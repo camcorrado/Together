@@ -1,6 +1,14 @@
 import React from 'react'
+import ValidationError from '../ValidationError'
 
 class EditProfile extends React.Component {
+
+    state = {
+        username: '',
+        usernameChange: {
+            touched: false
+        }
+    }
 
     handleClickDelete = (e) => {
         e.preventDefault()
@@ -9,6 +17,19 @@ class EditProfile extends React.Component {
     handleClickSubmit = (e) => {
         e.preventDefault()
         this.props.history.push('/UserProfile')
+    }
+
+    onChangeUsername = async (value) => {
+        this.setState({ usernameChange: { touched: true } })
+        await this.setState({username: value})
+    }
+
+    validateUsername(value) {
+        if (value.length === 0) {
+            return 'Username is required'
+        } else {
+            return true
+        }
     }
 
     render() {
@@ -20,26 +41,29 @@ class EditProfile extends React.Component {
                 <section className='formContainer'>
                     <form className='editProfileForm'>
                         <div className='usernameInput'>
-                            <label for='username'>Username</label>
-                            <input type='text' name='username' id='username' required />
+                            <label htmlFor='username'>Username</label>
+                            <input type='text' name='username' id='username' required 
+                                onChange={e => this.onChangeUsername(e.target.value)} 
+                            />
+                            {this.state.usernameChange.touched && <ValidationError message={this.validateUsername(this.state.username)} />}
                         </div>
                         <div className='bioInput'>
-                            <label for='bio'>About</label>
+                            <label htmlFor='bio'>About</label>
                             <textarea name='bio' id='bio' rows='15'></textarea>
                         </div>
                         <div className='interestsInput'>
-                            <label for='interests'>Interests</label>
+                            <label htmlFor='interests'>Interests</label>
                             <div className='interestCheckboxes'>
-                                <input type='checkbox' name='interest' value='0' class='interest-checkbox' />
-                                <label for='interest'>Activism</label>
-                                <input type='checkbox' name='interest' value='1' class='interest-checkbox' />
-                                <label for='interest'>Drag / Performance Art</label>
-                                <input type='checkbox' name='interest' value='2' class='interest-checkbox' />
-                                <label for='interest'>Gaming</label>
-                                <input type='checkbox' name='interest' value='3' class='interest-checkbox' />
-                                <label for='interest'>Reading</label>
-                                <input type='checkbox' name='interest' value='4' class='interest-checkbox' />
-                                <label for='interest'>Nightlife</label>
+                                <input type='checkbox' name='interest' value='0' className='interest-checkbox' />
+                                <label htmlFor='interest'>Activism</label>
+                                <input type='checkbox' name='interest' value='1' className='interest-checkbox' />
+                                <label htmlFor='interest'>Drag / Performance Art</label>
+                                <input type='checkbox' name='interest' value='2' className='interest-checkbox' />
+                                <label htmlFor='interest'>Gaming</label>
+                                <input type='checkbox' name='interest' value='3' className='interest-checkbox' />
+                                <label htmlFor='interest'>Reading</label>
+                                <input type='checkbox' name='interest' value='4' className='interest-checkbox' />
+                                <label htmlFor='interest'>Nightlife</label>
                             </div>
                         </div>
                         <div className='buttons'>
