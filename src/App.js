@@ -1,27 +1,78 @@
-import EditProfile from './components/EditProfile/EditProfile'
+import CreateProfilePage from './components/CreateProfile/CreateProfilePage'
+import EditProfilePage from './components/EditProfile/EditProfilePage'
 import Grid from './components/Grid/Grid'
+import Header from './components/Header/Header'
 import Hero from './components/Hero/Hero'
-import Login from './components/Login/Login'
+import LoginPage from './components/Login/LoginPage'
 import Messenger from './components/Messenger/Messenger'
-import React from 'react'
-import { Route } from 'react-router-dom'
-import SignUp from './components/SignUp/SignUp'
+import NotFoundPage from './components/NotFoundPage/NotFoundPage'
+import PublicOnlyRoute from './components/Utils/PublicOnlyRoute'
+import PrivateRoute from './components/Utils/PrivateRoute'
+import React, { Component } from 'react'
+import { Route, Switch } from 'react-router-dom'
+import SignUpPage from './components/SignUp/SignUpPage'
 import UserProfile from './components/UserProfile/UserProfile'
 
-class App extends React.Component  {
-  render() {
-    return (
-      <main className='App'>
-        <Route exact path='/Grid' component={Grid}/>
-        <Route exact path='/' component={Hero}/>
-        <Route exact path='/EditProfile' component={EditProfile}/>
-        <Route exact path='/Login' component={Login}/>
-        <Route exact path='/Messenger' component={Messenger}/>
-        <Route exact path='/UserProfile' component={UserProfile}/>
-        <Route exact path='/SignUp' component={SignUp}/>
-      </main>
-    )
-  }
+class App extends Component  {
+    state = {
+        profiles: [],
+        userProfile: [],
+        hasError: false,
+    }
+
+    static getDerivedStateFromError(error) {
+        console.error(error)
+        return { hasError: true }
+    }
+
+    render() {
+        return (
+        <main className='App'>
+            <header className='App_Header'>
+                <Header />
+            </header>
+            {this.state.hasError && <p className='red'>There was an error! Oh no!</p>}
+            <Switch>
+                <Route
+                    exact
+                    path={'/'}
+                    component={Hero}
+                />
+                <PublicOnlyRoute
+                    path={'/login'}
+                    component={LoginPage}
+                />
+                <PublicOnlyRoute
+                    path={'/signup'}
+                    component={SignUpPage}
+                />
+                <PrivateRoute
+                    path={'/createprofile'}
+                    component={CreateProfilePage}
+                />
+                <PrivateRoute
+                    path={'/editprofile'}
+                    component={EditProfilePage}
+                />
+                <PrivateRoute
+                    path={'/grid'}
+                    component={Grid}
+                />
+                <PrivateRoute
+                    path={'/messenger'}
+                    component={Messenger}
+                />
+                <PrivateRoute
+                    path={'/userprofile'}
+                    component={UserProfile}
+                />
+                <Route
+                    component={NotFoundPage}
+                />
+            </Switch>
+        </main>
+        )
+    }
 }
 
-export default App;
+export default App
