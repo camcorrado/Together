@@ -1,3 +1,4 @@
+import ApiContext from './ApiContext'
 import CreateProfilePage from './components/CreateProfile/CreateProfilePage'
 import EditProfilePage from './components/EditProfile/EditProfilePage'
 import Grid from './components/Grid/Grid'
@@ -15,8 +16,9 @@ import UserProfile from './components/UserProfile/UserProfile'
 
 class App extends Component  {
     state = {
-        profiles: [],
+        userInfo: [],
         userProfile: [],
+        nearbyProfiles: [],
         hasError: false,
     }
 
@@ -25,52 +27,67 @@ class App extends Component  {
         return { hasError: true }
     }
 
+    handleSetUserInfo = (data) => {
+        this.setState({
+            userInfo: data
+        })
+        console.log(this.state.userInfo)
+    }
+
     render() {
+        const value = {
+            userInfo: this.state.userInfo,
+            userProfile: this.state.userProfile,
+            nearbyProfiles: this.state.nearbyProfiles,
+            setUserInfo: this.handleSetUserInfo
+        }
         return (
-        <main className='App'>
-            <header className='App_Header'>
-                <Header />
-            </header>
-            {this.state.hasError && <p className='red'>There was an error! Oh no!</p>}
-            <Switch>
-                <Route
-                    exact
-                    path={'/'}
-                    component={Hero}
-                />
-                <PublicOnlyRoute
-                    path={'/login'}
-                    component={LoginPage}
-                />
-                <PublicOnlyRoute
-                    path={'/signup'}
-                    component={SignUpPage}
-                />
-                <PrivateRoute
-                    path={'/createprofile'}
-                    component={CreateProfilePage}
-                />
-                <PrivateRoute
-                    path={'/editprofile'}
-                    component={EditProfilePage}
-                />
-                <PrivateRoute
-                    path={'/grid'}
-                    component={Grid}
-                />
-                <PrivateRoute
-                    path={'/messenger'}
-                    component={Messenger}
-                />
-                <PrivateRoute
-                    path={'/userprofile'}
-                    component={UserProfile}
-                />
-                <Route
-                    component={NotFoundPage}
-                />
-            </Switch>
-        </main>
+            <ApiContext.Provider value={value}>
+                <main className='App'>
+                    <header className='App_Header'>
+                        <Header />
+                    </header>
+                    {this.state.hasError && <p className='red'>There was an error! Oh no!</p>}
+                    <Switch>
+                        <Route
+                            exact
+                            path={'/'}
+                            component={Hero}
+                        />
+                        <PublicOnlyRoute
+                            path={'/login'}
+                            component={LoginPage}
+                        />
+                        <PublicOnlyRoute
+                            path={'/signup'}
+                            component={SignUpPage}
+                        />
+                        <PrivateRoute
+                            path={'/createprofile'}
+                            component={CreateProfilePage}
+                        />
+                        <PrivateRoute
+                            path={'/editprofile'}
+                            component={EditProfilePage}
+                        />
+                        <PrivateRoute
+                            path={'/grid'}
+                            component={Grid}
+                        />
+                        <PrivateRoute
+                            path={'/messenger'}
+                            component={Messenger}
+                        />
+                        <PrivateRoute
+                            path={'/userprofile'}
+                            component={UserProfile}
+                        />
+                        <Route
+                            component={NotFoundPage}
+                        />
+                    </Switch>
+                </main>
+            </ApiContext.Provider>
         )
     }
 }

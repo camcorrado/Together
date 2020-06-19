@@ -9,7 +9,7 @@ export default class Grid extends Component {
     }
 
     componentDidMount() {
-        fetch(`${config.API_ENDPOINT}/api/profiles`, {
+        fetch(`${config.API_ENDPOINT}/profiles`, {
             method: 'GET',
             headers: {
                 'content-type': 'application/json',
@@ -30,7 +30,8 @@ export default class Grid extends Component {
 
     handleClickEditProfile = (e) => {
         e.preventDefault()
-        this.props.history.push('/EditProfile')
+        const profile_id = this.
+        this.props.history.push(`/EditProfile/${profile_id}`)
     }
 
     handleClickLogOut = (e) => {

@@ -1,10 +1,14 @@
+import ApiContext from '../../ApiContext'
 import AuthApiService from '../../services/auth-api-service'
 import React, { Component } from 'react'
 import TokenService from '../../services/token-service'
 
 export default class SignUpForm extends Component {
+    static contextType = ApiContext
+
     static defaultProps = {
-        onSignUpSuccess: () => {}
+        onSignUpSuccess: () => {},
+        setUserInfo: () => {},
     }
 
     state = {
@@ -14,7 +18,6 @@ export default class SignUpForm extends Component {
     handleSubmit = async (e) => {
         e.preventDefault()
         const { firstName, lastName, email, password } = e.target
-    
         this.setState({ error: null })
 
         await AuthApiService.postUser({
@@ -22,6 +25,14 @@ export default class SignUpForm extends Component {
             password: password.value,
             full_name: `${firstName.value} ${lastName.value}`,
         })
+            .then(res => {
+                const newUser = { 
+                    full_name: res.full_name,
+                    email: res.email, 
+                    id: res.id
+                }
+                this.context.setUserInfo(newUser)
+            })
             .catch(res => {
                 this.setState({ error: res.error })
             })

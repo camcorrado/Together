@@ -1,4 +1,5 @@
 import ApiContext from '../../ApiContext'
+import Checkbox from '../Checkbox/Checkbox'
 import config from '../../config'
 import React, { Component } from 'react'
 import TokenService from '../../services/token-service'
@@ -13,20 +14,54 @@ export default class CreateProfileForm extends Component {
 
     state = {
         error: null,
+        items: [
+            'Activism', 
+            'Drag',
+            'Gaming',
+            'Reading',
+            'Nightlife',
+        ]
     }
+
+    componentDidMount = () => {
+        this.selectedCheckboxes = new Set();
+    }
+
+    toggleCheckbox = label => {
+        if (this.selectedCheckboxes.has(label)) {
+            this.selectedCheckboxes.delete(label);
+        } else {
+            this.selectedCheckboxes.add(label);
+        }
+    }
+
+    createCheckbox = label => (
+        <Checkbox
+            label={label}
+            handleCheckboxChange={this.toggleCheckbox}
+            key={label}
+        />
+    )
+
+    createCheckboxes = () => (
+        this.state.items.map(this.createCheckbox)
+    )
 
     handleSubmit = (e) => {
         e.preventDefault()
-        const { username, bio, profile_pic, interests, pronouns, zipcode } = e.target
+        const interests = []
+        const { username, bio, profile_pic, pronouns, zipcode } = e.target
+        for (const checkbox of this.selectedCheckboxes) {
+            interests.push(checkbox)
+          }
         const newProfile = { 
             username: username.value, 
             bio: bio.value, 
             profile_pic: profile_pic.value, 
-            interests: interests.value, 
+            interests: interests, 
             pronouns: pronouns.value, 
             zipcode: zipcode.value
         }
-        console.log({newProfile})
         this.setState({ error: null })
 
         fetch(`${config.API_ENDPOINT}/profiles`, 
@@ -75,16 +110,7 @@ export default class CreateProfileForm extends Component {
                 <div className='interestsInput'>
                     <label htmlFor='interests'>Interests</label>
                     <div className='interestCheckboxes'>
-                        <label htmlFor='activism'>Activism</label>
-                        <input type='checkbox' name='interests' id='interests' value='activism' className='interest-checkbox' />
-                        <label htmlFor='drag'>Drag</label>
-                        <input type='checkbox' name='interests' id='interests' value='drag' className='interest-checkbox' />
-                        <label htmlFor='gaming'>Gaming</label>
-                        <input type='checkbox' name='interests' id='interests' value='gaming' className='interest-checkbox' />
-                        <label htmlFor='reading'>Reading</label>
-                        <input type='checkbox' name='interests' id='interests' value='reading' className='interest-checkbox' />
-                        <label htmlFor='nightlife'>Nightlife</label>
-                        <input type='checkbox' name='interests' id='interests' value='nightlife' className='interest-checkbox' />
+                        {this.createCheckboxes()}
                     </div>
                 </div>
                 <div className='pronounsInput'>
@@ -93,7 +119,6 @@ export default class CreateProfileForm extends Component {
                         <option value="She/Her">She/Her</option>
                         <option value="He/Him">He/Him</option>
                         <option value="They/Them">They/Them</option>
-                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div className='zipcodeInput'>

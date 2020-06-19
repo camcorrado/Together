@@ -1,7 +1,8 @@
 import React from 'react'
 
 export default React.createContext({
-    user: [],
+    userInfo: [],
     userProfile: [],
-    profiles: [],
+    nearbyProfiles: [],
+    setUserInfo: () => {},
 })

@@ -1,10 +1,15 @@
+import ApiContext from '../../ApiContext'
 import AuthApiService from '../../services/auth-api-service'
+import config from '../../config'
 import React, { Component } from 'react'
 import TokenService from '../../services/token-service'
 
 export default class LoginForm extends Component {
+    static contextType = ApiContext
+
     static defaultProps = {
-        onLoginSuccess: () => {}
+        onLoginSuccess: () => {},
+        setUserInfo: () => {},
     }
 
     state = {
@@ -15,11 +20,44 @@ export default class LoginForm extends Component {
         ev.preventDefault()
         this.setState({ error: null })
         const { email, password } = ev.target
+        const userEmail = email.value
         AuthApiService.postLogin({
             email: email.value,
             password: password.value,
         })
         .then(res => {
+            fetch(`${config.API_ENDPOINT}/users`, {
+                method: 'GET',
+                headers: {
+                    'content-type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                }
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        throw new Error(res.status)
+                    }
+                    return res.json()
+                })
+                .then(data => {
+                    let currentUser
+                    data.filter(user => {
+                        for (let key in user) {
+                            if (user.email === userEmail) {
+                                currentUser = user
+                            }
+                        }
+                    })
+                    const userInfo = {
+                        full_name: currentUser.full_name,
+                        email: currentUser.email, 
+                        id: currentUser.id
+                    }
+                    this.context.setUserInfo(userInfo)
+                })
+                .catch(error => {
+                    console.error(error)
+                })
             email.value = ''
             password.value = ''
             TokenService.saveAuthToken(res.authToken)

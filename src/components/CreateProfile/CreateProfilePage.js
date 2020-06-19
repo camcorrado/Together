@@ -8,7 +8,7 @@ export default class CreateProfilePage extends Component {
         },
     }
 
-    handleEditSuccess = () => {
+    handleCreateSuccess = () => {
         this.props.history.push('/grid')
     }
 
