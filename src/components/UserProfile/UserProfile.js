@@ -1,6 +1,12 @@
+import ApiContext from '../../ApiContext'
 import React from 'react'
 
 class UserProfile extends React.Component {
+    static contextType = ApiContext
+
+    static defaultProps = {
+        userProfile: [],
+    }
 
     handleClickBack = (e) =>{
         e.preventDefault()
@@ -13,21 +19,22 @@ class UserProfile extends React.Component {
     }
 
     render() {
+        const { username, bio, profile_pic, interests, pronouns, zipcode } = this.context.userProfile
         return (
             <section className='userProfile'>
                 <section className='username'>
-                    <h1>USERNAME</h1>
+                    <h1>{username}</h1>
                 </section>
                 <section className='profilePic'>
-                    <p>PROFILE PIC</p>
+                    <p>{profile_pic}</p>
                 </section>
                 <section className='interests'>
                     <ul>
-                        <li> List of checked interests</li>
+                        {interests.map(interest => <li key={interest} className='interest'>{interest}</li>)}
                     </ul>
                 </section>
                 <section className='bio'>
-                    <p>BIO</p>
+                    <p>{bio}</p>
                 </section>
                 <section className='buttons'>
                         <button onClick={this.handleClickEdit}>Edit Profile</button>

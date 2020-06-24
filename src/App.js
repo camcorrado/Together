@@ -1,4 +1,5 @@
 import ApiContext from './ApiContext'
+import config from './config'
 import CreateProfilePage from './components/CreateProfile/CreateProfilePage'
 import EditProfilePage from './components/EditProfile/EditProfilePage'
 import Grid from './components/Grid/Grid'
@@ -31,7 +32,38 @@ class App extends Component  {
         this.setState({
             userInfo: data
         })
-        console.log(this.state.userInfo)
+    }
+
+    handleSetProfileInfo = async (id) => {
+        await fetch(`${config.API_ENDPOINT}/profiles`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        })
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error(res.status)
+                }
+                return res.json()
+            })
+            .then((data) => {
+                console.log(data)
+                const profileInfo = data.filter(profile => profile.user_id === id)
+                this.setState({
+                    userProfile: profileInfo[0]
+                })
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
+
+    handleEditProfile = (data) => {
+        this.setState({
+            userProfile: data
+        })
     }
 
     render() {
@@ -39,7 +71,9 @@ class App extends Component  {
             userInfo: this.state.userInfo,
             userProfile: this.state.userProfile,
             nearbyProfiles: this.state.nearbyProfiles,
-            setUserInfo: this.handleSetUserInfo
+            setUserInfo: this.handleSetUserInfo,
+            setProfileInfo: this.handleSetProfileInfo,
+            editProfile: this.handleEditProfile,
         }
         return (
             <ApiContext.Provider value={value}>

@@ -8,7 +8,8 @@ export default class CreateProfileForm extends Component {
     static contextType = ApiContext
 
     static defaultProps = {
-        user: [],
+        userInfo: [],
+        setProfileInfo: () => {},
         onCreateSuccess: () => {}
     }
 
@@ -47,7 +48,7 @@ export default class CreateProfileForm extends Component {
         this.state.items.map(this.createCheckbox)
     )
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault()
         const interests = []
         const { username, bio, profile_pic, pronouns, zipcode } = e.target
@@ -62,9 +63,12 @@ export default class CreateProfileForm extends Component {
             pronouns: pronouns.value, 
             zipcode: zipcode.value
         }
+        console.log(newProfile)
+        console.log(JSON.stringify(newProfile))
+
         this.setState({ error: null })
 
-        fetch(`${config.API_ENDPOINT}/profiles`, 
+        await fetch(`${config.API_ENDPOINT}/profiles`, 
             {
                 method: 'POST',
                 body: JSON.stringify(newProfile),
@@ -79,6 +83,7 @@ export default class CreateProfileForm extends Component {
                     throw new Error(res.status)
                 }
             })
+            .then(this.context.setProfileInfo(this.context.userInfo.id))
             .then(this.props.onCreateSuccess())
             .catch(res => {
                 this.setState({ error: res.error })

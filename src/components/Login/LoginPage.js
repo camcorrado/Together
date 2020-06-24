@@ -11,6 +11,10 @@ export default class LoginPage extends Component {
     handleLoginSuccess = () => {
         this.props.history.push('/grid')
     }
+
+    handleBack = () => {
+        this.props.history.push('/')
+    }
   
     render() {
         return (
@@ -18,6 +22,7 @@ export default class LoginPage extends Component {
                 <h2>Login</h2>
                 <LoginForm
                     onLoginSuccess={this.handleLoginSuccess}
+                    onBack={this.handleBack}
                 />
             </section>
         ) 

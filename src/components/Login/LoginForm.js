@@ -9,11 +9,17 @@ export default class LoginForm extends Component {
 
     static defaultProps = {
         onLoginSuccess: () => {},
+        onBack: () => {},
         setUserInfo: () => {},
+        setProfileInfo: () => {},
     }
 
     state = {
         error: null,
+    }
+
+    handleClickBack = () => {
+        this.props.onBack()
     }
 
     handleSubmitJwtAuth = ev => {
@@ -40,20 +46,9 @@ export default class LoginForm extends Component {
                     return res.json()
                 })
                 .then(data => {
-                    let currentUser
-                    data.filter(user => {
-                        for (let key in user) {
-                            if (user.email === userEmail) {
-                                currentUser = user
-                            }
-                        }
-                    })
-                    const userInfo = {
-                        full_name: currentUser.full_name,
-                        email: currentUser.email, 
-                        id: currentUser.id
-                    }
-                    this.context.setUserInfo(userInfo)
+                    let currentUser = data.filter(user => user.email === userEmail)
+                    this.context.setUserInfo(currentUser[0])
+                    this.context.setProfileInfo(currentUser[0].id)
                 })
                 .catch(error => {
                     console.error(error)
@@ -89,6 +84,9 @@ export default class LoginForm extends Component {
                 <div className='buttons'>
                     <button type='submit'>
                         Login
+                    </button>
+                    <button onClick={this.handleClickBack}>
+                        Back
                     </button>
                 </div>
             </form>

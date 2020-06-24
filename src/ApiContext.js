@@ -5,4 +5,6 @@ export default React.createContext({
     userProfile: [],
     nearbyProfiles: [],
     setUserInfo: () => {},
+    setProfileInfo: () => {},
+    editProfile: () => {},
 })

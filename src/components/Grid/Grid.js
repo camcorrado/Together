@@ -1,11 +1,15 @@
+import ApiContext from '../../ApiContext'
 import config from '../../config'
 import ProfileIcon from './ProfileIcon'
 import React, { Component } from 'react'
+import TokenService from '../../services/token-service'
 
 export default class Grid extends Component {
+    static contextType = ApiContext
 
-    state = {
-        profiles: []
+    static defaultProps = {
+        userProfile: [],
+        nearbyProfiles: [],
     }
 
     componentDidMount() {
@@ -22,7 +26,7 @@ export default class Grid extends Component {
                 }
                 return res.json()
             })
-            .then(data => this.setState({ profiles: data }))
+            .then(data => this.setState({ nearbyProfiles: data }))
             .catch(error => {
                 console.error(error)
             })
@@ -30,18 +34,19 @@ export default class Grid extends Component {
 
     handleClickEditProfile = (e) => {
         e.preventDefault()
-        const profile_id = this.
-        this.props.history.push(`/EditProfile/${profile_id}`)
+        const profile_id = this.context.userProfile.id
+        this.props.history.push(`/editprofile/${profile_id}`)
     }
 
     handleClickLogOut = (e) => {
         e.preventDefault()
+        TokenService.clearAuthToken()
         this.props.history.push('/')
     }
 
     handleClickProfile = (e) => {
         e.preventDefault()
-        this.props.history.push('/UserProfile')
+        this.props.history.push('/userprofile')
     }
 
     render() {
@@ -55,7 +60,7 @@ export default class Grid extends Component {
                 </section>
                 <section className='profiles'>
                     <ul>
-                        {this.state.profiles.map(profile =>
+                        {this.context.nearbyProfiles.map(profile =>
                             <li className={profile.id}>    
                                 <ProfileIcon 
                                     id={profile.id}
