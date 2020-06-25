@@ -1,27 +1,33 @@
-import CreateProfileForm from './CreateProfileForm'
-import React, { Component } from 'react'
+import ApiContext from "../../ApiContext";
+import CreateProfileForm from "./CreateProfileForm";
+import React, { Component } from "react";
 
 export default class CreateProfilePage extends Component {
-    static defaultProps = {
-        history: {
-            push: () => {},
-        },
-    }
+  static contextType = ApiContext;
 
-    handleCreateSuccess = () => {
-        this.props.history.push('/grid')
-    }
+  static defaultProps = {
+    //refreshProfile: () => {},
+    history: {
+      push: () => {},
+    },
+  };
 
-    render() {
-        return (
-            <section className='CreateProfilePage'>
-                <header>
-                    <h1>Create Your Profile</h1>
-                </header>
-                <CreateProfileForm 
-                    onCreateSuccess={this.handleCreateSuccess}
-                />
-            </section>
-        )
-    }
+  handleCreateSuccess = () => {
+    this.props.history.push("/grid");
+  };
+
+  /*componentDidMount() {
+    this.context.refreshProfile();
+  }
+*/
+  render() {
+    return (
+      <section className="CreateProfilePage">
+        <header>
+          <h1>Create Your Profile</h1>
+        </header>
+        <CreateProfileForm onCreateSuccess={this.handleCreateSuccess} />
+      </section>
+    );
+  }
 }

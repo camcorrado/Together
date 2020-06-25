@@ -9,30 +9,24 @@ export default class CreateProfileForm extends Component {
 
     static defaultProps = {
         userInfo: [],
+        interestOptions: [],
         setProfileInfo: () => {},
         onCreateSuccess: () => {}
     }
 
     state = {
-        error: null,
-        items: [
-            'Activism', 
-            'Drag',
-            'Gaming',
-            'Reading',
-            'Nightlife',
-        ]
+        error: null
     }
 
     componentDidMount = () => {
-        this.selectedCheckboxes = new Set();
+        this.selectedCheckboxes = new Set()
     }
 
     toggleCheckbox = label => {
         if (this.selectedCheckboxes.has(label)) {
-            this.selectedCheckboxes.delete(label);
+            this.selectedCheckboxes.delete(label)
         } else {
-            this.selectedCheckboxes.add(label);
+            this.selectedCheckboxes.add(label)
         }
     }
 
@@ -45,10 +39,10 @@ export default class CreateProfileForm extends Component {
     )
 
     createCheckboxes = () => (
-        this.state.items.map(this.createCheckbox)
+        this.context.interestOptions.map(this.createCheckbox)
     )
 
-    handleSubmit = async (e) => {
+    handleSubmit = (e) => {
         e.preventDefault()
         const interests = []
         const { username, bio, profile_pic, pronouns, zipcode } = e.target
@@ -63,12 +57,10 @@ export default class CreateProfileForm extends Component {
             pronouns: pronouns.value, 
             zipcode: zipcode.value
         }
-        console.log(newProfile)
-        console.log(JSON.stringify(newProfile))
 
         this.setState({ error: null })
 
-        await fetch(`${config.API_ENDPOINT}/profiles`, 
+        fetch(`${config.API_ENDPOINT}/profiles`, 
             {
                 method: 'POST',
                 body: JSON.stringify(newProfile),
@@ -98,19 +90,37 @@ export default class CreateProfileForm extends Component {
                 onSubmit={this.handleSubmit}
             >
                 <div role='alert'>
-                    {error && <p className='red'>{error}</p>}
+                    {error && <p className='red'>{error.message}</p>}
                 </div>
                 <div className='usernameInput'>
                     <label htmlFor='username'>Username</label>
-                    <input type='text' name='username' id='username' required />
+                    <input 
+                        type='text' 
+                        name='username' 
+                        id='username' 
+                        aria-required='true'
+                        required 
+                    />
                 </div>
                 <div className='profilePicInput'>
                     <label htmlFor='profile_pic'>Profile Picture</label>
-                    <input type='text' name='profile_pic' id='profile_pic' required />
+                    <input 
+                        type='text' 
+                        name='profile_pic' 
+                        id='profile_pic'
+                        aria-required='true' 
+                        required 
+                    />
                 </div>
                 <div className='bioInput'>
                     <label htmlFor='bio'>About</label>
-                    <textarea name='bio' id='bio' rows='15'></textarea>
+                    <textarea 
+                        name='bio' 
+                        id='bio' 
+                        rows='15'
+                        aria-required='true' 
+                        required
+                    ></textarea>
                 </div>
                 <div className='interestsInput'>
                     <label htmlFor='interests'>Interests</label>
@@ -120,15 +130,29 @@ export default class CreateProfileForm extends Component {
                 </div>
                 <div className='pronounsInput'>
                     <label htmlFor='pronouns'>Pronouns</label>
-                    <select name="pronouns" id="pronouns" required>
-                        <option value="She/Her">She/Her</option>
-                        <option value="He/Him">He/Him</option>
-                        <option value="They/Them">They/Them</option>
-                    </select>
+                    <input
+                        type='text' 
+                        list='pronouns' 
+                        aria-required='true' 
+                        required 
+                        name="pronouns"
+                    />
+                    <datalist name='pronouns' id='pronouns'>
+                        <option value='She/Her'>She/Her</option>
+                        <option value='He/Him'>He/Him</option>
+                        <option value='They/Them'>They/Them</option>
+                    </datalist>
                 </div>
                 <div className='zipcodeInput'>
                     <label htmlFor='zipcode'>Zipcode</label>
-                    <input type='number' name='zipcode' id='zipcode' maxLength='5' required />
+                    <input 
+                        type='number' 
+                        name='zipcode' 
+                        id='zipcode' 
+                        maxLength='5' 
+                        aria-required='true' 
+                        required 
+                    />
                 </div>
                 <div className='buttons'>
                     <button type='submit'>Submit</button>

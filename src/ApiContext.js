@@ -1,10 +1,13 @@
-import React from 'react'
+import React from "react";
 
 export default React.createContext({
-    userInfo: [],
-    userProfile: [],
-    nearbyProfiles: [],
-    setUserInfo: () => {},
-    setProfileInfo: () => {},
-    editProfile: () => {},
-})
+  userInfo: [],
+  userProfile: [],
+  nearbyProfiles: [],
+  interestOptions: [],
+  //refreshProfile: () => {},
+  setUserInfo: () => {},
+  setProfileInfo: () => {},
+  setNearbyProfiles: () => {},
+  editProfile: () => {},
+});

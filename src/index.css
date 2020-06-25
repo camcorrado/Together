@@ -5,8 +5,7 @@
 }
 
 body {
-  font-family: "Open Sans",
-  sans-serif;
+  font-family: "Open Sans", sans-serif;
   font-size: 20px;
   color: #444;
   text-align: center;
@@ -60,6 +59,35 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.buttons a,
+button {
+  padding: 8px 25px;
+  border-radius: 5px;
+  border: 1px solid #999;
+  background-color: #ccc;
+  border-bottom: 3px solid #333;
+  font-size: 20px;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.5s;
+  margin: 10px;
+}
+
+.buttons a.primary,
+button.primary {
+  background-color: #5b905b;
+  border-bottom: 3px solid green;
+  color: white;
+}
+
+.buttons a:hover,
+button:hover {
+  border-bottom-width: 1px;
+  background-color: #333;
+  color: white;
 }

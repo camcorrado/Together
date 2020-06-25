@@ -1,31 +1,39 @@
-import LoginForm from './LoginForm'
-import React, { Component } from 'react'
+import ApiContext from "../../ApiContext";
+import LoginForm from "./LoginForm";
+import React, { Component } from "react";
 
 export default class LoginPage extends Component {
-    static defaultProps = {
-        history: {
-            push: () => {},
-        },
-    }
-  
-    handleLoginSuccess = () => {
-        this.props.history.push('/grid')
-    }
+  static contextType = ApiContext;
 
-    handleBack = () => {
-        this.props.history.push('/')
+  static defaultProps = {
+    userProfile: [],
+    history: {
+      push: () => {},
+    },
+  };
+
+  handleLoginSuccess = () => {
+    if (this.context.userProfile === undefined) {
+      console.log("no profile");
+      this.props.history.push("/createprofile");
+    } else {
+      this.props.history.push("/grid");
     }
-  
-    render() {
-        return (
-            <section className='LoginPage'>
-                <h2>Login</h2>
-                <LoginForm
-                    onLoginSuccess={this.handleLoginSuccess}
-                    onBack={this.handleBack}
-                />
-            </section>
-        ) 
-    }
+  };
+
+  handleNoProfile = () => {
+    this.props.history.push("/createprofile");
+  };
+
+  render() {
+    return (
+      <section className="LoginPage">
+        <h2>Login</h2>
+        <LoginForm
+          onLoginSuccess={this.handleLoginSuccess}
+          onNoProfile={this.handleNoProfile}
+        />
+      </section>
+    );
+  }
 }
-      
