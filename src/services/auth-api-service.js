@@ -4,7 +4,6 @@ import TokenService from "./token-service";
 
 const AuthApiService = {
   postUser(user) {
-    console.log(user);
     return fetch(`${config.API_ENDPOINT}/users`, {
       method: "POST",
       headers: {
@@ -40,6 +39,7 @@ const AuthApiService = {
         TokenService.queueCallbackBeforeExpiry(() => {
           AuthApiService.postRefreshToken();
         });
+        console.log(`login success`);
         return res;
       });
   },

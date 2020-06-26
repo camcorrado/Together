@@ -8,11 +8,12 @@ export default class EditProfilepage extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
-    userProfile: [],
+    userProfile: {},
     history: {
       push: () => {},
     },
     editProfile: () => {},
+    refreshProfile: () => {},
   };
 
   state = {
@@ -104,16 +105,33 @@ export default class EditProfilepage extends Component {
       });
   };
 
+  async componentDidMount() {
+    console.log(`componentDidMount began`);
+    await this.context.refreshProfile();
+    this.updateState();
+  }
+
+  updateState() {
+    console.log(`updateState began`);
+    this.setState({
+      id: this.context.userProfile.id,
+      user_id: this.context.userProfile.user_id,
+      username: this.context.userProfile.username,
+      bio: this.context.userProfile.bio,
+      profile_pic: this.context.userProfile.profile_pic,
+      interests: this.context.userProfile.interests,
+      pronouns: this.context.userProfile.pronouns,
+      zipcode: this.context.userProfile.zipcode,
+    });
+    console.log(this.state);
+  }
+
   componentDidUpdate() {
     if (this.state.id === null && this.context.userProfile.id) {
       this.setState({
         ...this.context.userProfile,
       });
     }
-  }
-
-  componentDidMount() {
-    this.context.refreshProfile();
   }
 
   render() {

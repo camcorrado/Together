@@ -1,16 +1,18 @@
-import IdleService from "../../services/idle-service";
+import ApiContext from "../../ApiContext";
 import React from "react";
 import TokenService from "../../services/token-service";
 import { Link } from "react-router-dom";
 
 class Hero extends React.Component {
+  static contextType = ApiContext;
+
+  static defaultProps = {
+    logOut: () => {},
+  };
+
   handleClickLogOut = (e) => {
     e.preventDefault();
-    TokenService.clearAuthToken();
-    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
-    TokenService.clearCallbackBeforeExpiry();
-    IdleService.unRegisterIdleResets();
-    this.props.history.push("/");
+    this.context.logOut();
   };
 
   render() {

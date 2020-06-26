@@ -1,16 +1,15 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
-import IdleService from "../../services/idle-service";
 import ProfileIcon from "./ProfileIcon";
 import React, { Component } from "react";
-import TokenService from "../../services/token-service";
 
 export default class Grid extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
-    userProfile: [],
+    userProfile: {},
     nearbyProfiles: [],
+    logOut: () => {},
   };
 
   componentDidMount() {
@@ -35,17 +34,14 @@ export default class Grid extends Component {
 
   handleClickEditProfile = (e) => {
     e.preventDefault();
+    console.log(this.context.userProfile);
     const profile_id = this.context.userProfile.id;
     this.props.history.push(`/editprofile/${profile_id}`);
   };
 
   handleClickLogOut = (e) => {
     e.preventDefault();
-    TokenService.clearAuthToken();
-    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
-    TokenService.clearCallbackBeforeExpiry();
-    IdleService.unRegisterIdleResets();
-    this.props.history.push("/");
+    this.context.logOut();
   };
 
   handleClickProfile = (e) => {
@@ -54,7 +50,7 @@ export default class Grid extends Component {
   };
 
   render() {
-    return (
+    return this.context.nearbyProfiles.length > 0 ? (
       <section className="grid">
         <section className="nav">
           <nav role="navigation">
@@ -83,6 +79,8 @@ export default class Grid extends Component {
         </section>
         <button onClick={this.handleClickProfile}>View Profile Test</button>
       </section>
+    ) : (
+      <h2>Loading Profiles...</h2>
     );
   }
 }

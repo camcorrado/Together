@@ -29,7 +29,6 @@ class App extends Component {
     userInfo: {},
     userProfile: {},
     nearbyProfiles: [],
-    hasError: false,
     interestOptions: [
       "Activism",
       "Drag",
@@ -40,12 +39,9 @@ class App extends Component {
     ],
   };
 
-  static getDerivedStateFromError(error) {
-    console.error(error);
-    return { hasError: true };
-  }
-
   componentDidMount() {
+    console.log(`componentWillUnmount began`);
+    this.refreshProfile();
     /*
       set the function (callback) to call when a user goes idle
       we'll set this to logout a user when they're idle
@@ -71,9 +67,11 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
+    console.log(`componentDidMount completed`);
   }
 
   componentWillUnmount() {
+    console.log(`componentWillUnmount began`);
     /*
       when the app unmounts,
       stop the event listeners that auto logout (clear the token from storage)
@@ -83,9 +81,11 @@ class App extends Component {
       and remove the refresh endpoint request
     */
     TokenService.clearCallbackBeforeExpiry();
+    console.log(`componentWillUnmount completed`);
   }
 
   logoutFromIdle = () => {
+    console.log(`logoutFromIdle began`);
     /* remove the token from localStorage */
     TokenService.clearAuthToken();
     /* remove any queued calls to the refresh endpoint */
@@ -97,11 +97,13 @@ class App extends Component {
       so we need to tell React to rerender
     */
     this.forceUpdate();
+    console.log(`logoutFromIdle completed`);
   };
 
-  handleSetUserInfo = () => {
+  handleSetUserInfo = async () => {
+    console.log(`handleSetUserInfo pt 1`);
     const authToken = TokenService.getAuthToken();
-    fetch(`${config.API_ENDPOINT}/users`, {
+    await fetch(`${config.API_ENDPOINT}/users`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -109,22 +111,26 @@ class App extends Component {
         Authorization: `Bearer ${authToken}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then((user) => {
+        console.log(`handleSetUserInfo pt 2`);
         this.setState({
           userInfo: user,
         });
         console.log(this.state.userInfo);
+      })
+      .catch((res) => {
+        this.setState({ error: res.error });
       });
+    console.log(`handleSetUserInfo completed`);
   };
 
-  handleSetProfileInfo = (id) => {
-    fetch(`${config.API_ENDPOINT}/profiles`, {
+  handleSetProfileInfo = async (id) => {
+    console.log(`handleSetProfileInfo pt 1`);
+    console.log({ id });
+    await fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -137,35 +143,64 @@ class App extends Component {
         }
         return res.json();
       })
-      .then((data) => {
-        const profileInfo = data.filter((profile) => profile.user_id === id);
+      .then(async (data) => {
+        console.log({ data });
+        console.log(`handleSetProfileInfo pt 2`);
+        const profileInfo = await data.filter((profile) => {
+          return profile.user_id == id;
+        });
         this.setState({
-          userProfile: profileInfo[0],
+          userProfile: profileInfo.pop(),
         });
         console.log(this.state.userProfile);
       })
       .catch((error) => {
         console.error(error);
       });
+    console.log(`handleSetProfileInfo completed`);
   };
 
   handleSetNearbyProfiles = (data) => {
+    console.log(`handleSetNearbyProfiles ran`);
     this.setState({
       nearbyProfiles: data,
     });
+    console.log(this.state.nearbyProfiles);
+    console.log(`handleSetNearbyProfiles completed`);
   };
 
   handleEditProfile = (data) => {
+    console.log(`handleEditProfile ran`);
     this.setState({
       userProfile: data,
     });
+    console.log(this.state.userProfile);
+    console.log(`handleEditProfile completed`);
   };
 
-  /*
-  refreshProfile = () => {
+  handleLogOut = async () => {
+    console.log(`handleLogOut ran`);
+    TokenService.clearAuthToken();
+    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
+    TokenService.clearCallbackBeforeExpiry();
+    IdleService.unRegisterIdleResets();
+    await this.setState({
+      userInfo: {},
+      userProfile: {},
+      nearbyProfiles: [],
+    });
+    console.log(this.state);
+    console.log(`state cleared`);
+
+    this.props.history.push("/");
+    console.log(`handleLogOut completed`);
+  };
+
+  refreshProfile = async () => {
+    console.log(`refreshProfile began`);
     const authToken = TokenService.getAuthToken();
     if (authToken) {
-      fetch(`${config.API_ENDPOINT}/users`, {
+      await fetch(`${config.API_ENDPOINT}/users`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -179,13 +214,15 @@ class App extends Component {
           }
           return res.json();
         })
-        .then((user) => {
-          this.handleSetUserInfo(user);
-          this.handleSetProfileInfo(user.id);
+        .then(async (user) => {
+          console.log(`refreshProfile setting user and profile info`);
+          await this.handleSetUserInfo(user);
+          await this.handleSetProfileInfo(user.id);
         });
     }
+    console.log(`refreshProfile completed`);
   };
-*/
+
   render() {
     const value = {
       userInfo: this.state.userInfo,
@@ -196,17 +233,16 @@ class App extends Component {
       setProfileInfo: this.handleSetProfileInfo,
       setNearbyProfiles: this.handleSetNearbyProfiles,
       editProfile: this.handleEditProfile,
-      //refreshProfile: this.refreshProfile,
+      logOut: this.handleLogOut,
+      refreshProfile: this.refreshProfile,
     };
+    const { error } = this.state;
     return (
       <ApiContext.Provider value={value}>
         <main className="App">
           <header className="App_Header">
             <Header />
           </header>
-          {this.state.hasError && (
-            <p className="red">There was an error! Oh no!</p>
-          )}
           <Switch>
             <Route exact path={"/"} component={Hero} />
             <PublicOnlyRoute path={"/login"} component={LoginPage} />

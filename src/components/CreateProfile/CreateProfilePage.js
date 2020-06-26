@@ -13,6 +13,7 @@ export default class CreateProfilePage extends Component {
   };
 
   handleCreateSuccess = () => {
+    console.log(`handleCreateSuccess began`);
     this.props.history.push("/grid");
   };
 

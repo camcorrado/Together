@@ -1,6 +1,5 @@
 import ApiContext from "../../ApiContext";
 import AuthApiService from "../../services/auth-api-service";
-import config from "../../config";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
@@ -9,10 +8,10 @@ export default class LoginForm extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
+    userInfo: {},
+    userProfile: {},
     onLoginSuccess: () => {},
     onNoProfile: () => {},
-    onBack: () => {},
-    setUserInfo: () => {},
     setProfileInfo: () => {},
   };
 
@@ -20,51 +19,36 @@ export default class LoginForm extends Component {
     error: null,
   };
 
-  handleClickBack = () => {
-    this.props.onBack();
-  };
-
   handleSubmitJwtAuth = (ev) => {
     ev.preventDefault();
+    console.log(`handleSubmitJwtAuth began`);
     this.setState({ error: null });
     const { email, password } = ev.target;
-    const userEmail = email.value;
     AuthApiService.postLogin({
       email: email.value,
       password: password.value,
     })
-      .then((res) => {
-        fetch(`${config.API_ENDPOINT}/users`, {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            Authorization: `Bearer ${res.authToken}`,
-          },
-        })
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error(res.status);
-            }
-            return res.json();
-          })
-          .then((user) => {
-            this.context.setUserInfo(user);
-            this.context.setProfileInfo(user.id);
-          })
-          .then(() => {
-            email.value = "";
-            password.value = "";
-            TokenService.saveAuthToken(res.authToken);
-            this.props.onLoginSuccess();
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      .then(async (res) => {
+        console.log(`handleSubmitJwtAuth pt 1`);
+        TokenService.saveAuthToken(res.authToken);
+        await this.context.setUserInfo();
+      })
+      .then(async () => {
+        console.log(`handleSubmitJwtAuth pt 2`);
+        await this.context.setProfileInfo(this.context.userInfo.id);
+        email.value = "";
+        password.value = "";
+        console.log(this.context.userProfile);
+        if (!this.context.userProfile) {
+          this.props.onNoProfile();
+        } else {
+          this.props.onLoginSuccess();
+        }
       })
       .catch((res) => {
         this.setState({ error: res.error });
       });
+    console.log(`handleSubmitJwtAuth completed`);
   };
 
   render() {
@@ -78,7 +62,12 @@ export default class LoginForm extends Component {
         </div>
         <div className="passwordInput">
           <label htmlFor="password">Password</label>
-          <input type="password" name="password" id="password" />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            value="Test123!"
+          />
         </div>
         <div className="buttons">
           <button type="submit" className="primary">

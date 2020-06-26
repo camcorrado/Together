@@ -6,22 +6,19 @@ export default class LoginPage extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
-    userProfile: [],
+    userProfile: {},
     history: {
       push: () => {},
     },
   };
 
   handleLoginSuccess = () => {
-    if (this.context.userProfile === undefined) {
-      console.log("no profile");
-      this.props.history.push("/createprofile");
-    } else {
-      this.props.history.push("/grid");
-    }
+    console.log(`handleLoginSuccess ran`);
+    this.props.history.push("/grid");
   };
 
   handleNoProfile = () => {
+    console.log(`handleNoProfile ran`);
     this.props.history.push("/createprofile");
   };
 

@@ -16,28 +16,36 @@ export default class SignUpForm extends Component {
     error: null,
   };
 
-  handleSubmit = async (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
     const { firstName, lastName, email, password } = e.target;
     this.setState({ error: null });
 
-    await AuthApiService.postUser({
+    AuthApiService.postUser({
       email: email.value,
       password: password.value,
       full_name: `${firstName.value} ${lastName.value}`,
-    }).catch((res) => {
-      this.setState({ error: res.error });
-    });
-
-    await AuthApiService.postLogin({
-      email: email.value,
-      password: password.value,
     })
-      .then((res) => {
-        TokenService.saveAuthToken(res.authToken);
-        this.context.setUserInfo();
+      .then(() => {
+        AuthApiService.postLogin({
+          email: email.value,
+          password: password.value,
+        })
+          .then((res) => {
+            TokenService.saveAuthToken(res.authToken);
+          })
+          .then(() => {
+            this.context.setUserInfo();
+          })
+          .then(() => {
+            email.value = "";
+            password.value = "";
+            this.props.onSignUpSuccess();
+          })
+          .catch((res) => {
+            this.setState({ error: res.error });
+          });
       })
-      .then(this.props.onSignUpSuccess())
       .catch((res) => {
         this.setState({ error: res.error });
       });
