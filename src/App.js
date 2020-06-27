@@ -254,7 +254,10 @@ class App extends Component {
             <PrivateRoute path={"/editprofile"} component={EditProfilePage} />
             <PrivateRoute path={"/grid"} component={Grid} />
             <PrivateRoute path={"/messenger"} component={Messenger} />
-            <PrivateRoute path={"/userprofile"} component={UserProfile} />
+            <PrivateRoute
+              path={"/userprofile/:profileId"}
+              component={UserProfile}
+            />
             <Route component={NotFoundPage} />
           </Switch>
         </main>

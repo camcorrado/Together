@@ -1,5 +1,6 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
+import { Link } from "react-router-dom";
 import ProfileIcon from "./ProfileIcon";
 import React, { Component } from "react";
 
@@ -10,9 +11,11 @@ export default class Grid extends Component {
     userProfile: {},
     nearbyProfiles: [],
     logOut: () => {},
+    refreshProfile: () => {},
   };
 
   componentDidMount() {
+    this.context.refreshProfile();
     fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "GET",
       headers: {
@@ -44,22 +47,34 @@ export default class Grid extends Component {
     this.context.logOut();
   };
 
-  handleClickProfile = (e) => {
-    e.preventDefault();
-    this.props.history.push("/userprofile");
-  };
-
   render() {
-    return this.context.nearbyProfiles.length > 0 ? (
+    const url = `/userprofile/${this.context.userProfile.id}`;
+    return this.context.nearbyProfiles.length > 0 &&
+      this.context.userProfile.id ? (
       <section className="grid">
-        <section className="nav">
-          <nav role="navigation">
-            <button onClick={this.handleClickEditProfile}>Edit Profile</button>
-            <button onClick={this.handleClickLogOut}>Log Out</button>
-          </nav>
-        </section>
+        <nav role="navigation">
+          <button onClick={this.handleClickEditProfile}>Edit Profile</button>
+          <button onClick={this.handleClickLogOut}>Log Out</button>
+        </nav>
         <section className="profiles">
-          <ul>
+          <ul className="gridProfiles">
+            <li>
+              <Link to={url}>
+                <section className="profileIcon">
+                  <img
+                    src={this.context.userProfile.profile_pic}
+                    alt={this.context.userProfile.username + `'s profile pic`}
+                    className="profilePicGrid"
+                  />
+                  <h4 className="username">
+                    {this.context.userProfile.username}
+                  </h4>
+                  <h4 className="interests">
+                    {this.context.userProfile.interests.join(", ")}
+                  </h4>
+                </section>
+              </Link>
+            </li>
             {this.context.nearbyProfiles.map((profile) => (
               <li key={profile.id}>
                 <ProfileIcon
@@ -72,12 +87,7 @@ export default class Grid extends Component {
               </li>
             ))}
           </ul>
-          <p>
-            Grid of profiles, displaying profile pics and emoji overlay to show
-            interests
-          </p>
         </section>
-        <button onClick={this.handleClickProfile}>View Profile Test</button>
       </section>
     ) : (
       <h2>Loading Profiles...</h2>
