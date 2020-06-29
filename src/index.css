@@ -65,6 +65,7 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+nav a,
 .buttons a,
 button {
   padding: 8px 25px;
@@ -87,11 +88,19 @@ button.primary {
   color: white;
 }
 
+nav a:hover,
 .buttons a:hover,
-button:hover {
+button:hover,
+button.favorite:hover {
   border-bottom-width: 1px;
   background-color: #333;
   color: white;
+}
+
+button.favorite {
+  background-color: yellow;
+  border-bottom: 3px solid darkgoldenrod;
+  color: black;
 }
 
 nav {

@@ -25,6 +25,8 @@ export default class EditProfilepage extends Component {
     interests: null,
     pronouns: null,
     zipcode: null,
+    blocked_profiles: null,
+    favorited_profiles: null,
   };
 
   handleChangeUsername = (value) => {
@@ -57,10 +59,6 @@ export default class EditProfilepage extends Component {
     });
   };
 
-  handleClickCancel = () => {
-    this.props.history.push("/userprofile");
-  };
-
   handleEditSuccess = () => {
     const {
       id,
@@ -71,6 +69,8 @@ export default class EditProfilepage extends Component {
       interests,
       pronouns,
       zipcode,
+      blocked_profiles,
+      favorited_profiles,
     } = this.state;
     const newProfile = {
       id,
@@ -81,6 +81,8 @@ export default class EditProfilepage extends Component {
       interests,
       pronouns,
       zipcode,
+      blocked_profiles,
+      favorited_profiles,
     };
     this.setState({ error: null });
     console.log(newProfile);
@@ -99,7 +101,7 @@ export default class EditProfilepage extends Component {
         }
       })
       .then(this.context.editProfile(newProfile))
-      .then(this.props.history.push("/UserProfile"))
+      .then(this.props.history.push(`/userprofile/${this.state.id}`))
       .catch((res) => {
         this.setState({ error: res.error });
       });
@@ -122,6 +124,8 @@ export default class EditProfilepage extends Component {
       interests: this.context.userProfile.interests,
       pronouns: this.context.userProfile.pronouns,
       zipcode: this.context.userProfile.zipcode,
+      blocked_profiles: this.context.userProfile.blocked_profiles,
+      favorited_profiles: this.context.userProfile.favorited_profiles,
     });
     console.log(this.state);
   }
@@ -151,6 +155,7 @@ export default class EditProfilepage extends Component {
       pronouns,
       zipcode,
     };
+    console.log({ profile });
     return (
       <section className="EditProfilePage">
         <header>
@@ -164,7 +169,6 @@ export default class EditProfilepage extends Component {
           onProfilePicChange={this.handleChangeProfilePic}
           onPronounsChange={this.handleChangePronouns}
           onZipcodeChange={this.handleChangeZipcode}
-          onClickCancel={this.handleClickCancel}
         />
       </section>
     );

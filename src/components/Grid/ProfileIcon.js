@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
 
-export default class Grid extends Component {
+export default class ProfileIcon extends Component {
   render() {
     const url = `/userProfile/${this.props.id}`;
     return (

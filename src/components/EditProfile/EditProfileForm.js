@@ -1,5 +1,6 @@
 import ApiContext from "../../ApiContext";
 import Checkbox from "../Checkbox/Checkbox";
+import { Link } from "react-router-dom";
 import React, { Component } from "react";
 
 export default class EditProfileForm extends Component {
@@ -26,13 +27,33 @@ export default class EditProfileForm extends Component {
     }
   };
 
-  createCheckbox = (label) => (
-    <Checkbox
-      label={label}
-      handleCheckboxChange={this.toggleCheckbox}
-      key={label}
-    />
-  );
+  createCheckbox = (label) => {
+    console.log(this.props.profile.interests);
+    console.log({ label });
+    for (let i = 0; i < this.props.profile.interests.length; i++) {
+      if (label === this.props.profile.interests[i]) {
+        console.log("true");
+        return (
+          <Checkbox
+            label={label}
+            handleCheckboxChange={this.toggleCheckbox}
+            key={label}
+            checked={true}
+          />
+        );
+      } else {
+        console.log("false");
+        return (
+          <Checkbox
+            label={label}
+            handleCheckboxChange={this.toggleCheckbox}
+            key={label}
+            checked={false}
+          />
+        );
+      }
+    }
+  };
 
   createCheckboxes = () => {
     this.context.interestOptions.map(this.createCheckbox);
@@ -73,7 +94,10 @@ export default class EditProfileForm extends Component {
       pronouns,
       zipcode,
     } = this.props.profile;
-    return (
+    const url = `/userprofile/${this.context.userProfile.id}`;
+    console.log({ interests });
+    console.log(this.context.interestOptions);
+    return this.props.profile.username ? (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
         <div role="alert">
           {error && <p className="red">{error.message}</p>}
@@ -155,9 +179,11 @@ export default class EditProfileForm extends Component {
           <button className="primary" type="submit" onClick={this.handleSubmit}>
             Submit
           </button>
-          <button onClick={() => this.props.onClickCancel()}>Cancel</button>
+          <Link to={url}>Cancel</Link>
         </div>
       </form>
+    ) : (
+      <h2>Loading Profile Information...</h2>
     );
   }
 }

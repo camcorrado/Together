@@ -1,19 +1,22 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
 import React from "react";
+import TokenService from "../../services/token-service";
 
 class UserProfile extends React.Component {
   static contextType = ApiContext;
 
   static defaultProps = {
     userProfile: {},
+    refreshProfile: () => {},
   };
 
   state = {
     profile: {},
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.context.refreshProfile();
     const profileId = this.props.match.params.profileId;
     fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
       method: "GET",
@@ -46,6 +49,161 @@ class UserProfile extends React.Component {
   handleClickEdit = (e) => {
     e.preventDefault();
     this.props.history.push(`/EditProfile/${this.state.profile.id}`);
+  };
+
+  handleClickFavorite = async (e) => {
+    e.preventDefault();
+
+    const favoritedProfiles = [
+      ...this.context.userProfile.favorited_profiles,
+      this.state.profile.id,
+    ];
+
+    const {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      blocked_profiles,
+    } = this.context.userProfile;
+    const updatedProfile = {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      blocked_profiles,
+      favorited_profiles: favoritedProfiles,
+    };
+
+    fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updatedProfile),
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        authorization: `bearer ${TokenService.getAuthToken()}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
+      })
+      .then(this.context.editProfile(updatedProfile))
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
+  };
+
+  handleClickUnfavorite = async (e) => {
+    e.preventDefault();
+
+    const favoritedProfiles = this.context.userProfile.favorited_profiles.filter(
+      (profileId) => profileId !== this.state.profile.id
+    );
+    console.log({ favoritedProfiles });
+    const {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      blocked_profiles,
+    } = this.context.userProfile;
+    const updatedProfile = {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      blocked_profiles,
+      favorited_profiles: favoritedProfiles,
+    };
+
+    fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updatedProfile),
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        authorization: `bearer ${TokenService.getAuthToken()}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
+      })
+      .then(this.context.editProfile(updatedProfile))
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
+  };
+
+  handleClickBlock = async (e) => {
+    e.preventDefault();
+    const blockedProfiles = [
+      ...this.context.userProfile.blocked_profiles,
+      this.state.profile.id,
+    ];
+
+    const {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      favorited_profiles,
+    } = this.context.userProfile;
+    const updatedProfile = {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      zipcode,
+      blocked_profiles: blockedProfiles,
+      favorited_profiles,
+    };
+
+    fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updatedProfile),
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        authorization: `bearer ${TokenService.getAuthToken()}`,
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
+      })
+      .then(this.context.editProfile(updatedProfile))
+      .then(this.props.history.push(`/grid`))
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
   };
 
   render() {
@@ -118,6 +276,24 @@ class UserProfile extends React.Component {
               onClick={() => this.props.history.push("/messenger")}
             >
               Message
+            </button>
+            {this.context.userProfile.favorited_profiles.includes(
+              this.state.profile.id
+            ) === true ? (
+              <button
+                className="unfavorite"
+                onClick={this.handleClickUnfavorite}
+              >
+                Unfavorite
+              </button>
+            ) : (
+              <button className="favorite" onClick={this.handleClickFavorite}>
+                Favorite
+              </button>
+            )}
+
+            <button className="block" onClick={this.handleClickBlock}>
+              Block
             </button>
             <button onClick={() => this.props.history.push("/grid")}>
               Back

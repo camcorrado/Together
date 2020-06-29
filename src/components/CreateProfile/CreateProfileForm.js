@@ -58,6 +58,8 @@ export default class CreateProfileForm extends Component {
       interests: interests,
       pronouns: pronouns.value,
       zipcode: zipcode.value,
+      blocked_profiles: [],
+      favorited_profiles: [],
     };
 
     console.log({ newProfile });

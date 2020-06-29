@@ -8,7 +8,7 @@ import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
 import IdleService from "./services/idle-service";
 import LoginPage from "./components/Login/LoginPage";
-import Messenger from "./components/Messenger/Messenger";
+import Messenger from "./components/Messenger/MessageList";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import PublicOnlyRoute from "./components/Utils/PublicOnlyRoute";
 import PrivateRoute from "./components/Utils/PrivateRoute";
@@ -31,11 +31,12 @@ class App extends Component {
     nearbyProfiles: [],
     interestOptions: [
       "Activism",
+      "Art",
       "Drag",
       "Gaming",
+      "Nightlife",
       "Reading",
       "Sports",
-      "Nightlife",
     ],
   };
 
@@ -147,7 +148,7 @@ class App extends Component {
         console.log({ data });
         console.log(`handleSetProfileInfo pt 2`);
         const profileInfo = await data.filter((profile) => {
-          return profile.user_id == id;
+          return profile.user_id === id;
         });
         this.setState({
           userProfile: profileInfo.pop(),
@@ -162,8 +163,20 @@ class App extends Component {
 
   handleSetNearbyProfiles = (data) => {
     console.log(`handleSetNearbyProfiles ran`);
+    console.log(this.state.userProfile.blocked_profiles);
+    let filteredProfiles = [];
+    data.filter((profile) => {
+      console.log(profile);
+      if (
+        this.state.userProfile.blocked_profiles.includes(profile.id) === false
+      ) {
+        console.log(profile.id);
+
+        filteredProfiles.push(profile);
+      }
+    });
     this.setState({
-      nearbyProfiles: data,
+      nearbyProfiles: filteredProfiles,
     });
     console.log(this.state.nearbyProfiles);
     console.log(`handleSetNearbyProfiles completed`);
