@@ -31,17 +31,31 @@ class App extends Component {
     nearbyProfiles: [],
     interestOptions: [
       "Activism",
+      "Anime",
       "Art",
+      "Cooking",
+      "Crafting",
       "Drag",
+      "Fashion",
+      "Fitness",
+      "Food",
       "Gaming",
+      "Gardening",
+      "Hiking/Camping/Outdoors",
+      "Movies",
+      "Music",
       "Nightlife",
+      "Pets/Animals",
       "Reading",
+      "Spirituality",
       "Sports",
+      "Tech",
+      "Theater",
+      "Travel",
     ],
   };
 
   componentDidMount() {
-    console.log(`componentWillUnmount began`);
     this.refreshProfile();
     /*
       set the function (callback) to call when a user goes idle
@@ -68,11 +82,9 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
-    console.log(`componentDidMount completed`);
   }
 
   componentWillUnmount() {
-    console.log(`componentWillUnmount began`);
     /*
       when the app unmounts,
       stop the event listeners that auto logout (clear the token from storage)
@@ -82,11 +94,9 @@ class App extends Component {
       and remove the refresh endpoint request
     */
     TokenService.clearCallbackBeforeExpiry();
-    console.log(`componentWillUnmount completed`);
   }
 
   logoutFromIdle = () => {
-    console.log(`logoutFromIdle began`);
     /* remove the token from localStorage */
     TokenService.clearAuthToken();
     /* remove any queued calls to the refresh endpoint */
@@ -98,11 +108,9 @@ class App extends Component {
       so we need to tell React to rerender
     */
     this.forceUpdate();
-    console.log(`logoutFromIdle completed`);
   };
 
   handleSetUserInfo = async () => {
-    console.log(`handleSetUserInfo pt 1`);
     const authToken = TokenService.getAuthToken();
     await fetch(`${config.API_ENDPOINT}/users`, {
       method: "GET",
@@ -116,21 +124,16 @@ class App extends Component {
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
       .then((user) => {
-        console.log(`handleSetUserInfo pt 2`);
         this.setState({
           userInfo: user,
         });
-        console.log(this.state.userInfo);
       })
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    console.log(`handleSetUserInfo completed`);
   };
 
   handleSetProfileInfo = async (id) => {
-    console.log(`handleSetProfileInfo pt 1`);
-    console.log({ id });
     await fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "GET",
       headers: {
@@ -145,54 +148,39 @@ class App extends Component {
         return res.json();
       })
       .then(async (data) => {
-        console.log({ data });
-        console.log(`handleSetProfileInfo pt 2`);
         const profileInfo = await data.filter((profile) => {
           return profile.user_id === id;
         });
         this.setState({
           userProfile: profileInfo.pop(),
         });
-        console.log(this.state.userProfile);
       })
       .catch((error) => {
         console.error(error);
       });
-    console.log(`handleSetProfileInfo completed`);
   };
 
   handleSetNearbyProfiles = (data) => {
-    console.log(`handleSetNearbyProfiles ran`);
-    console.log(this.state.userProfile.blocked_profiles);
     let filteredProfiles = [];
     data.filter((profile) => {
-      console.log(profile);
       if (
         this.state.userProfile.blocked_profiles.includes(profile.id) === false
       ) {
-        console.log(profile.id);
-
         filteredProfiles.push(profile);
       }
     });
     this.setState({
       nearbyProfiles: filteredProfiles,
     });
-    console.log(this.state.nearbyProfiles);
-    console.log(`handleSetNearbyProfiles completed`);
   };
 
   handleEditProfile = (data) => {
-    console.log(`handleEditProfile ran`);
     this.setState({
       userProfile: data,
     });
-    console.log(this.state.userProfile);
-    console.log(`handleEditProfile completed`);
   };
 
   handleLogOut = async () => {
-    console.log(`handleLogOut ran`);
     TokenService.clearAuthToken();
     /* when logging out, clear the callbacks to the refresh api and idle auto logout */
     TokenService.clearCallbackBeforeExpiry();
@@ -202,15 +190,11 @@ class App extends Component {
       userProfile: {},
       nearbyProfiles: [],
     });
-    console.log(this.state);
-    console.log(`state cleared`);
 
     this.props.history.push("/");
-    console.log(`handleLogOut completed`);
   };
 
   refreshProfile = async () => {
-    console.log(`refreshProfile began`);
     const authToken = TokenService.getAuthToken();
     if (authToken) {
       await fetch(`${config.API_ENDPOINT}/users`, {
@@ -228,12 +212,10 @@ class App extends Component {
           return res.json();
         })
         .then(async (user) => {
-          console.log(`refreshProfile setting user and profile info`);
           await this.handleSetUserInfo(user);
           await this.handleSetProfileInfo(user.id);
         });
     }
-    console.log(`refreshProfile completed`);
   };
 
   render() {
@@ -249,7 +231,6 @@ class App extends Component {
       logOut: this.handleLogOut,
       refreshProfile: this.refreshProfile,
     };
-    const { error } = this.state;
     return (
       <ApiContext.Provider value={value}>
         <main className="App">

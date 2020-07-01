@@ -28,11 +28,8 @@ export default class EditProfileForm extends Component {
   };
 
   createCheckbox = (label) => {
-    console.log(this.props.profile.interests);
-    console.log({ label });
     for (let i = 0; i < this.props.profile.interests.length; i++) {
       if (label === this.props.profile.interests[i]) {
-        console.log("true");
         return (
           <Checkbox
             label={label}
@@ -42,7 +39,6 @@ export default class EditProfileForm extends Component {
           />
         );
       } else {
-        console.log("false");
         return (
           <Checkbox
             label={label}
@@ -95,8 +91,6 @@ export default class EditProfileForm extends Component {
       zipcode,
     } = this.props.profile;
     const url = `/userprofile/${this.context.userProfile.id}`;
-    console.log({ interests });
-    console.log(this.context.interestOptions);
     return this.props.profile.username ? (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
         <div role="alert">

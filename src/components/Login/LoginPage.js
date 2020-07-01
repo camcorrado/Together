@@ -13,12 +13,10 @@ export default class LoginPage extends Component {
   };
 
   handleLoginSuccess = () => {
-    console.log(`handleLoginSuccess ran`);
     this.props.history.push("/grid");
   };
 
   handleNoProfile = () => {
-    console.log(`handleNoProfile ran`);
     this.props.history.push("/createprofile");
   };
 

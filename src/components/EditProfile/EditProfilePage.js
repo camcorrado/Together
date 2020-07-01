@@ -85,7 +85,6 @@ export default class EditProfilepage extends Component {
       favorited_profiles,
     };
     this.setState({ error: null });
-    console.log(newProfile);
     fetch(`${config.API_ENDPOINT}/profiles/${id}`, {
       method: "PATCH",
       body: JSON.stringify(newProfile),
@@ -108,13 +107,11 @@ export default class EditProfilepage extends Component {
   };
 
   async componentDidMount() {
-    console.log(`componentDidMount began`);
     await this.context.refreshProfile();
     this.updateState();
   }
 
   updateState() {
-    console.log(`updateState began`);
     this.setState({
       id: this.context.userProfile.id,
       user_id: this.context.userProfile.user_id,
@@ -127,7 +124,6 @@ export default class EditProfilepage extends Component {
       blocked_profiles: this.context.userProfile.blocked_profiles,
       favorited_profiles: this.context.userProfile.favorited_profiles,
     });
-    console.log(this.state);
   }
 
   componentDidUpdate() {
@@ -155,7 +151,6 @@ export default class EditProfilepage extends Component {
       pronouns,
       zipcode,
     };
-    console.log({ profile });
     return (
       <section className="EditProfilePage">
         <header>

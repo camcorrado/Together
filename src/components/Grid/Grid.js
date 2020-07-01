@@ -110,7 +110,7 @@ export default class Grid extends Component {
           </nav>
           <section className="profiles">
             <ul className="gridProfiles">
-              <li>
+              <li className="profile">
                 <Link to={url}>
                   <section className="profileIcon">
                     <img
@@ -130,7 +130,7 @@ export default class Grid extends Component {
               {this.state.profilesToDisplay
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (
-                  <li key={profile.id}>
+                  <li key={profile.id} className="profile">
                     <ProfileIcon
                       id={profile.id}
                       user_id={profile.user_id}
@@ -206,12 +206,17 @@ export default class Grid extends Component {
       this.context.userProfile.id
     ) {
       this.context.nearbyProfiles.filter((profile) => {
+        profile.count = 0;
         profile.interests.forEach((interest) => {
           if (this.context.userProfile.interests.includes(interest) === true) {
+            profile.count++;
             filteredProfiles.push(profile);
           }
         });
       });
+      const uniqueSet = new Set(filteredProfiles);
+      const profilesArray = [...uniqueSet];
+      profilesArray.sort((a, b) => b.count - a.count);
       return (
         <section className="grid">
           <nav role="navigation">
@@ -239,7 +244,7 @@ export default class Grid extends Component {
                   </section>
                 </Link>
               </li>
-              {filteredProfiles
+              {profilesArray
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (
                   <li key={profile.id}>

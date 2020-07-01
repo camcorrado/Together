@@ -6,19 +6,24 @@ export default class CreateProfilePage extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
-    //refreshProfile: () => {},
+    userInfo: {},
+    userProfile: {},
+    refreshProfile: () => {},
     history: {
       push: () => {},
     },
   };
 
   handleCreateSuccess = () => {
-    console.log(`handleCreateSuccess began`);
     this.props.history.push("/grid");
   };
-
-  /*componentDidMount() {
-    this.context.refreshProfile();
+  /*
+  async componentDidMount() {
+    await this.context.refreshProfile();
+    if (this.context.userProfile.id) {
+      console.log("true");
+      this.props.history.push("/editprofile");
+    }
   }
 */
   render() {

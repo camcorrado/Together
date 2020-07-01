@@ -223,7 +223,11 @@ class UserProfile extends React.Component {
             <h1>{username}</h1>
           </section>
           <section className="profilePic">
-            <p>{profile_pic}</p>
+            <img
+              src={profile_pic}
+              alt={this.props.username + `'s profile pic`}
+              className="profilePic"
+            />
           </section>
           <section className="interests">
             <ul>
@@ -256,7 +260,11 @@ class UserProfile extends React.Component {
             <h1>{username}</h1>
           </section>
           <section className="profilePic">
-            <p>{profile_pic}</p>
+            <img
+              src={profile_pic}
+              alt={this.props.username + `'s profile pic`}
+              className="profilePic"
+            />
           </section>
           <section className="interests">
             <ul>

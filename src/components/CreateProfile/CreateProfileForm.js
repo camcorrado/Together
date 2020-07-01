@@ -19,12 +19,10 @@ export default class CreateProfileForm extends Component {
   };
 
   componentDidMount = () => {
-    console.log(`componentDidMount began`);
     this.selectedCheckboxes = new Set();
   };
 
   toggleCheckbox = (label) => {
-    console.log(`toggleCheckbox began`);
     if (this.selectedCheckboxes.has(label)) {
       this.selectedCheckboxes.delete(label);
     } else {
@@ -45,7 +43,6 @@ export default class CreateProfileForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(`handleSubmit began`);
     const interests = [];
     const { username, bio, profile_pic, pronouns, zipcode } = e.target;
     for (const checkbox of this.selectedCheckboxes) {
@@ -61,8 +58,6 @@ export default class CreateProfileForm extends Component {
       blocked_profiles: [],
       favorited_profiles: [],
     };
-
-    console.log({ newProfile });
 
     this.setState({ error: null });
 
@@ -83,10 +78,8 @@ export default class CreateProfileForm extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    console.log(this.context.userInfo);
     await this.context.setProfileInfo(this.context.userInfo.id);
     this.props.onCreateSuccess();
-    console.log(`handleSubmit completed`);
   };
 
   render() {

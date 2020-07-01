@@ -15,7 +15,6 @@ const AuthApiService = {
     );
   },
   postLogin(credentials) {
-    console.log(credentials);
     return fetch(`${config.API_ENDPOINT}/auth/login`, {
       method: "POST",
       headers: {
@@ -39,7 +38,6 @@ const AuthApiService = {
         TokenService.queueCallbackBeforeExpiry(() => {
           AuthApiService.postRefreshToken();
         });
-        console.log(`login success`);
         return res;
       });
   },
@@ -66,7 +64,6 @@ const AuthApiService = {
         return res;
       })
       .catch((err) => {
-        console.log("refresh token request error");
         console.error(err);
       });
   },

@@ -21,7 +21,6 @@ export default class LoginForm extends Component {
 
   handleSubmitJwtAuth = (ev) => {
     ev.preventDefault();
-    console.log(`handleSubmitJwtAuth began`);
     this.setState({ error: null });
     const { email, password } = ev.target;
     AuthApiService.postLogin({
@@ -29,16 +28,13 @@ export default class LoginForm extends Component {
       password: password.value,
     })
       .then(async (res) => {
-        console.log(`handleSubmitJwtAuth pt 1`);
         TokenService.saveAuthToken(res.authToken);
         await this.context.setUserInfo();
       })
       .then(async () => {
-        console.log(`handleSubmitJwtAuth pt 2`);
         await this.context.setProfileInfo(this.context.userInfo.id);
         email.value = "";
         password.value = "";
-        console.log(this.context.userProfile);
         if (!this.context.userProfile) {
           this.props.onNoProfile();
         } else {
@@ -48,7 +44,6 @@ export default class LoginForm extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    console.log(`handleSubmitJwtAuth completed`);
   };
 
   render() {

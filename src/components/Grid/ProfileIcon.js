@@ -8,7 +8,7 @@ export default class ProfileIcon extends Component {
       <Link to={url} className="profileIconLink">
         <section className="profileIcon">
           <img
-            src={this.props.profilePic}
+            src={this.props.profile_pic}
             alt={this.props.username + `'s profile pic`}
             className="profilePicGrid"
           />
