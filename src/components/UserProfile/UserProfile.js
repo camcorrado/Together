@@ -208,13 +208,14 @@ class UserProfile extends React.Component {
 
   render() {
     const {
+      id,
       username,
       bio,
       profile_pic,
       interests = [],
       pronouns,
-      zipcode,
     } = this.state.profile;
+    console.log(interests);
 
     if (this.state.profile.id === this.context.userProfile.id) {
       return this.state.profile.id ? (
@@ -278,10 +279,13 @@ class UserProfile extends React.Component {
           <section className="bio">
             <p>{bio}</p>
           </section>
+          <section className="pronouns">
+            <p>{pronouns}</p>
+          </section>
           <section className="buttons">
             <button
               className="primary"
-              onClick={() => this.props.history.push("/messenger")}
+              onClick={() => this.props.history.push(`/message/${id}`)}
             >
               Message
             </button>

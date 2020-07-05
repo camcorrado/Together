@@ -3,11 +3,13 @@ import AuthApiService from "./services/auth-api-service";
 import config from "./config";
 import CreateProfilePage from "./components/CreateProfile/CreateProfilePage";
 import EditProfilePage from "./components/EditProfile/EditProfilePage";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Grid from "./components/Grid/Grid";
 import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
 import IdleService from "./services/idle-service";
 import LoginPage from "./components/Login/LoginPage";
+import Message from "./components/Messenger/Message";
 import Messenger from "./components/Messenger/MessageList";
 import NotFoundPage from "./components/NotFoundPage/NotFoundPage";
 import PublicOnlyRoute from "./components/Utils/PublicOnlyRoute";
@@ -15,8 +17,8 @@ import PrivateRoute from "./components/Utils/PrivateRoute";
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import SignUpPage from "./components/SignUp/SignUpPage";
-import UserProfile from "./components/UserProfile/UserProfile";
 import TokenService from "./services/token-service";
+import UserProfile from "./components/UserProfile/UserProfile";
 
 class App extends Component {
   static defaultProps = {
@@ -53,9 +55,11 @@ class App extends Component {
       "Theater",
       "Travel",
     ],
+    sortBy: "View All",
   };
 
   componentDidMount() {
+    console.log(`componentDidMount App ran`);
     this.refreshProfile();
     /*
       set the function (callback) to call when a user goes idle
@@ -82,9 +86,11 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
+    console.log(`componentDidMount App completed`);
   }
 
   componentWillUnmount() {
+    console.log(`componentWillUnmount ran`);
     /*
       when the app unmounts,
       stop the event listeners that auto logout (clear the token from storage)
@@ -94,6 +100,7 @@ class App extends Component {
       and remove the refresh endpoint request
     */
     TokenService.clearCallbackBeforeExpiry();
+    console.log(`componentWillUnmount completed`);
   }
 
   logoutFromIdle = () => {
@@ -110,91 +117,9 @@ class App extends Component {
     this.forceUpdate();
   };
 
-  handleSetUserInfo = async () => {
-    const authToken = TokenService.getAuthToken();
-    await fetch(`${config.API_ENDPOINT}/users`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
-      .then((res) =>
-        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-      )
-      .then((user) => {
-        this.setState({
-          userInfo: user,
-        });
-      })
-      .catch((res) => {
-        this.setState({ error: res.error });
-      });
-  };
-
-  handleSetProfileInfo = async (id) => {
-    await fetch(`${config.API_ENDPOINT}/profiles`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
-      .then(async (data) => {
-        const profileInfo = await data.filter((profile) => {
-          return profile.user_id === id;
-        });
-        this.setState({
-          userProfile: profileInfo.pop(),
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  handleSetNearbyProfiles = (data) => {
-    let filteredProfiles = [];
-    data.filter((profile) => {
-      if (
-        this.state.userProfile.blocked_profiles.includes(profile.id) === false
-      ) {
-        filteredProfiles.push(profile);
-      }
-    });
-    this.setState({
-      nearbyProfiles: filteredProfiles,
-    });
-  };
-
-  handleEditProfile = (data) => {
-    this.setState({
-      userProfile: data,
-    });
-  };
-
-  handleLogOut = async () => {
-    TokenService.clearAuthToken();
-    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
-    TokenService.clearCallbackBeforeExpiry();
-    IdleService.unRegisterIdleResets();
-    await this.setState({
-      userInfo: {},
-      userProfile: {},
-      nearbyProfiles: [],
-    });
-
-    this.props.history.push("/");
-  };
-
   refreshProfile = async () => {
+    console.log(`refreshProfile ran`);
+
     const authToken = TokenService.getAuthToken();
     if (authToken) {
       await fetch(`${config.API_ENDPOINT}/users`, {
@@ -216,6 +141,110 @@ class App extends Component {
           await this.handleSetProfileInfo(user.id);
         });
     }
+    console.log(`refreshProfile completed`);
+  };
+
+  handleSetUserInfo = async () => {
+    console.log(`handleSetUserInfo ran`);
+
+    const authToken = TokenService.getAuthToken();
+    await fetch(`${config.API_ENDPOINT}/users`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
+      .then((user) => {
+        this.setState({
+          userInfo: user,
+        });
+      })
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
+    console.log(`handleSetUserInfo completed`);
+  };
+
+  handleSetProfileInfo = async (id) => {
+    console.log(`handleSetProfileInfo ran`);
+
+    await fetch(`${config.API_ENDPOINT}/profiles`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status);
+        }
+        return res.json();
+      })
+      .then(async (data) => {
+        const profileInfo = await data.filter((profile) => {
+          return profile.user_id === id;
+        });
+        this.setState({
+          userProfile: profileInfo.pop(),
+        });
+        this.handleSetNearbyProfiles(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    console.log(`handleSetProfileInfo completed`);
+  };
+
+  handleSetNearbyProfiles = (data) => {
+    console.log(`handleSetNearbyProfiles ran`);
+    console.log(data);
+    let filteredProfiles = data.filter((profile) => {
+      if (
+        this.state.userProfile.blocked_profiles.includes(profile.id) === false
+      ) {
+        return profile;
+      }
+    });
+    this.setState({
+      nearbyProfiles: filteredProfiles,
+    });
+    console.log(`handleSetNearbyProfiles completed`);
+  };
+
+  handleSortBy = (value) => {
+    this.setState({ sortBy: value });
+  };
+
+  handleEditProfile = (data) => {
+    console.log(`handleEditProfile ran`);
+
+    this.setState({
+      userProfile: data,
+    });
+    console.log(`handleEditProfile completed`);
+  };
+
+  handleLogOut = async () => {
+    console.log(`handleLogOut ran`);
+
+    TokenService.clearAuthToken();
+    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
+    TokenService.clearCallbackBeforeExpiry();
+    IdleService.unRegisterIdleResets();
+    await this.setState({
+      userInfo: {},
+      userProfile: {},
+      nearbyProfiles: [],
+    });
+
+    this.props.history.push("/");
+    console.log(`handleLogOut completed`);
   };
 
   render() {
@@ -224,12 +253,14 @@ class App extends Component {
       userProfile: this.state.userProfile,
       nearbyProfiles: this.state.nearbyProfiles,
       interestOptions: this.state.interestOptions,
+      sortBy: this.state.sortBy,
+      refreshProfile: this.refreshProfile,
       setUserInfo: this.handleSetUserInfo,
       setProfileInfo: this.handleSetProfileInfo,
       setNearbyProfiles: this.handleSetNearbyProfiles,
+      handleSortBy: this.handleSortBy,
       editProfile: this.handleEditProfile,
       logOut: this.handleLogOut,
-      refreshProfile: this.refreshProfile,
     };
     return (
       <ApiContext.Provider value={value}>
@@ -237,23 +268,26 @@ class App extends Component {
           <header className="App_Header">
             <Header />
           </header>
-          <Switch>
-            <Route exact path={"/"} component={Hero} />
-            <PublicOnlyRoute path={"/login"} component={LoginPage} />
-            <PublicOnlyRoute path={"/signup"} component={SignUpPage} />
-            <PrivateRoute
-              path={"/createprofile"}
-              component={CreateProfilePage}
-            />
-            <PrivateRoute path={"/editprofile"} component={EditProfilePage} />
-            <PrivateRoute path={"/grid"} component={Grid} />
-            <PrivateRoute path={"/messenger"} component={Messenger} />
-            <PrivateRoute
-              path={"/userprofile/:profileId"}
-              component={UserProfile}
-            />
-            <Route component={NotFoundPage} />
-          </Switch>
+          <ErrorBoundary>
+            <Switch>
+              <Route exact path={"/"} component={Hero} />
+              <PublicOnlyRoute path={"/login"} component={LoginPage} />
+              <PublicOnlyRoute path={"/signup"} component={SignUpPage} />
+              <PrivateRoute
+                path={"/createprofile"}
+                component={CreateProfilePage}
+              />
+              <PrivateRoute path={"/editprofile"} component={EditProfilePage} />
+              <PrivateRoute path={"/grid"} component={Grid} />
+              <PrivateRoute
+                path={"/userprofile/:profileId"}
+                component={UserProfile}
+              />
+              <PrivateRoute path={"/messenger"} component={Messenger} />
+              <PrivateRoute path={"/message"} component={Message} />
+              <Route component={NotFoundPage} />
+            </Switch>
+          </ErrorBoundary>
         </main>
       </ApiContext.Provider>
     );

@@ -12,8 +12,8 @@ export default class EditProfilepage extends Component {
     history: {
       push: () => {},
     },
-    editProfile: () => {},
     refreshProfile: () => {},
+    editProfile: () => {},
   };
 
   state = {
@@ -27,36 +27,45 @@ export default class EditProfilepage extends Component {
     zipcode: null,
     blocked_profiles: null,
     favorited_profiles: null,
+    error: null,
   };
 
-  handleChangeUsername = (value) => {
+  async componentDidMount() {
+    console.log(`componentDidMount page ran`);
+    await this.context.refreshProfile();
     this.setState({
-      username: value,
+      ...this.context.userProfile,
     });
+    console.log(`componentDidMount page completed`);
+  }
+
+  handleChangeUsername = (value) => {
+    console.log(`handleChangeUsername ran`);
+    this.setState({ username: value });
+    console.log(this.state);
+    console.log(`handleChangeUsername completed`);
   };
 
   handleChangeBio = (value) => {
-    this.setState({
-      bio: value,
-    });
+    console.log(`handleChangeBio ran`);
+    this.setState({ bio: value });
+    console.log(`handleChangeBio completed`);
+  };
+
+  handleChangeInterests = (value) => {
+    this.setState({ interests: value });
   };
 
   handleChangeProfilePic = (value) => {
-    this.setState({
-      profile_pic: value,
-    });
+    this.setState({ profile_pic: value });
   };
 
   handleChangePronouns = (value) => {
-    this.setState({
-      pronouns: value,
-    });
+    this.setState({ pronouns: value });
   };
 
   handleChangeZipcode = (value) => {
-    this.setState({
-      zipcode: value,
-    });
+    this.setState({ zipcode: value });
   };
 
   handleEditSuccess = () => {
@@ -100,72 +109,60 @@ export default class EditProfilepage extends Component {
         }
       })
       .then(this.context.editProfile(newProfile))
-      .then(this.props.history.push(`/userprofile/${this.state.id}`))
+      .then(
+        this.props.history.push(`/userprofile/${this.context.userProfile.id}`)
+      )
       .catch((res) => {
         this.setState({ error: res.error });
       });
   };
 
-  async componentDidMount() {
-    await this.context.refreshProfile();
-    this.updateState();
-  }
-
-  updateState() {
-    this.setState({
-      id: this.context.userProfile.id,
-      user_id: this.context.userProfile.user_id,
-      username: this.context.userProfile.username,
-      bio: this.context.userProfile.bio,
-      profile_pic: this.context.userProfile.profile_pic,
-      interests: this.context.userProfile.interests,
-      pronouns: this.context.userProfile.pronouns,
-      zipcode: this.context.userProfile.zipcode,
-      blocked_profiles: this.context.userProfile.blocked_profiles,
-      favorited_profiles: this.context.userProfile.favorited_profiles,
-    });
-  }
-
-  componentDidUpdate() {
-    if (this.state.id === null && this.context.userProfile.id) {
-      this.setState({
-        ...this.context.userProfile,
-      });
-    }
-  }
-
   render() {
     const {
+      id,
+      user_id,
       username,
       bio,
       profile_pic,
       interests,
       pronouns,
       zipcode,
+      blocked_profiles,
+      favorited_profiles,
+      error,
     } = this.state;
     const profile = {
+      id,
+      user_id,
       username,
       bio,
       profile_pic,
       interests,
       pronouns,
       zipcode,
+      blocked_profiles,
+      favorited_profiles,
     };
-    return (
+
+    return this.state.id ? (
       <section className="EditProfilePage">
         <header>
           <h1>Edit Your Profile</h1>
         </header>
+        <div role="alert">{error && <p className="red">{error}</p>}</div>
         <EditProfileForm
           profile={profile}
           onEditSuccess={this.handleEditSuccess}
           onUsernameChange={this.handleChangeUsername}
           onBioChange={this.handleChangeBio}
+          onInterestsChange={this.handleChangeInterests}
           onProfilePicChange={this.handleChangeProfilePic}
           onPronounsChange={this.handleChangePronouns}
           onZipcodeChange={this.handleChangeZipcode}
         />
       </section>
+    ) : (
+      <h2>Loading Profile Information...</h2>
     );
   }
 }

@@ -5,10 +5,12 @@ export default React.createContext({
   userProfile: {},
   nearbyProfiles: [],
   interestOptions: [],
+  sortBy: "",
   refreshProfile: () => {},
   setUserInfo: () => {},
   setProfileInfo: () => {},
   setNearbyProfiles: () => {},
+  handleSortBy: () => {},
   editProfile: () => {},
   logOut: () => {},
 });

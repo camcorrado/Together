@@ -17,15 +17,11 @@ export default class CreateProfilePage extends Component {
   handleCreateSuccess = () => {
     this.props.history.push("/grid");
   };
-  /*
-  async componentDidMount() {
-    await this.context.refreshProfile();
+  componentDidUpdate() {
     if (this.context.userProfile.id) {
-      console.log("true");
       this.props.history.push("/editprofile");
     }
   }
-*/
   render() {
     return (
       <section className="CreateProfilePage">

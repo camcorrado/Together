@@ -7,16 +7,23 @@ export default class EditProfileForm extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
+    userProfile: {},
     interestOptions: [],
     onEditSuccess: () => {},
   };
 
   state = {
-    error: null,
+    interests: [],
   };
 
   componentDidMount = () => {
+    console.log(`componentDidMount form ran`);
+
     this.selectedCheckboxes = new Set();
+    this.props.profile.interests.forEach((interest) =>
+      this.selectedCheckboxes.add(interest)
+    );
+    console.log(`componentDidMount form completed`);
   };
 
   toggleCheckbox = (label) => {
@@ -28,31 +35,18 @@ export default class EditProfileForm extends Component {
   };
 
   createCheckbox = (label) => {
-    for (let i = 0; i < this.props.profile.interests.length; i++) {
-      if (label === this.props.profile.interests[i]) {
-        return (
-          <Checkbox
-            label={label}
-            handleCheckboxChange={this.toggleCheckbox}
-            key={label}
-            checked={true}
-          />
-        );
-      } else {
-        return (
-          <Checkbox
-            label={label}
-            handleCheckboxChange={this.toggleCheckbox}
-            key={label}
-            checked={false}
-          />
-        );
-      }
-    }
+    return (
+      <Checkbox
+        label={label}
+        handleCheckboxChange={this.toggleCheckbox}
+        key={label}
+        isChecked={this.context.userProfile.interests.includes(label)}
+      />
+    );
   };
 
   createCheckboxes = () => {
-    this.context.interestOptions.map(this.createCheckbox);
+    return this.context.interestOptions.map(this.createCheckbox);
   };
 
   onUsernameChange = async (e) => {
@@ -75,27 +69,27 @@ export default class EditProfileForm extends Component {
     await this.props.onZipcodeChange(e.target.value);
   };
 
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault();
+    const interests = [];
+    for (const checkbox of this.selectedCheckboxes) {
+      await interests.push(checkbox);
+    }
+    this.props.onInterestsChange(interests);
     this.props.onEditSuccess();
   };
 
   render() {
-    const { error } = this.state;
     const {
       username,
       bio,
       profile_pic,
-      interests,
       pronouns,
       zipcode,
     } = this.props.profile;
     const url = `/userprofile/${this.context.userProfile.id}`;
-    return this.props.profile.username ? (
+    return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
-        <div role="alert">
-          {error && <p className="red">{error.message}</p>}
-        </div>
         <div className="usernameInput">
           <label htmlFor="username">Username</label>
           <input
@@ -176,8 +170,6 @@ export default class EditProfileForm extends Component {
           <Link to={url}>Cancel</Link>
         </div>
       </form>
-    ) : (
-      <h2>Loading Profile Information...</h2>
     );
   }
 }
