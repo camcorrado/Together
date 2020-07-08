@@ -78,14 +78,9 @@ export default class Grid extends Component {
       this.context.nearbyProfiles.length > 0 &&
       this.context.userProfile.id
     ) {
-      const filteredProfiles = [];
-      this.context.nearbyProfiles.filter((profile) => {
-        if (
-          this.context.userProfile.favorited_profiles.includes(profile.id) ===
-          true
-        )
-          filteredProfiles.push(profile);
-      });
+      const filteredProfiles = this.context.nearbyProfiles.filter((profile) =>
+        this.context.userProfile.favorited_profiles.includes(profile.id)
+      );
       return (
         <section className="grid">
           <nav role="navigation">
@@ -122,19 +117,14 @@ export default class Grid extends Component {
       this.context.nearbyProfiles.length > 0 &&
       this.context.userProfile.id
     ) {
-      const filteredProfiles = [];
-      this.context.nearbyProfiles.filter((profile) => {
-        profile.count = 0;
-        profile.interests.forEach((interest) => {
-          if (this.context.userProfile.interests.includes(interest) === true) {
-            profile.count++;
-            filteredProfiles.push(profile);
-          }
-        });
+      const filteredProfiles = this.context.nearbyProfiles.filter((profile) => {
+        profile.count = profile.interests.filter((interest) =>
+          this.context.userProfile.interests.includes(interest)
+        ).length;
+        return profile.count;
       });
-      const uniqueSet = new Set(filteredProfiles);
-      const profilesArray = [...uniqueSet];
-      profilesArray.sort((a, b) => b.count - a.count);
+
+      filteredProfiles.sort((a, b) => b.count - a.count);
       return (
         <section className="grid">
           <nav role="navigation">
@@ -148,7 +138,7 @@ export default class Grid extends Component {
               <li key={this.context.userProfile.id} className="profile">
                 <UserProfileIcon />
               </li>
-              {profilesArray
+              {filteredProfiles
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (
                   <li key={profile.id} className="profile">

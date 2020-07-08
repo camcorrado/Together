@@ -103,15 +103,16 @@ export default class EditProfilepage extends Component {
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-      })
-      .then(this.context.editProfile(newProfile))
-      .then(
-        this.props.history.push(`/userprofile/${this.context.userProfile.id}`)
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : true
       )
+      .then((resBody) => {
+        this.context.editProfile(newProfile, () => {
+          this.props.history.push(
+            `/userprofile/${this.context.userProfile.id}`
+          );
+        });
+      })
       .catch((res) => {
         this.setState({ error: res.error });
       });

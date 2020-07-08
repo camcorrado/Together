@@ -204,13 +204,9 @@ class App extends Component {
   handleSetNearbyProfiles = (data) => {
     console.log(`handleSetNearbyProfiles ran`);
     console.log(data);
-    let filteredProfiles = data.filter((profile) => {
-      if (
-        this.state.userProfile.blocked_profiles.includes(profile.id) === false
-      ) {
-        return profile;
-      }
-    });
+    let filteredProfiles = data.filter(
+      (profile) => !this.state.userProfile.blocked_profiles.includes(profile.id)
+    );
     this.setState({
       nearbyProfiles: filteredProfiles,
     });
@@ -221,12 +217,15 @@ class App extends Component {
     this.setState({ sortBy: value });
   };
 
-  handleEditProfile = (data) => {
+  handleEditProfile = (data, cb) => {
     console.log(`handleEditProfile ran`);
 
-    this.setState({
-      userProfile: data,
-    });
+    this.setState(
+      {
+        userProfile: data,
+      },
+      cb
+    );
     console.log(`handleEditProfile completed`);
   };
 
