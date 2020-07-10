@@ -8,11 +8,14 @@ class UserProfile extends React.Component {
 
   static defaultProps = {
     userProfile: {},
+    conversations: [],
     refreshProfile: () => {},
+    setConversations: () => {},
   };
 
   state = {
     profile: {},
+    error: null,
   };
 
   async componentDidMount() {
@@ -206,20 +209,52 @@ class UserProfile extends React.Component {
       });
   };
 
+  sendMessage = (e) => {
+    console.log(`send message ran`);
+    e.preventDefault();
+    if (this.context.conversations !== undefined) {
+      let convo = this.context.conversations.filter((conversation) =>
+        conversation.users.includes(this.state.profile.id)
+      );
+      this.props.history.push(`/conversation/${convo.id}`);
+    } else {
+      const users = [this.context.userProfile.id, this.state.profile.id];
+      const newConvo = { users };
+      fetch(`${config.API_ENDPOINT}/conversations`, {
+        method: "POST",
+        body: JSON.stringify(newConvo),
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          authorization: `bearer ${TokenService.getAuthToken()}`,
+        },
+      })
+        .then((res) => {
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json();
+        })
+        .then(async () => {
+          await this.context.setConversations();
+          let convo = this.context.conversations.filter((conversation) =>
+            conversation.users.includes(this.state.profile.id)
+          );
+          this.props.history.push(`/conversation/${convo.id}`);
+        })
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+    }
+  };
+
   render() {
-    const {
-      id,
-      username,
-      bio,
-      profile_pic,
-      interests = [],
-      pronouns,
-    } = this.state.profile;
-    console.log(interests);
+    const { profile, error } = this.state;
+    const { username, bio, profile_pic, interests = [], pronouns } = profile;
 
     if (this.state.profile.id === this.context.userProfile.id) {
       return this.state.profile.id ? (
         <section className="userProfile">
+          <div role="alert">
+            {error && <p className="red">{error.message}</p>}
+          </div>
           <section className="username">
             <h1>{username}</h1>
           </section>
@@ -283,10 +318,7 @@ class UserProfile extends React.Component {
             <p>{pronouns}</p>
           </section>
           <section className="buttons">
-            <button
-              className="primary"
-              onClick={() => this.props.history.push(`/message/${id}`)}
-            >
+            <button className="primary" onClick={this.sendMessage}>
               Message
             </button>
             {this.context.userProfile.favorited_profiles.includes(

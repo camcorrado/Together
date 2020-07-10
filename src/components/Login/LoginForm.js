@@ -42,6 +42,8 @@ export default class LoginForm extends Component {
         }
       })
       .catch((res) => {
+        console.log({ res });
+        console.log(res.error);
         this.setState({ error: res.error });
       });
   };
@@ -50,7 +52,9 @@ export default class LoginForm extends Component {
     const { error } = this.state;
     return (
       <form className="LoginForm" onSubmit={this.handleSubmitJwtAuth}>
-        <div role="alert">{error && <p className="red">{error}</p>}</div>
+        <div role="alert">
+          {error && <p className="red">{error.message}</p>}
+        </div>
         <div className="emailInput">
           <label htmlFor="email">Email</label>
           <input

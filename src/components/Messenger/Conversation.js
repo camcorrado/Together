@@ -72,7 +72,7 @@ export default class Conversation extends Component {
   }
 
   render() {
-    const url = `/message/${this.props.id}`;
+    const url = `/conversation/${this.props.id}`;
     return (
       <Link to={url} className="conversationLink">
         <section className="conversation">

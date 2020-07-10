@@ -31,6 +31,7 @@ class App extends Component {
     userInfo: {},
     userProfile: {},
     nearbyProfiles: [],
+    conversations: [],
     interestOptions: [
       "Activism",
       "Anime",
@@ -194,6 +195,7 @@ class App extends Component {
           userProfile: profileInfo.pop(),
         });
         this.handleSetNearbyProfiles(data);
+        this.handleSetConverations();
       })
       .catch((error) => {
         console.error(error);
@@ -211,6 +213,29 @@ class App extends Component {
       nearbyProfiles: filteredProfiles,
     });
     console.log(`handleSetNearbyProfiles completed`);
+  };
+
+  handleSetConverations = () => {
+    fetch(`${config.API_ENDPOINT}/conversations`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        Authorization: `Bearer ${TokenService.getAuthToken()}`,
+      },
+    })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
+      .then((conversations) => {
+        this.setState({
+          conversations: conversations,
+        });
+        console.log(this.state.conversations);
+      })
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
   };
 
   handleSortBy = (value) => {
@@ -251,12 +276,14 @@ class App extends Component {
       userInfo: this.state.userInfo,
       userProfile: this.state.userProfile,
       nearbyProfiles: this.state.nearbyProfiles,
+      conversations: this.state.conversations,
       interestOptions: this.state.interestOptions,
       sortBy: this.state.sortBy,
       refreshProfile: this.refreshProfile,
       setUserInfo: this.handleSetUserInfo,
       setProfileInfo: this.handleSetProfileInfo,
       setNearbyProfiles: this.handleSetNearbyProfiles,
+      setConversations: this.handleSetConverations,
       handleSortBy: this.handleSortBy,
       editProfile: this.handleEditProfile,
       logOut: this.handleLogOut,
