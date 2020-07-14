@@ -4,20 +4,91 @@
   padding: 0;
 }
 
+html,
+body {
+  height: 100%;
+  width: 100%;
+  min-width: 360px;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   font-size: 20px;
   color: #444;
   text-align: center;
   line-height: 1.5;
+}
+
+main {
   height: 100%;
+  overflow: scroll;
+}
+
+header {
+  padding: 45px 15px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+  margin: auto;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+form div {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 5px;
   width: 100%;
 }
 
-nav,
-footer {
-  padding: 1% 0;
-  background-color: #aaa;
+label {
+  flex: 1;
+  font-size: 20px;
+  text-align: right;
+  padding-right: 10px;
+}
+
+input {
+  flex: 3;
+  border: 1px solid darkgray;
+  font-size: 20px;
+}
+
+select {
+  background-color: white;
+  border: 1px solid darkgray;
+  text-align-last: center;
+}
+
+.bioInput,
+.interestsInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.bioInput label,
+.interestsInput label {
+  text-align: center;
+}
+
+textarea {
+  width: 100%;
+  margin: auto;
+  border: 1px solid darkgray;
+}
+
+.interestCheckboxes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.checkbox {
+  border: 1px solid red;
+  flex-basis: 40%;
 }
 
 nav {
@@ -26,20 +97,26 @@ nav {
   left: 0;
   right: 0;
   z-index: 10;
+  padding: 1% 0;
+  background-color: #aaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 120px;
 }
 
-header {
-  padding: 45px 15px;
+.sortByForm {
+  border: none;
+}
+
+#sortBy {
+  padding: 0px;
+  font-size: 0px;
 }
 
 section {
-  min-height: 200px;
-  padding: 30px 15px;
-  background-color: #bbb;
-}
-
-section:nth-child(even) {
-  background-color: #ddd;
+  border: 1px solid red;
+  padding: 15px;
 }
 
 p {
@@ -67,6 +144,7 @@ input[type="number"] {
 
 nav a,
 .buttons a,
+.button,
 button {
   padding: 8px 25px;
   border-radius: 5px;
@@ -91,7 +169,8 @@ button.primary {
 nav a:hover,
 .buttons a:hover,
 button:hover,
-button.favorite:hover {
+button.favorite:hover,
+button.block:hover {
   border-bottom-width: 1px;
   background-color: #333;
   color: white;
@@ -103,10 +182,10 @@ button.favorite {
   color: black;
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
+button.block {
+  background-color: red;
+  border-bottom: 3px solid darkred;
+  color: black;
 }
 
 .grid {
@@ -115,28 +194,32 @@ nav {
   padding: 0px;
 }
 
+.profiles {
+  margin-top: 120px;
+  padding: 0px;
+  overflow: scroll;
+}
+
 .gridProfiles {
   list-style: none;
   display: flex;
   flex-flow: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   align-content: flex-start;
   width: 100%;
 }
 
 .profile {
-  flex-basis: 25%;
+  height: 200px;
+  flex-basis: 50%;
   border: 2px solid black;
 }
 
 .profileIcon {
   width: 100%;
-  height: 300px;
+  height: 100%;
   position: relative;
   padding: 0px;
-  box-sizing: border-box;
-  flex: 1 0 25%;
-  text-align: center;
 }
 
 .profileIconLink {
@@ -153,18 +236,18 @@ nav {
   background-color: black;
 }
 
-.username {
-  top: 0px;
-  text-decoration: underline;
+.profilePic {
+  width: 100%;
+  height: 100%;
 }
 
-.interests {
-  color: black;
+.interestsGrid {
+  color: white;
   margin: auto;
   width: 100%;
   white-space: normal;
   position: absolute;
-  color: white;
+  background-color: black;
   max-height: 30px;
   min-height: 10px;
   left: 0px;
@@ -176,33 +259,84 @@ nav {
   overflow-x: scroll;
 }
 
-.wrapper {
-  top: 30px;
+.faIcon,
+.faIconGrid,
+.faIconProfile {
+  margin: 0px 5px;
   width: 100%;
 }
 
-.faIcon {
-  margin: 0px 5px;
-  width: 100%;
+.faIconGrid {
   filter: drop-shadow(0 0 0.15rem black);
 }
 
-.checkbox {
-  filter: none;
+.userProfile {
+  overflow: scroll;
+  max-width: 500px;
+  margin: auto;
 }
 
-.wrapper .text {
-  position: absolute;
-  bottom: 0px;
-  left: 50%;
-  visibility: hidden;
+.profilePic {
+  max-width: 500px;
+  margin: auto;
+}
+
+.faIconProfile {
+  cursor: pointer;
+}
+
+.interestsProfile ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  overflow-x: scroll;
+}
+
+.interestWrapper {
+  position: relative;
+}
+
+.interestText {
+  background-color: black;
   color: red;
+  position: absolute;
+  opacity: 0;
+  display: none;
 }
 
-.wrapper:hover .text {
-  visibility: visible;
+.interestText:hover {
+  opacity: 1;
+}
+
+.buttonsProfile {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0px;
+}
+
+.buttonsProfile button,
+.buttonsProfile a {
+  flex-basis: 40%;
+}
+
+.messageList > nav {
+  height: 100px;
+}
+
+.conversations {
+  margin-top: 100px;
 }
 
 .profilePicConversations {
   max-width: 50px;
+}
+
+@media (orientation: landscape) {
+  .profile {
+    flex-basis: 25%;
+  }
 }

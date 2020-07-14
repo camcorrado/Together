@@ -70,11 +70,9 @@ export default class CreateProfileForm extends Component {
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .catch((res) => {
         this.setState({ error: res.error });
       });
@@ -86,9 +84,7 @@ export default class CreateProfileForm extends Component {
     const { error } = this.state;
     return (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
-        <div role="alert">
-          {error && <p className="red">{error.message}</p>}
-        </div>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <div className="usernameInput">
           <label htmlFor="username">Username</label>
           <input
@@ -96,6 +92,7 @@ export default class CreateProfileForm extends Component {
             name="username"
             id="username"
             aria-required="true"
+            maxLength="12"
             required
           />
         </div>
@@ -116,6 +113,7 @@ export default class CreateProfileForm extends Component {
             id="bio"
             rows="15"
             aria-required="true"
+            maxLength="120"
             required
           ></textarea>
         </div>
@@ -130,6 +128,7 @@ export default class CreateProfileForm extends Component {
             list="pronouns"
             aria-required="true"
             required
+            maxLength="12"
             name="pronouns"
           />
           <datalist name="pronouns" id="pronouns">
@@ -141,10 +140,11 @@ export default class CreateProfileForm extends Component {
         <div className="zipcodeInput">
           <label htmlFor="zipcode">Zipcode</label>
           <input
-            type="number"
+            type="text"
             name="zipcode"
             id="zipcode"
-            maxLength="5"
+            pattern="[0-9]*"
+            maxlength="5"
             aria-required="true"
             required
           />

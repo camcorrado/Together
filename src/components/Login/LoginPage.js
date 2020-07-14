@@ -1,4 +1,5 @@
 import ApiContext from "../../ApiContext";
+import Header from "../Header/Header";
 import LoginForm from "./LoginForm";
 import React, { Component } from "react";
 
@@ -7,9 +8,6 @@ export default class LoginPage extends Component {
 
   static defaultProps = {
     userProfile: {},
-    history: {
-      push: () => {},
-    },
   };
 
   handleLoginSuccess = () => {
@@ -23,6 +21,9 @@ export default class LoginPage extends Component {
   render() {
     return (
       <section className="LoginPage">
+        <header className="App_Header">
+          <Header />
+        </header>
         <h2>Login</h2>
         <LoginForm
           onLoginSuccess={this.handleLoginSuccess}

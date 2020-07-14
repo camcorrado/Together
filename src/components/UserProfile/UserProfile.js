@@ -1,7 +1,38 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
+import { Link } from "react-router-dom";
 import React from "react";
 import TokenService from "../../services/token-service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faFistRaised,
+  faDragon,
+  faPaintBrush,
+  faUtensilSpoon,
+  faHammer,
+  faFemale,
+  faTshirt,
+  faDumbbell,
+  faPizzaSlice,
+  faGamepad,
+  faSeedling,
+  faCampground,
+  faFilm,
+  faMusic,
+  faMoon,
+  faCat,
+  faBookOpen,
+  faPrayingHands,
+  faFutbol,
+  faMicrochip,
+  faTheaterMasks,
+  faPlane,
+  faTimes,
+  faStar,
+  faComments,
+  faUndo,
+  faCog,
+} from "@fortawesome/free-solid-svg-icons";
 
 class UserProfile extends React.Component {
   static contextType = ApiContext;
@@ -19,35 +50,32 @@ class UserProfile extends React.Component {
   };
 
   async componentDidMount() {
+    this.setState({ error: null });
     await this.context.refreshProfile();
-    const profileId = this.props.match.params.profileId;
-    fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
+    } else {
+      const profileId = this.props.match.params.profileId;
+      fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
       })
-      .then((data) => {
-        this.setState({
-          profile: data,
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
+        .then((data) => {
+          this.setState({
+            profile: data,
+          });
+        })
+        .catch((res) => {
+          this.setState({ error: res.error });
         });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    }
   }
-
-  handleClickBack = (e) => {
-    e.preventDefault();
-    this.props.history.push("/Grid");
-  };
 
   handleClickEdit = (e) => {
     e.preventDefault();
@@ -56,7 +84,7 @@ class UserProfile extends React.Component {
 
   handleClickFavorite = async (e) => {
     e.preventDefault();
-
+    this.setState({ error: null });
     const favoritedProfiles = [
       ...this.context.userProfile.favorited_profiles,
       this.state.profile.id,
@@ -95,11 +123,9 @@ class UserProfile extends React.Component {
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then(this.context.editProfile(updatedProfile))
       .catch((res) => {
         this.setState({ error: res.error });
@@ -108,11 +134,10 @@ class UserProfile extends React.Component {
 
   handleClickUnfavorite = async (e) => {
     e.preventDefault();
-
+    this.setState({ error: null });
     const favoritedProfiles = this.context.userProfile.favorited_profiles.filter(
       (profileId) => profileId !== this.state.profile.id
     );
-    console.log({ favoritedProfiles });
     const {
       id,
       user_id,
@@ -146,11 +171,9 @@ class UserProfile extends React.Component {
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then(this.context.editProfile(updatedProfile))
       .catch((res) => {
         this.setState({ error: res.error });
@@ -159,6 +182,7 @@ class UserProfile extends React.Component {
 
   handleClickBlock = async (e) => {
     e.preventDefault();
+    this.setState({ error: null });
     const blockedProfiles = [
       ...this.context.userProfile.blocked_profiles,
       this.state.profile.id,
@@ -197,11 +221,9 @@ class UserProfile extends React.Component {
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then(this.context.editProfile(updatedProfile))
       .then(this.props.history.push(`/grid`))
       .catch((res) => {
@@ -210,14 +232,16 @@ class UserProfile extends React.Component {
   };
 
   sendMessage = (e) => {
-    console.log(`send message ran`);
     e.preventDefault();
-    if (this.context.conversations !== undefined) {
-      let convo = this.context.conversations.filter((conversation) =>
+    let convo = this.context.conversations
+      .filter((conversation) =>
         conversation.users.includes(this.state.profile.id)
-      );
+      )
+      .pop();
+    if (convo) {
       this.props.history.push(`/conversation/${convo.id}`);
     } else {
+      this.setState({ error: null });
       const users = [this.context.userProfile.id, this.state.profile.id];
       const newConvo = { users };
       fetch(`${config.API_ENDPOINT}/conversations`, {
@@ -234,9 +258,14 @@ class UserProfile extends React.Component {
         })
         .then(async () => {
           await this.context.setConversations();
-          let convo = this.context.conversations.filter((conversation) =>
-            conversation.users.includes(this.state.profile.id)
-          );
+          convo = this.context.conversations
+            .filter((conversation) =>
+              conversation.users.includes(this.state.profile.id)
+            )
+            .pop();
+          return convo;
+        })
+        .then((convo) => {
           this.props.history.push(`/conversation/${convo.id}`);
         })
         .catch((res) => {
@@ -248,13 +277,36 @@ class UserProfile extends React.Component {
   render() {
     const { profile, error } = this.state;
     const { username, bio, profile_pic, interests = [], pronouns } = profile;
+    let interestDict = {
+      Activism: faFistRaised,
+      Anime: faDragon,
+      Art: faPaintBrush,
+      Cooking: faUtensilSpoon,
+      Crafting: faHammer,
+      Drag: faFemale,
+      Fashion: faTshirt,
+      Fitness: faDumbbell,
+      Food: faPizzaSlice,
+      Gaming: faGamepad,
+      Gardening: faSeedling,
+      "Hiking/Camping/Outdoors": faCampground,
+      Movies: faFilm,
+      Music: faMusic,
+      Nightlife: faMoon,
+      "Pets/Animals": faCat,
+      Reading: faBookOpen,
+      Spirituality: faPrayingHands,
+      Sports: faFutbol,
+      Tech: faMicrochip,
+      Theater: faTheaterMasks,
+      Travel: faPlane,
+    };
+    const url = `/editprofile/${this.context.userProfile.id}`;
 
     if (this.state.profile.id === this.context.userProfile.id) {
       return this.state.profile.id ? (
         <section className="userProfile">
-          <div role="alert">
-            {error && <p className="red">{error.message}</p>}
-          </div>
+          <div role="alert">{error && <p className="error">{error}</p>}</div>
           <section className="username">
             <h1>{username}</h1>
           </section>
@@ -265,11 +317,15 @@ class UserProfile extends React.Component {
               className="profilePic"
             />
           </section>
-          <section className="interests">
+          <section className="interestsProfile">
             <ul>
               {interests.map((interest) => (
-                <li key={interest} className="interest">
-                  {interest}
+                <li key={interest} className="interestWrapper">
+                  <FontAwesomeIcon
+                    icon={interestDict[interest]}
+                    className="faIconProfile"
+                  />
+                  <p className="interestText">{interest}</p>
                 </li>
               ))}
             </ul>
@@ -278,12 +334,12 @@ class UserProfile extends React.Component {
             <p>{bio}</p>
           </section>
           <section className="buttons">
-            <button className="primary" onClick={this.handleClickEdit}>
-              Edit Profile
-            </button>
-            <button onClick={() => this.props.history.push("/grid")}>
-              Back
-            </button>
+            <Link to={url} aira-label="edit profile button">
+              <FontAwesomeIcon icon={faCog} className="faIcon" />
+            </Link>
+            <Link to="/grid" aria-label="back button">
+              <FontAwesomeIcon icon={faUndo} className="faIcon" />
+            </Link>
           </section>
         </section>
       ) : (
@@ -302,11 +358,15 @@ class UserProfile extends React.Component {
               className="profilePic"
             />
           </section>
-          <section className="interests">
+          <section className="interestsProfile">
             <ul>
               {interests.map((interest) => (
-                <li key={interest} className="interest">
-                  {interest}
+                <li key={interest} className="interestWrapper">
+                  <FontAwesomeIcon
+                    icon={interestDict[interest]}
+                    className="faIconProfile"
+                  />
+                  <p className="interestText">{interest}</p>
                 </li>
               ))}
             </ul>
@@ -317,31 +377,44 @@ class UserProfile extends React.Component {
           <section className="pronouns">
             <p>{pronouns}</p>
           </section>
-          <section className="buttons">
-            <button className="primary" onClick={this.sendMessage}>
-              Message
+          <section className="buttonsProfile">
+            <button
+              className="primary"
+              aria-label="message button"
+              onClick={this.sendMessage}
+            >
+              <FontAwesomeIcon icon={faComments} className="faIcon" />
             </button>
             {this.context.userProfile.favorited_profiles.includes(
               this.state.profile.id
             ) === true ? (
               <button
                 className="unfavorite"
+                aria-label="unfavorite button"
                 onClick={this.handleClickUnfavorite}
               >
-                Unfavorite
+                <FontAwesomeIcon icon={["far", "star"]} className="faIcon" />
               </button>
             ) : (
-              <button className="favorite" onClick={this.handleClickFavorite}>
-                Favorite
+              <button
+                className="favorite"
+                aria-label="favorite button"
+                onClick={this.handleClickFavorite}
+              >
+                <FontAwesomeIcon icon={faStar} className="faIcon" />
               </button>
             )}
 
-            <button className="block" onClick={this.handleClickBlock}>
-              Block
+            <button
+              className="block"
+              aria-label="block button"
+              onClick={this.handleClickBlock}
+            >
+              <FontAwesomeIcon icon={faTimes} className="faIcon" />
             </button>
-            <button onClick={() => this.props.history.push("/grid")}>
-              Back
-            </button>
+            <Link to="/grid" aria-label="back button" className="button">
+              <FontAwesomeIcon icon={faUndo} className="faIcon" />
+            </Link>
           </section>
         </section>
       ) : (

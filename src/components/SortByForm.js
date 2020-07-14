@@ -17,19 +17,16 @@ export default class SortByForm extends React.Component {
   };
 
   async handleChange(event) {
-    console.log("handleChange began");
     await this.setState({ value: event.target.value });
     this.context.handleSortBy(this.state.value);
-    console.log("handleChange completed");
   }
 
   render() {
     return (
-      <form>
-        <label>
-          Sort Profiles By:
+      <form className="sortByForm">
+        <label htmlFor="sortBy" id="sortBy" aria-label="sort by options">
           <select
-            value={this.state.value}
+            value={this.context.sortBy}
             onChange={(e) => this.handleChange(e)}
           >
             <option value="View All">View All</option>

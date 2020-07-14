@@ -13,13 +13,14 @@ export default class Conversation extends Component {
   state = {
     users: [],
     displayMessage: "",
+    error: null,
   };
 
-  async componentDidMount() {
-    await this.context.refreshProfile();
+  componentDidMount() {
     const otherUsers = this.props.users.filter((user) => {
       return user !== this.context.userInfo.id;
     });
+    this.setState({ error: null });
     otherUsers.forEach((user) => {
       fetch(`${config.API_ENDPOINT}/profiles/${user}`, {
         method: "GET",
@@ -28,12 +29,9 @@ export default class Conversation extends Component {
           "Access-Control-Allow-Origin": "*",
         },
       })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(res.status);
-          }
-          return res.json();
-        })
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
         .then((userInfo) => {
           this.setState((state) => {
             const users = state.users.concat(userInfo);
@@ -46,25 +44,19 @@ export default class Conversation extends Component {
           this.setState({ error: res.error });
         });
     });
-    fetch(`${config.API_ENDPOINT}/messages/`, {
+    fetch(`${config.API_ENDPOINT}/conversations/${this.props.id}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
         "Access-Control-Allow-Origin": "*",
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then((messages) => {
-        let userMessages = messages.filter(
-          (message) => message.conversation_id === this.props.id
-        );
-        let mostRecentMessage = userMessages.length - 1;
-        this.setState({ displayMessage: messages[mostRecentMessage].content });
+        let latestMessage = messages.pop();
+        this.setState({ displayMessage: latestMessage.content });
       })
       .catch((res) => {
         this.setState({ error: res.error });
@@ -72,9 +64,11 @@ export default class Conversation extends Component {
   }
 
   render() {
+    const { error } = this.state;
     const url = `/conversation/${this.props.id}`;
     return (
       <Link to={url} className="conversationLink">
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="conversation">
           {this.state.users.map((profile) => (
             <img

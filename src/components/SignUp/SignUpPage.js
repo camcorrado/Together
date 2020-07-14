@@ -1,13 +1,8 @@
+import Header from "../Header/Header";
 import React, { Component } from "react";
 import SignUpForm from "../../components/SignUp/SignUpForm";
 
 export default class SignUpPage extends Component {
-  static defaultProps = {
-    history: {
-      push: () => {},
-    },
-  };
-
   handleSignUpSuccess = () => {
     this.props.history.push("/createprofile");
   };
@@ -15,6 +10,9 @@ export default class SignUpPage extends Component {
   render() {
     return (
       <section className="SignUpPage">
+        <header className="App_Header">
+          <Header />
+        </header>
         <h2>Register</h2>
         <SignUpForm onSignUpSuccess={this.handleSignUpSuccess} />
       </section>

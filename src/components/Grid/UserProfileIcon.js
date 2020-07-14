@@ -69,15 +69,13 @@ export default class UserProfileIcon extends Component {
             alt={username + `'s profile pic`}
             className="profilePicGrid"
           />
-          <h4 className="username">{username}</h4>
-          <section className="interests">
+          <section className="interestsGrid">
             {interests.map((interest) => (
               <div key={interest} className="wrapper">
                 <FontAwesomeIcon
                   icon={interestDict[interest]}
-                  className="faIcon"
+                  className="faIconGrid"
                 />
-                <p className="text">{interest}</p>
               </div>
             ))}
           </section>

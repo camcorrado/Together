@@ -78,10 +78,7 @@ class Checkbox extends Component {
             checked={isChecked}
             onChange={this.toggleCheckboxChange}
           />
-          <FontAwesomeIcon
-            icon={interestDict[label]}
-            className="faIcon checkbox"
-          />
+          <FontAwesomeIcon icon={interestDict[label]} className="faIcon" />
           {label}
         </label>
       </div>

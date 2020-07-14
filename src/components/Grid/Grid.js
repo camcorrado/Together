@@ -1,8 +1,7 @@
 import ApiContext from "../../ApiContext";
-import { Link } from "react-router-dom";
+import Nav from "../Nav/Nav";
 import ProfileIcon from "./ProfileIcon";
 import React, { Component } from "react";
-import SortByForm from "../SortByForm";
 import UserProfileIcon from "./UserProfileIcon";
 
 export default class Grid extends Component {
@@ -13,29 +12,22 @@ export default class Grid extends Component {
     nearbyProfiles: [],
     sortBy: "",
     refreshProfile: () => {},
-    logOut: () => {},
   };
 
   state = {
     profilesToDisplay: [],
   };
 
-  componentDidMount() {
-    this.setState({
-      profilesToDisplay: this.context.nearbyProfiles,
-    });
+  async componentDidMount() {
+    await this.context.refreshProfile();
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
+    } else {
+      this.setState({
+        profilesToDisplay: this.context.nearbyProfiles,
+      });
+    }
   }
-
-  handleClickEditProfile = (e) => {
-    e.preventDefault();
-    const profile_id = this.context.userProfile.id;
-    this.props.history.push(`/editprofile/${profile_id}`);
-  };
-
-  handleClickLogOut = (e) => {
-    e.preventDefault();
-    this.context.logOut();
-  };
 
   render() {
     if (
@@ -45,12 +37,7 @@ export default class Grid extends Component {
     ) {
       return (
         <section className="grid">
-          <nav role="navigation">
-            <button onClick={this.handleClickEditProfile}>Edit Profile</button>
-            <Link to="messenger">Messages</Link>
-            <button onClick={this.handleClickLogOut}>Log Out</button>
-            <SortByForm />
-          </nav>
+          <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
               <li key={this.context.userProfile.id} className="profile">
@@ -83,12 +70,7 @@ export default class Grid extends Component {
       );
       return (
         <section className="grid">
-          <nav role="navigation">
-            <button onClick={this.handleClickEditProfile}>Edit Profile</button>
-            <Link to="messenger">Messages</Link>
-            <button onClick={this.handleClickLogOut}>Log Out</button>
-            <SortByForm />
-          </nav>
+          <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
               <li key={this.context.userProfile.id} className="profile">
@@ -127,12 +109,7 @@ export default class Grid extends Component {
       filteredProfiles.sort((a, b) => b.count - a.count);
       return (
         <section className="grid">
-          <nav role="navigation">
-            <button onClick={this.handleClickEditProfile}>Edit Profile</button>
-            <Link to="messenger">Messages</Link>
-            <button onClick={this.handleClickLogOut}>Log Out</button>
-            <SortByForm />
-          </nav>
+          <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
               <li key={this.context.userProfile.id} className="profile">

@@ -1,30 +1,36 @@
 import ApiContext from "../../ApiContext";
+import Header from "../Header/Header";
 import React from "react";
 import TokenService from "../../services/token-service";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDoorOpen, faTh } from "@fortawesome/free-solid-svg-icons";
 
 class Hero extends React.Component {
   static contextType = ApiContext;
 
   static defaultProps = {
     userProfile: {},
-    refreshProfile: () => {},
     logOut: () => {},
-  };
-
-  handleClickLogOut = (e) => {
-    e.preventDefault();
-    this.context.logOut();
+    refreshProfile: () => {},
   };
 
   componentDidMount() {
     this.context.refreshProfile();
   }
 
+  handleClickLogOut = (e) => {
+    e.preventDefault();
+    this.context.logOut();
+  };
+
   render() {
     if (TokenService.getAuthToken()) {
       return (
         <section className="hero">
+          <header className="App_Header">
+            <Header />
+          </header>
           <section className="appDescription">
             <h3>LGBTQ+ Locals</h3>
             <p>
@@ -32,12 +38,17 @@ class Hero extends React.Component {
             </p>
           </section>
           <section className="buttons">
-            {this.context.userProfile ? (
+            {Object.keys(this.context.userProfile).length > 0 ? (
               <>
-                <Link to="/grid" className="primary">
-                  Dashboard
+                <Link to="/grid" className="primary" aria-label="grid button">
+                  <FontAwesomeIcon icon={faTh} className="faIcon" />
                 </Link>
-                <button onClick={this.handleClickLogOut}>Log Out</button>
+                <button
+                  onClick={this.handleClickLogOut}
+                  aria-label="logout button"
+                >
+                  <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
+                </button>
               </>
             ) : (
               <>
@@ -53,6 +64,9 @@ class Hero extends React.Component {
     } else {
       return (
         <section className="hero">
+          <header className="App_Header">
+            <Header />
+          </header>
           <section className="appDescription">
             <h3>LGBTQ+ Locals</h3>
             <p>

@@ -4,6 +4,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import {
   faFistRaised,
   faDragon,
@@ -27,6 +28,13 @@ import {
   faMicrochip,
   faTheaterMasks,
   faPlane,
+  faUndo,
+  faComments,
+  faTimes,
+  faStar,
+  faDoorOpen,
+  faCog,
+  faTh,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -51,7 +59,15 @@ library.add(
   faFutbol,
   faMicrochip,
   faTheaterMasks,
-  faPlane
+  faPlane,
+  faUndo,
+  faComments,
+  faTimes,
+  faStar,
+  faStarRegular,
+  faDoorOpen,
+  faCog,
+  faTh
 );
 
 ReactDOM.render(

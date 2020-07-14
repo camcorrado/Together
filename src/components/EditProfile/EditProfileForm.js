@@ -14,16 +14,14 @@ export default class EditProfileForm extends Component {
 
   state = {
     interests: [],
+    error: null,
   };
 
   componentDidMount = () => {
-    console.log(`componentDidMount form ran`);
-
     this.selectedCheckboxes = new Set();
     this.props.profile.interests.forEach((interest) =>
       this.selectedCheckboxes.add(interest)
     );
-    console.log(`componentDidMount form completed`);
   };
 
   toggleCheckbox = (label) => {
@@ -71,12 +69,27 @@ export default class EditProfileForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    const zipcode = this.props.profile.zipcode;
     const interests = [];
     for (const checkbox of this.selectedCheckboxes) {
       await interests.push(checkbox);
     }
-    this.props.onInterestsChange(interests);
-    this.props.onEditSuccess();
+
+    if (zipcode.length === 5) {
+      this.setState({ error: null });
+      const url = `https://cors-anywhere.herokuapp.com/https://phzmapi.org/${zipcode}.json`;
+      fetch(url)
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : true
+        )
+        .then(this.props.onEditSuccess())
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+      this.props.onInterestsChange(interests);
+    } else {
+      this.setState({ error: `Invalid zipcode` });
+    }
   };
 
   render() {
@@ -87,11 +100,12 @@ export default class EditProfileForm extends Component {
       pronouns,
       zipcode,
     } = this.props.profile;
+    const { error } = this.state;
     const url = `/userprofile/${this.context.userProfile.id}`;
     return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
         <div className="usernameInput">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
             name="username"
@@ -100,11 +114,12 @@ export default class EditProfileForm extends Component {
             value={username || ""}
             onChange={this.onUsernameChange}
             aria-required="true"
+            maxLength="12"
             required
           />
         </div>
         <div className="profilePicInput">
-          <label htmlFor="profile_pic">Profile Picture</label>
+          <label htmlFor="profile_pic">Profile Picture:</label>
           <input
             type="text"
             name="profile_pic"
@@ -117,7 +132,7 @@ export default class EditProfileForm extends Component {
           />
         </div>
         <div className="bioInput">
-          <label htmlFor="bio">About</label>
+          <label htmlFor="bio">About:</label>
           <textarea
             name="bio"
             id="bio"
@@ -126,21 +141,23 @@ export default class EditProfileForm extends Component {
             value={bio || ""}
             onChange={this.onBioChange}
             aria-required="true"
+            maxLength="120"
             required
           ></textarea>
         </div>
         <div className="interestsInput">
-          <label htmlFor="interests">Interests</label>
+          <label htmlFor="interests">Interests:</label>
           <div className="interestCheckboxes">{this.createCheckboxes()}</div>
         </div>
         <div className="pronounsInput">
-          <label htmlFor="pronouns">Pronouns</label>
+          <label htmlFor="pronouns">Pronouns:</label>
           <input
             type="text"
             list="pronouns"
             value={pronouns || ""}
             onChange={this.onPronounsChange}
             aria-required="true"
+            maxLength="12"
             required
           />
           <datalist name="pronouns" id="pronouns">
@@ -150,12 +167,11 @@ export default class EditProfileForm extends Component {
           </datalist>
         </div>
         <div className="zipcodeInput">
-          <label htmlFor="zipcode">Zipcode</label>
+          <label htmlFor="zipcode">Zipcode:</label>
           <input
             type="number"
             name="zipcode"
             id="zipcode"
-            maxLength="5"
             placeholder={zipcode || ""}
             value={zipcode || ""}
             onChange={this.onZipcodeChange}
@@ -163,11 +179,12 @@ export default class EditProfileForm extends Component {
             required
           />
         </div>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <div className="buttons">
           <button className="primary" type="submit" onClick={this.handleSubmit}>
             Submit
           </button>
-          <Link to={url}>Cancel</Link>
+          <button onClick={this.props.onClickCancel}>Cancel</button>
         </div>
       </form>
     );

@@ -31,25 +31,18 @@ export default class EditProfilepage extends Component {
   };
 
   async componentDidMount() {
-    console.log(`componentDidMount page ran`);
     await this.context.refreshProfile();
     this.setState({
       ...this.context.userProfile,
     });
-    console.log(`componentDidMount page completed`);
   }
 
   handleChangeUsername = (value) => {
-    console.log(`handleChangeUsername ran`);
     this.setState({ username: value });
-    console.log(this.state);
-    console.log(`handleChangeUsername completed`);
   };
 
   handleChangeBio = (value) => {
-    console.log(`handleChangeBio ran`);
     this.setState({ bio: value });
-    console.log(`handleChangeBio completed`);
   };
 
   handleChangeInterests = (value) => {
@@ -106,7 +99,7 @@ export default class EditProfilepage extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : true
       )
-      .then((resBody) => {
+      .then(() => {
         this.context.editProfile(newProfile, () => {
           this.props.history.push(
             `/userprofile/${this.context.userProfile.id}`
@@ -116,6 +109,11 @@ export default class EditProfilepage extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
+  };
+
+  handleClickCancel = (e) => {
+    e.preventDefault();
+    this.props.history.goBack();
   };
 
   render() {
@@ -150,7 +148,7 @@ export default class EditProfilepage extends Component {
         <header>
           <h1>Edit Your Profile</h1>
         </header>
-        <div role="alert">{error && <p className="red">{error}</p>}</div>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <EditProfileForm
           profile={profile}
           onEditSuccess={this.handleEditSuccess}
@@ -160,6 +158,7 @@ export default class EditProfilepage extends Component {
           onProfilePicChange={this.handleChangeProfilePic}
           onPronounsChange={this.handleChangePronouns}
           onZipcodeChange={this.handleChangeZipcode}
+          onClickCancel={this.handleClickCancel}
         />
       </section>
     ) : (

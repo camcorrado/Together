@@ -5,7 +5,6 @@ import CreateProfilePage from "./components/CreateProfile/CreateProfilePage";
 import EditProfilePage from "./components/EditProfile/EditProfilePage";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Grid from "./components/Grid/Grid";
-import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
 import IdleService from "./services/idle-service";
 import LoginPage from "./components/Login/LoginPage";
@@ -57,11 +56,10 @@ class App extends Component {
       "Travel",
     ],
     sortBy: "View All",
+    error: null,
   };
 
   componentDidMount() {
-    console.log(`componentDidMount App ran`);
-    this.refreshProfile();
     /*
       set the function (callback) to call when a user goes idle
       we'll set this to logout a user when they're idle
@@ -87,11 +85,9 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
-    console.log(`componentDidMount App completed`);
   }
 
   componentWillUnmount() {
-    console.log(`componentWillUnmount ran`);
     /*
       when the app unmounts,
       stop the event listeners that auto logout (clear the token from storage)
@@ -101,7 +97,6 @@ class App extends Component {
       and remove the refresh endpoint request
     */
     TokenService.clearCallbackBeforeExpiry();
-    console.log(`componentWillUnmount completed`);
   }
 
   logoutFromIdle = () => {
@@ -119,8 +114,7 @@ class App extends Component {
   };
 
   refreshProfile = async () => {
-    console.log(`refreshProfile ran`);
-
+    this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
     if (authToken) {
       await fetch(`${config.API_ENDPOINT}/users`, {
@@ -131,23 +125,18 @@ class App extends Component {
           Authorization: `Bearer ${authToken}`,
         },
       })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(res.status);
-          }
-          return res.json();
-        })
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
         .then(async (user) => {
           await this.handleSetUserInfo(user);
           await this.handleSetProfileInfo(user.id);
         });
     }
-    console.log(`refreshProfile completed`);
   };
 
   handleSetUserInfo = async () => {
-    console.log(`handleSetUserInfo ran`);
-
+    this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
     await fetch(`${config.API_ENDPOINT}/users`, {
       method: "GET",
@@ -168,12 +157,10 @@ class App extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    console.log(`handleSetUserInfo completed`);
   };
 
   handleSetProfileInfo = async (id) => {
-    console.log(`handleSetProfileInfo ran`);
-
+    this.setState({ error: null });
     await fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "GET",
       headers: {
@@ -181,42 +168,38 @@ class App extends Component {
         "Access-Control-Allow-Origin": "*",
       },
     })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status);
-        }
-        return res.json();
-      })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
       .then(async (data) => {
         const profileInfo = await data.filter((profile) => {
           return profile.user_id === id;
         });
-        this.setState({
-          userProfile: profileInfo.pop(),
-        });
-        this.handleSetNearbyProfiles(data);
-        this.handleSetConverations();
+        if (profileInfo.length > 0) {
+          this.setState({
+            userProfile: profileInfo.pop(),
+          });
+          await this.handleSetNearbyProfiles(data);
+          await this.handleSetConverations();
+        }
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((res) => {
+        this.setState({ error: res.error });
       });
-    console.log(`handleSetProfileInfo completed`);
   };
 
   handleSetNearbyProfiles = (data) => {
-    console.log(`handleSetNearbyProfiles ran`);
-    console.log(data);
     let filteredProfiles = data.filter(
       (profile) => !this.state.userProfile.blocked_profiles.includes(profile.id)
     );
     this.setState({
       nearbyProfiles: filteredProfiles,
     });
-    console.log(`handleSetNearbyProfiles completed`);
   };
 
-  handleSetConverations = () => {
-    fetch(`${config.API_ENDPOINT}/conversations`, {
+  handleSetConverations = async () => {
+    this.setState({ error: null });
+    await fetch(`${config.API_ENDPOINT}/conversations`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -227,11 +210,15 @@ class App extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then((conversations) => {
-        this.setState({
-          conversations: conversations,
+      .then(async (conversations) => {
+        let filteredConvos = conversations.filter((convo) =>
+          this.state.userProfile.blocked_profiles.forEach(
+            (profile) => !convo.users.includes(profile)
+          )
+        );
+        await this.setState({
+          conversations: filteredConvos,
         });
-        console.log(this.state.conversations);
       })
       .catch((res) => {
         this.setState({ error: res.error });
@@ -243,20 +230,15 @@ class App extends Component {
   };
 
   handleEditProfile = (data, cb) => {
-    console.log(`handleEditProfile ran`);
-
     this.setState(
       {
         userProfile: data,
       },
       cb
     );
-    console.log(`handleEditProfile completed`);
   };
 
   handleLogOut = async () => {
-    console.log(`handleLogOut ran`);
-
     TokenService.clearAuthToken();
     /* when logging out, clear the callbacks to the refresh api and idle auto logout */
     TokenService.clearCallbackBeforeExpiry();
@@ -268,7 +250,6 @@ class App extends Component {
     });
 
     this.props.history.push("/");
-    console.log(`handleLogOut completed`);
   };
 
   render() {
@@ -291,9 +272,6 @@ class App extends Component {
     return (
       <ApiContext.Provider value={value}>
         <main className="App">
-          <header className="App_Header">
-            <Header />
-          </header>
           <ErrorBoundary>
             <Switch>
               <Route exact path={"/"} component={Hero} />
@@ -310,7 +288,10 @@ class App extends Component {
                 component={UserProfile}
               />
               <PrivateRoute path={"/messenger"} component={Messenger} />
-              <PrivateRoute path={"/message"} component={Message} />
+              <PrivateRoute
+                path={"/conversation/:conversationId"}
+                component={Message}
+              />
               <Route component={NotFoundPage} />
             </Switch>
           </ErrorBoundary>
