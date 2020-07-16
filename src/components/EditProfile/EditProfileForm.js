@@ -70,23 +70,25 @@ export default class EditProfileForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const zipcode = this.props.profile.zipcode;
+    console.log({ zipcode });
     const interests = [];
     for (const checkbox of this.selectedCheckboxes) {
       await interests.push(checkbox);
     }
-
-    if (zipcode.length === 5) {
+    const sortedInterests = interests.sort();
+    if (zipcode.toString().length === 5) {
       this.setState({ error: null });
       const url = `https://cors-anywhere.herokuapp.com/https://phzmapi.org/${zipcode}.json`;
       fetch(url)
         .then((res) =>
           !res.ok ? res.json().then((e) => Promise.reject(e)) : true
         )
-        .then(this.props.onEditSuccess())
+        .then(this.props.onEditSuccess)
         .catch((res) => {
-          this.setState({ error: res.error });
+          this.setState({ error: "Could not find that zipcode" });
         });
-      this.props.onInterestsChange(interests);
+
+      this.props.onInterestsChange(sortedInterests);
     } else {
       this.setState({ error: `Invalid zipcode` });
     }

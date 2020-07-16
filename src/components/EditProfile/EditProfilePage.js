@@ -113,7 +113,7 @@ export default class EditProfilepage extends Component {
 
   handleClickCancel = (e) => {
     e.preventDefault();
-    this.props.history.goBack();
+    this.props.history.push(`/userprofile/${this.context.userProfile.id}`);
   };
 
   render() {

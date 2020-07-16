@@ -40,7 +40,7 @@ export default class ProfileIcon extends Component {
       Food: faPizzaSlice,
       Gaming: faGamepad,
       Gardening: faSeedling,
-      "Hiking/Camping/Outdoors": faCampground,
+      "The Outdoors": faCampground,
       Movies: faFilm,
       Music: faMusic,
       Nightlife: faMoon,
@@ -64,14 +64,17 @@ export default class ProfileIcon extends Component {
             className="profilePicGrid"
           />
           <section className="interestsGrid">
-            {interests.map((interest) => (
-              <div key={interest} className="wrapper">
-                <FontAwesomeIcon
-                  icon={interestDict[interest]}
-                  className="faIconGrid"
-                />
-              </div>
-            ))}
+            <ul>
+              {interests.map((interest) => (
+                <li key={interest} className="interestWrapper">
+                  <FontAwesomeIcon
+                    icon={interestDict[interest]}
+                    className="faIconGrid"
+                  />
+                  <p className="interestTextGrid">{interest}</p>
+                </li>
+              ))}
+            </ul>
           </section>
         </section>
       </Link>

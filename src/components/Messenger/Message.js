@@ -193,10 +193,10 @@ class Message extends Component {
               <div className="buttons">
                 <div className="buttons">
                   <button type="submit">Submit</button>
+                  <button onClick={this.handleBack} aria-label="back button">
+                    <FontAwesomeIcon icon={faUndo} className="faIcon" />
+                  </button>
                 </div>
-                <button onClick={this.handleBack} aria-label="back button">
-                  <FontAwesomeIcon icon={faUndo} className="faIcon" />
-                </button>
               </div>
             </form>
           </section>

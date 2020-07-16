@@ -6,9 +6,9 @@ class Title extends React.Component {
     return (
       <header role="banner">
         <h1>
-          <Link to="/">APP TITLE</Link>
+          <Link to="/">Together</Link>
         </h1>
-        <h2>APP FLAVOR TEXT</h2>
+        <h2>Meet your neighbors</h2>
       </header>
     );
   }

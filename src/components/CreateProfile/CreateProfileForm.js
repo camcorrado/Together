@@ -48,11 +48,12 @@ export default class CreateProfileForm extends Component {
     for (const checkbox of this.selectedCheckboxes) {
       interests.push(checkbox);
     }
+    const sortedInterests = interests.sort();
     const newProfile = {
       username: username.value,
       bio: bio.value,
       profile_pic: profile_pic.value,
-      interests: interests,
+      interests: sortedInterests,
       pronouns: pronouns.value,
       zipcode: zipcode.value,
       blocked_profiles: [],
@@ -144,7 +145,7 @@ export default class CreateProfileForm extends Component {
             name="zipcode"
             id="zipcode"
             pattern="[0-9]*"
-            maxlength="5"
+            maxLength="5"
             aria-required="true"
             required
           />

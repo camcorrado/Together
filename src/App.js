@@ -43,7 +43,6 @@ class App extends Component {
       "Food",
       "Gaming",
       "Gardening",
-      "Hiking/Camping/Outdoors",
       "Movies",
       "Music",
       "Nightlife",
@@ -52,10 +51,12 @@ class App extends Component {
       "Spirituality",
       "Sports",
       "Tech",
+      "The Outdoors",
       "Theater",
       "Travel",
     ],
     sortBy: "View All",
+    location: {},
     error: null,
   };
 
@@ -85,6 +86,8 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
+
+    //this.findLocation();
   }
 
   componentWillUnmount() {
@@ -112,7 +115,26 @@ class App extends Component {
     */
     this.forceUpdate();
   };
+  /*
+  findLocation = async () => {
+    await navigator.geolocation.getCurrentPosition(success, error);
 
+    function success(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.REACT_APP_API_KEY}`;
+      console.log(process.env);
+      console.log({ url });
+    }
+
+    function error(err) {
+      this.setState({ error: err.message });
+    }
+
+    console.log(this.state.location);
+  };
+*/
   refreshProfile = async () => {
     this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
@@ -211,11 +233,15 @@ class App extends Component {
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
       .then(async (conversations) => {
-        let filteredConvos = conversations.filter((convo) =>
-          this.state.userProfile.blocked_profiles.forEach(
-            (profile) => !convo.users.includes(profile)
-          )
-        );
+        let filteredConvos = [];
+        conversations.forEach((convo) => {
+          let id = convo.users
+            .filter((user) => user !== this.state.userProfile.id)
+            .pop();
+          if (!this.state.userProfile.blocked_profiles.includes(id)) {
+            filteredConvos.push(convo);
+          }
+        });
         await this.setState({
           conversations: filteredConvos,
         });
@@ -224,6 +250,8 @@ class App extends Component {
         this.setState({ error: res.error });
       });
   };
+
+  handle;
 
   handleSortBy = (value) => {
     this.setState({ sortBy: value });
@@ -260,6 +288,7 @@ class App extends Component {
       conversations: this.state.conversations,
       interestOptions: this.state.interestOptions,
       sortBy: this.state.sortBy,
+      location: this.state.location,
       refreshProfile: this.refreshProfile,
       setUserInfo: this.handleSetUserInfo,
       setProfileInfo: this.handleSetProfileInfo,

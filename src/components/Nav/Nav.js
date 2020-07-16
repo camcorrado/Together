@@ -7,6 +7,7 @@ import {
   faComments,
   faDoorOpen,
   faCog,
+  faTh,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default class Nav extends Component {
@@ -30,9 +31,16 @@ export default class Nav extends Component {
           <Link to={url} aira-label="edit profile button">
             <FontAwesomeIcon icon={faCog} className="faIcon" />
           </Link>
-          <Link to="messenger" aria-label="messages button">
-            <FontAwesomeIcon icon={faComments} className="faIcon" />
-          </Link>
+          {window.location.pathname === "/grid" ? (
+            <Link to="messenger" aria-label="messages button">
+              <FontAwesomeIcon icon={faComments} className="faIcon" />
+            </Link>
+          ) : (
+            <Link to="/grid" aria-label="back button" className="primary">
+              <FontAwesomeIcon icon={faTh} className="faIcon" />
+            </Link>
+          )}
+
           <button onClick={this.handleClickLogOut} aria-label="logout button">
             <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
           </button>

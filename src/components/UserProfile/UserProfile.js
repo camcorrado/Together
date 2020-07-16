@@ -30,7 +30,7 @@ import {
   faTimes,
   faStar,
   faComments,
-  faUndo,
+  faTh,
   faCog,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -239,6 +239,7 @@ class UserProfile extends React.Component {
       )
       .pop();
     if (convo) {
+      console.log({ convo });
       this.props.history.push(`/conversation/${convo.id}`);
     } else {
       this.setState({ error: null });
@@ -289,7 +290,7 @@ class UserProfile extends React.Component {
       Food: faPizzaSlice,
       Gaming: faGamepad,
       Gardening: faSeedling,
-      "Hiking/Camping/Outdoors": faCampground,
+      "The Outdoors": faCampground,
       Movies: faFilm,
       Music: faMusic,
       Nightlife: faMoon,
@@ -308,7 +309,7 @@ class UserProfile extends React.Component {
         <section className="userProfile">
           <div role="alert">{error && <p className="error">{error}</p>}</div>
           <section className="username">
-            <h1>{username}</h1>
+            <h2>{username}</h2>
           </section>
           <section className="profilePic">
             <img
@@ -325,7 +326,7 @@ class UserProfile extends React.Component {
                     icon={interestDict[interest]}
                     className="faIconProfile"
                   />
-                  <p className="interestText">{interest}</p>
+                  <p className="interestTextProfile">{interest}</p>
                 </li>
               ))}
             </ul>
@@ -337,8 +338,8 @@ class UserProfile extends React.Component {
             <Link to={url} aira-label="edit profile button">
               <FontAwesomeIcon icon={faCog} className="faIcon" />
             </Link>
-            <Link to="/grid" aria-label="back button">
-              <FontAwesomeIcon icon={faUndo} className="faIcon" />
+            <Link to="/grid" aria-label="back button" className="primary">
+              <FontAwesomeIcon icon={faTh} className="faIcon" />
             </Link>
           </section>
         </section>
@@ -349,7 +350,7 @@ class UserProfile extends React.Component {
       return this.state.profile.id ? (
         <section className="userProfile">
           <section className="username">
-            <h1>{username}</h1>
+            <h2>{username}</h2>
           </section>
           <section className="profilePic">
             <img
@@ -366,7 +367,7 @@ class UserProfile extends React.Component {
                     icon={interestDict[interest]}
                     className="faIconProfile"
                   />
-                  <p className="interestText">{interest}</p>
+                  <p className="interestTextProfile">{interest}</p>
                 </li>
               ))}
             </ul>
@@ -412,8 +413,8 @@ class UserProfile extends React.Component {
             >
               <FontAwesomeIcon icon={faTimes} className="faIcon" />
             </button>
-            <Link to="/grid" aria-label="back button" className="button">
-              <FontAwesomeIcon icon={faUndo} className="faIcon" />
+            <Link to="/grid" aria-label="back button" className="primary">
+              <FontAwesomeIcon icon={faTh} className="faIcon" />
             </Link>
           </section>
         </section>

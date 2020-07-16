@@ -17,6 +17,7 @@ export default class Conversation extends Component {
   };
 
   componentDidMount() {
+    const conversationId = this.props.id;
     const otherUsers = this.props.users.filter((user) => {
       return user !== this.context.userInfo.id;
     });
@@ -44,7 +45,7 @@ export default class Conversation extends Component {
           this.setState({ error: res.error });
         });
     });
-    fetch(`${config.API_ENDPOINT}/conversations/${this.props.id}`, {
+    fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -55,8 +56,24 @@ export default class Conversation extends Component {
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
       .then((messages) => {
-        let latestMessage = messages.pop();
-        this.setState({ displayMessage: latestMessage.content });
+        if (messages.length === 0) {
+          fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
+            method: "DELETE",
+            headers: {
+              "content-type": "application/json",
+              "Access-Control-Allow-Origin": "*",
+            },
+          })
+            .then((res) =>
+              !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+            )
+            .catch((res) => {
+              this.setState({ error: res.error });
+            });
+        } else {
+          let latestMessage = messages.pop();
+          this.setState({ displayMessage: latestMessage.content });
+        }
       })
       .catch((res) => {
         this.setState({ error: res.error });

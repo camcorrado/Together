@@ -1,6 +1,7 @@
 import ApiContext from "../../ApiContext";
 import Conversation from "./Conversation";
 import { Link } from "react-router-dom";
+import Nav from "../Nav/Nav";
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDoorOpen, faTh } from "@fortawesome/free-solid-svg-icons";
@@ -23,19 +24,7 @@ class MessageList extends Component {
     if (this.context.conversations.length === 0) {
       return (
         <section className="messageList">
-          <nav role="navigation">
-            <div className="buttons">
-              <Link to="/grid" className="primary" aria-label="grid button">
-                <FontAwesomeIcon icon={faTh} className="faIcon" />
-              </Link>
-              <button
-                onClick={this.handleClickLogOut}
-                aria-label="logout button"
-              >
-                <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
-              </button>
-            </div>
-          </nav>
+          <Nav />
           <section className="conversations">
             <p>You haven't sent or recieved any messages yet!</p>
           </section>
@@ -44,19 +33,7 @@ class MessageList extends Component {
     } else {
       return (
         <section className="messageList">
-          <nav role="navigation">
-            <div className="buttons">
-              <Link to="/grid" className="primary" aria-label="grid button">
-                <FontAwesomeIcon icon={faTh} className="faIcon" />
-              </Link>
-              <button
-                onClick={this.handleClickLogOut}
-                aria-label="logout button"
-              >
-                <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
-              </button>
-            </div>
-          </nav>
+          <Nav />
           <section className="conversations">
             <ul>
               {this.context.conversations.map((conversation) => (

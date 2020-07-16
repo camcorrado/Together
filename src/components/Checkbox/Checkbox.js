@@ -56,7 +56,7 @@ class Checkbox extends Component {
       Food: faPizzaSlice,
       Gaming: faGamepad,
       Gardening: faSeedling,
-      "Hiking/Camping/Outdoors": faCampground,
+      "The Outdoors": faCampground,
       Movies: faFilm,
       Music: faMusic,
       Nightlife: faMoon,
