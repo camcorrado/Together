@@ -69,7 +69,6 @@ export default class EditProfileForm extends Component {
   handleSubmit = async (e) => {
     e.preventDefault();
     const zipcode = this.props.profile.zipcode;
-    console.log({ zipcode });
     const interests = [];
     for (const checkbox of this.selectedCheckboxes) {
       await interests.push(checkbox);
