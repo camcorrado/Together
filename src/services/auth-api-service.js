@@ -8,6 +8,7 @@ const AuthApiService = {
       method: "POST",
       headers: {
         "content-type": "application/json",
+        "Access-Control-Allow-Origin": "*",
       },
       body: JSON.stringify(user),
     }).then((res) =>
@@ -46,6 +47,7 @@ const AuthApiService = {
       method: "POST",
       headers: {
         authorization: `Bearer ${TokenService.getAuthToken()}`,
+        "Access-Control-Allow-Origin": "*",
       },
     })
       .then((res) =>
