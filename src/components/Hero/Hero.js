@@ -34,8 +34,8 @@ class Hero extends React.Component {
           <section className="appDescription">
             <h3>LGBTQ+ Locals</h3>
             <p>
-              Find and befriend local LGBTQ+ persons based on distance and
-              mutual interests.
+              Find and befriend LGBTQ+ locals based on distance and mutual
+              interests.
             </p>
           </section>
           <section className="buttons">
@@ -71,8 +71,8 @@ class Hero extends React.Component {
           <section className="appDescription">
             <h3>LGBTQ+ Locals</h3>
             <p>
-              Find and befriend local LGBTQ+ persons based on distance and
-              mutual interests.
+              Find and befriend LGBTQ+ locals based on distance and mutual
+              interests.
             </p>
           </section>
           <section className="buttons">
