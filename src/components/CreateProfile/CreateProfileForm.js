@@ -67,7 +67,6 @@ export default class CreateProfileForm extends Component {
       body: JSON.stringify(newProfile),
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })

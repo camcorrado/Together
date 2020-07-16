@@ -27,7 +27,6 @@ export default class Conversation extends Component {
         method: "GET",
         headers: {
           "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
       })
         .then((res) =>
@@ -49,7 +48,6 @@ export default class Conversation extends Component {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
     })
       .then((res) =>
@@ -61,7 +59,6 @@ export default class Conversation extends Component {
             method: "DELETE",
             headers: {
               "content-type": "application/json",
-              "Access-Control-Allow-Origin": "*",
             },
           })
             .then((res) =>

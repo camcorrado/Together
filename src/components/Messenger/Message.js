@@ -26,7 +26,6 @@ class Message extends Component {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
     })
       .then((res) =>
@@ -58,7 +57,6 @@ class Message extends Component {
       body: JSON.stringify(newMessage),
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
@@ -71,7 +69,6 @@ class Message extends Component {
           method: "GET",
           headers: {
             "content-type": "application/json",
-            "Access-Control-Allow-Origin": "*",
           },
         })
           .then((res) =>
@@ -100,7 +97,6 @@ class Message extends Component {
         method: "DELETE",
         headers: {
           "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
       })
         .then((res) =>

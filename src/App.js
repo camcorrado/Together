@@ -143,7 +143,6 @@ class App extends Component {
         method: "GET",
         headers: {
           "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
           Authorization: `Bearer ${authToken}`,
         },
       })
@@ -164,7 +163,6 @@ class App extends Component {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         Authorization: `Bearer ${authToken}`,
       },
     })
@@ -187,7 +185,6 @@ class App extends Component {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
       },
     })
       .then((res) =>
@@ -225,7 +222,6 @@ class App extends Component {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         Authorization: `Bearer ${TokenService.getAuthToken()}`,
       },
     })

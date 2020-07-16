@@ -60,7 +60,6 @@ class UserProfile extends React.Component {
         method: "GET",
         headers: {
           "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
         },
       })
         .then((res) =>
@@ -119,7 +118,6 @@ class UserProfile extends React.Component {
       body: JSON.stringify(updatedProfile),
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
@@ -167,7 +165,6 @@ class UserProfile extends React.Component {
       body: JSON.stringify(updatedProfile),
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
@@ -217,7 +214,6 @@ class UserProfile extends React.Component {
       body: JSON.stringify(updatedProfile),
       headers: {
         "content-type": "application/json",
-        "Access-Control-Allow-Origin": "*",
         authorization: `bearer ${TokenService.getAuthToken()}`,
       },
     })
@@ -250,7 +246,6 @@ class UserProfile extends React.Component {
         body: JSON.stringify(newConvo),
         headers: {
           "content-type": "application/json",
-          "Access-Control-Allow-Origin": "*",
           authorization: `bearer ${TokenService.getAuthToken()}`,
         },
       })
