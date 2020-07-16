@@ -45,7 +45,7 @@ export default class Nav extends Component {
             <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
           </button>
         </div>
-        <SortByForm />
+        {window.location.pathname === "/grid" ? <SortByForm /> : <> </>}
       </nav>
     );
   }
