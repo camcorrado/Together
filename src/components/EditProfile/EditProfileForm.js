@@ -1,6 +1,5 @@
 import ApiContext from "../../ApiContext";
 import Checkbox from "../Checkbox/Checkbox";
-import { Link } from "react-router-dom";
 import React, { Component } from "react";
 
 export default class EditProfileForm extends Component {
@@ -103,7 +102,6 @@ export default class EditProfileForm extends Component {
       zipcode,
     } = this.props.profile;
     const { error } = this.state;
-    const url = `/userprofile/${this.context.userProfile.id}`;
     return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
         <div className="usernameInput">

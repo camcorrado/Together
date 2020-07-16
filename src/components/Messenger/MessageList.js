@@ -1,10 +1,7 @@
 import ApiContext from "../../ApiContext";
 import Conversation from "./Conversation";
-import { Link } from "react-router-dom";
 import Nav from "../Nav/Nav";
 import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDoorOpen, faTh } from "@fortawesome/free-solid-svg-icons";
 
 class MessageList extends Component {
   static contextType = ApiContext;
