@@ -24,7 +24,7 @@ export default class EditProfilepage extends Component {
     profile_pic: null,
     interests: null,
     pronouns: null,
-    zipcode: null,
+    geolocation: null,
     blocked_profiles: null,
     favorited_profiles: null,
     error: null,
@@ -57,11 +57,9 @@ export default class EditProfilepage extends Component {
     this.setState({ pronouns: value });
   };
 
-  handleChangeZipcode = (value) => {
-    this.setState({ zipcode: value });
-  };
-
   handleEditSuccess = () => {
+    let geoData = this.context.userProfile.geolocation;
+
     const {
       id,
       user_id,
@@ -70,7 +68,6 @@ export default class EditProfilepage extends Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       blocked_profiles,
       favorited_profiles,
     } = this.state;
@@ -82,7 +79,7 @@ export default class EditProfilepage extends Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
+      geolocation: `${geoData.x}, ${geoData.y}`,
       blocked_profiles,
       favorited_profiles,
     };
@@ -124,7 +121,6 @@ export default class EditProfilepage extends Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       blocked_profiles,
       favorited_profiles,
       error,
@@ -137,7 +133,6 @@ export default class EditProfilepage extends Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       blocked_profiles,
       favorited_profiles,
     };
@@ -156,7 +151,6 @@ export default class EditProfilepage extends Component {
           onInterestsChange={this.handleChangeInterests}
           onProfilePicChange={this.handleChangeProfilePic}
           onPronounsChange={this.handleChangePronouns}
-          onZipcodeChange={this.handleChangeZipcode}
           onClickCancel={this.handleClickCancel}
         />
       </section>

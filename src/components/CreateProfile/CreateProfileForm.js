@@ -15,11 +15,13 @@ export default class CreateProfileForm extends Component {
   };
 
   state = {
+    geolocationData: "",
     error: null,
   };
 
   componentDidMount = () => {
     this.selectedCheckboxes = new Set();
+    this.findLocation();
   };
 
   toggleCheckbox = (label) => {
@@ -41,21 +43,39 @@ export default class CreateProfileForm extends Component {
   createCheckboxes = () =>
     this.context.interestOptions.map(this.createCheckbox);
 
+  findLocation = async () => {
+    await navigator.geolocation.getCurrentPosition(
+      this.locationSuccess,
+      this.locationError
+    );
+  };
+
+  locationSuccess = (position) => {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    this.setState({ geolocationData: `${latitude}, ${longitude}` });
+  };
+
+  locationError = (err) => {
+    this.setState({ error: err.message });
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
     const interests = [];
-    const { username, bio, profile_pic, pronouns, zipcode } = e.target;
+    const { username, bio, profile_pic, pronouns } = e.target;
     for (const checkbox of this.selectedCheckboxes) {
       interests.push(checkbox);
     }
     const sortedInterests = interests.sort();
+
     const newProfile = {
       username: username.value,
       bio: bio.value,
       profile_pic: profile_pic.value,
       interests: sortedInterests,
       pronouns: pronouns.value,
-      zipcode: zipcode.value,
+      geolocation: this.state.geolocationData,
       blocked_profiles: [],
       favorited_profiles: [],
     };
@@ -84,7 +104,9 @@ export default class CreateProfileForm extends Component {
     const { error } = this.state;
     return (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
-        <div role="alert">{error && <p className="error">{error}</p>}</div>
+        <div role="alert">
+          {error && <p className="error">{error.message}</p>}
+        </div>
         <div className="usernameInput">
           <label htmlFor="username">Username</label>
           <input
@@ -136,18 +158,6 @@ export default class CreateProfileForm extends Component {
             <option value="He/Him">He/Him</option>
             <option value="They/Them">They/Them</option>
           </datalist>
-        </div>
-        <div className="zipcodeInput">
-          <label htmlFor="zipcode">Zipcode</label>
-          <input
-            type="text"
-            name="zipcode"
-            id="zipcode"
-            pattern="[0-9]*"
-            maxLength="5"
-            aria-required="true"
-            required
-          />
         </div>
         <div className="buttons">
           <button type="submit">Submit</button>

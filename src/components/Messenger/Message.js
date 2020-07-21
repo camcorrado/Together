@@ -1,5 +1,6 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
+import { Link } from "react-router-dom";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,11 +11,14 @@ class Message extends Component {
 
   static defaultProps = {
     userProfile: {},
+    nearbyProfiles: [],
     conversations: [],
+    refreshProfile: () => {},
   };
 
   state = {
     messageHistory: [],
+    otherUser: {},
     error: null,
   };
 
@@ -32,8 +36,25 @@ class Message extends Component {
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
       .then((data) => {
+        const convo = this.context.conversations
+          .filter((convo) => convo.id === Number(conversationId))
+          .pop();
+        const otherUser = convo.users.filter(
+          (user) => user !== this.context.userProfile.id
+        );
+        const otherProfile = this.context.nearbyProfiles.filter(
+          (profile) => profile.id === otherUser[0]
+        );
         this.setState({
           messageHistory: data,
+          otherUser: otherProfile.pop(),
+        });
+        data.forEach((message) => {
+          if (
+            message.msg_read === false &&
+            message.user_id !== this.context.userProfile.id
+          ) {
+          }
         });
       })
       .catch((res) => {
@@ -126,9 +147,19 @@ class Message extends Component {
 
   render() {
     const { messageHistory, error } = this.state;
+    const url = `/userprofile/${this.state.otherUser.id}`;
     if (this.state.messageHistory.length === 0) {
       return (
         <section className="messenger">
+          <section className="profilePicMessage">
+            <Link to={url}>
+              <img
+                src={this.state.otherUser.profile_pic}
+                alt={this.state.otherUser.username + `'s profile pic`}
+                className="profilePicMessage"
+              />
+            </Link>
+          </section>
           <section className="messageHistory">
             <p>You two haven't messaged each other yet!</p>
           </section>
@@ -147,9 +178,7 @@ class Message extends Component {
                 ></textarea>
               </div>
               <div className="buttons">
-                <div className="buttons">
-                  <button type="submit">Submit</button>
-                </div>
+                <button type="submit">Submit</button>
                 <button onClick={this.handleBack}>Back</button>
               </div>
             </form>
@@ -159,6 +188,15 @@ class Message extends Component {
     } else {
       return (
         <section className="messenger">
+          <section className="profilePicMessage">
+            <Link to={url}>
+              <img
+                src={this.state.otherUser.profile_pic}
+                alt={this.state.otherUser.username + `'s profile pic`}
+                className="profilePicMessage"
+              />
+            </Link>
+          </section>
           <section className="messageHistory">
             {messageHistory.map((message) =>
               message.user_id === this.context.userProfile.id ? (
@@ -187,12 +225,10 @@ class Message extends Component {
                 ></textarea>
               </div>
               <div className="buttons">
-                <div className="buttons">
-                  <button type="submit">Submit</button>
-                  <button onClick={this.handleBack} aria-label="back button">
-                    <FontAwesomeIcon icon={faUndo} className="faIcon" />
-                  </button>
-                </div>
+                <button type="submit">Submit</button>
+                <button onClick={this.handleBack} aria-label="back button">
+                  <FontAwesomeIcon icon={faUndo} className="faIcon" />
+                </button>
               </div>
             </form>
           </section>

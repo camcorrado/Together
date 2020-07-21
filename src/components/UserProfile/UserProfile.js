@@ -1,6 +1,7 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
 import { Link } from "react-router-dom";
+import Nav from "../Nav/Nav";
 import React from "react";
 import TokenService from "../../services/token-service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,7 +32,8 @@ import {
   faStar,
   faComments,
   faTh,
-  faCog,
+  faUndo,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 class UserProfile extends React.Component {
@@ -83,11 +85,14 @@ class UserProfile extends React.Component {
 
   handleClickFavorite = async (e) => {
     e.preventDefault();
+    console.log(this.context.userProfile);
     this.setState({ error: null });
     const favoritedProfiles = [
       ...this.context.userProfile.favorited_profiles,
       this.state.profile.id,
     ];
+
+    let geoData = this.context.userProfile.geolocation;
 
     const {
       id,
@@ -97,9 +102,9 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       blocked_profiles,
     } = this.context.userProfile;
+
     const updatedProfile = {
       id,
       user_id,
@@ -108,10 +113,11 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
+      geolocation: `${geoData.x}, ${geoData.y}`,
       blocked_profiles,
       favorited_profiles: favoritedProfiles,
     };
+    console.log({ updatedProfile });
 
     fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
       method: "PATCH",
@@ -124,7 +130,10 @@ class UserProfile extends React.Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then(this.context.editProfile(updatedProfile))
+      .then(
+        this.context.editProfile(updatedProfile),
+        this.context.refreshProfile()
+      )
       .catch((res) => {
         this.setState({ error: res.error });
       });
@@ -132,10 +141,14 @@ class UserProfile extends React.Component {
 
   handleClickUnfavorite = async (e) => {
     e.preventDefault();
+    console.log(this.context.userProfile);
     this.setState({ error: null });
     const favoritedProfiles = this.context.userProfile.favorited_profiles.filter(
       (profileId) => profileId !== this.state.profile.id
     );
+
+    let geoData = this.context.userProfile.geolocation;
+
     const {
       id,
       user_id,
@@ -144,9 +157,9 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       blocked_profiles,
     } = this.context.userProfile;
+
     const updatedProfile = {
       id,
       user_id,
@@ -155,10 +168,12 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
+      geolocation: `${geoData.x}, ${geoData.y}`,
       blocked_profiles,
       favorited_profiles: favoritedProfiles,
     };
+
+    console.log({ updatedProfile });
 
     fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
       method: "PATCH",
@@ -171,7 +186,10 @@ class UserProfile extends React.Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then(this.context.editProfile(updatedProfile))
+      .then(
+        this.context.editProfile(updatedProfile),
+        this.context.refreshProfile()
+      )
       .catch((res) => {
         this.setState({ error: res.error });
       });
@@ -185,6 +203,8 @@ class UserProfile extends React.Component {
       this.state.profile.id,
     ];
 
+    let geoData = this.context.userProfile.geolocation;
+
     const {
       id,
       user_id,
@@ -193,9 +213,9 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
       favorited_profiles,
     } = this.context.userProfile;
+
     const updatedProfile = {
       id,
       user_id,
@@ -204,7 +224,7 @@ class UserProfile extends React.Component {
       profile_pic,
       interests,
       pronouns,
-      zipcode,
+      geolocation: `${geoData.x}, ${geoData.y}`,
       blocked_profiles: blockedProfiles,
       favorited_profiles,
     };
@@ -227,6 +247,60 @@ class UserProfile extends React.Component {
       });
   };
 
+  handleClickUnblock = async (e) => {
+    e.preventDefault();
+    this.setState({ error: null });
+    const blockedProfiles = this.context.userProfile.blocked_profiles.filter(
+      (profileId) => profileId !== this.state.profile.id
+    );
+
+    let geoData = this.context.userProfile.geolocation;
+
+    const {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      favorited_profiles,
+    } = this.context.userProfile;
+
+    const updatedProfile = {
+      id,
+      user_id,
+      username,
+      bio,
+      profile_pic,
+      interests,
+      pronouns,
+      geolocation: `${geoData.x}, ${geoData.y}`,
+      blocked_profiles: blockedProfiles,
+      favorited_profiles,
+    };
+
+    fetch(`${config.API_ENDPOINT}/profiles/${updatedProfile.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(updatedProfile),
+      headers: {
+        "content-type": "application/json",
+        authorization: `bearer ${TokenService.getAuthToken()}`,
+      },
+    })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
+      .then(
+        this.context.editProfile(updatedProfile, () => {
+          this.props.history.push(`/blockedprofiles`);
+        })
+      )
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
+  };
+
   sendMessage = (e) => {
     e.preventDefault();
     let convo = this.context.conversations
@@ -235,7 +309,6 @@ class UserProfile extends React.Component {
       )
       .pop();
     if (convo) {
-      console.log({ convo });
       this.props.history.push(`/conversation/${convo.id}`);
     } else {
       this.setState({ error: null });
@@ -272,7 +345,14 @@ class UserProfile extends React.Component {
 
   render() {
     const { profile, error } = this.state;
-    const { username, bio, profile_pic, interests = [], pronouns } = profile;
+    const {
+      id,
+      username,
+      bio,
+      profile_pic,
+      interests = [],
+      pronouns,
+    } = profile;
     let interestDict = {
       Activism: faFistRaised,
       Anime: faDragon,
@@ -297,11 +377,11 @@ class UserProfile extends React.Component {
       Theater: faTheaterMasks,
       Travel: faPlane,
     };
-    const url = `/editprofile/${this.context.userProfile.id}`;
 
     if (this.state.profile.id === this.context.userProfile.id) {
       return this.state.profile.id ? (
         <section className="userProfile">
+          <Nav />
           <div role="alert">{error && <p className="error">{error}</p>}</div>
           <section className="username">
             <h2>{username}</h2>
@@ -329,21 +409,18 @@ class UserProfile extends React.Component {
           <section className="bio">
             <p>{bio}</p>
           </section>
-          <section className="buttons">
-            <Link to={url} aira-label="edit profile button">
-              <FontAwesomeIcon icon={faCog} className="faIcon" />
-            </Link>
-            <Link to="/grid" aria-label="back button" className="primary">
-              <FontAwesomeIcon icon={faTh} className="faIcon" />
-            </Link>
-          </section>
         </section>
       ) : (
         <h2>Loading Profile...</h2>
       );
-    } else {
+    } else if (this.context.userProfile.blocked_profiles.includes(id)) {
       return this.state.profile.id ? (
         <section className="userProfile">
+          {!this.context.userProfile.blocked_profiles.includes(id) ? (
+            <Nav />
+          ) : (
+            <> </>
+          )}
           <section className="username">
             <h2>{username}</h2>
           </section>
@@ -375,42 +452,101 @@ class UserProfile extends React.Component {
           </section>
           <section className="buttonsProfile">
             <button
+              className="unblock"
+              aria-label="unblock button"
+              onClick={this.handleClickUnblock}
+            >
+              <FontAwesomeIcon icon={faCheck} className="faIcon" />
+            </button>
+            <Link
+              to="/blockedprofiles"
+              aria-label="back button"
               className="primary"
-              aria-label="message button"
-              onClick={this.sendMessage}
             >
-              <FontAwesomeIcon icon={faComments} className="faIcon" />
-            </button>
-            {this.context.userProfile.favorited_profiles.includes(
-              this.state.profile.id
-            ) === true ? (
-              <button
-                className="unfavorite"
-                aria-label="unfavorite button"
-                onClick={this.handleClickUnfavorite}
-              >
-                <FontAwesomeIcon icon={["far", "star"]} className="faIcon" />
-              </button>
-            ) : (
-              <button
-                className="favorite"
-                aria-label="favorite button"
-                onClick={this.handleClickFavorite}
-              >
-                <FontAwesomeIcon icon={faStar} className="faIcon" />
-              </button>
-            )}
-
-            <button
-              className="block"
-              aria-label="block button"
-              onClick={this.handleClickBlock}
-            >
-              <FontAwesomeIcon icon={faTimes} className="faIcon" />
-            </button>
-            <Link to="/grid" aria-label="back button" className="primary">
-              <FontAwesomeIcon icon={faTh} className="faIcon" />
+              <FontAwesomeIcon icon={faUndo} className="faIcon" />
             </Link>
+          </section>
+        </section>
+      ) : (
+        <h2>Loading Profile...</h2>
+      );
+    } else {
+      return this.state.profile.id ? (
+        <section className="userProfile">
+          <nav role="navigation">
+            <section className="buttons">
+              <section className="buttons">
+                <button
+                  className="primary"
+                  aria-label="message button"
+                  onClick={this.sendMessage}
+                >
+                  <FontAwesomeIcon icon={faComments} className="faIcon" />
+                </button>
+                {this.context.userProfile.favorited_profiles.includes(
+                  this.state.profile.id
+                ) === true ? (
+                  <button
+                    className="unfavorite"
+                    aria-label="unfavorite button"
+                    onClick={this.handleClickUnfavorite}
+                  >
+                    <FontAwesomeIcon
+                      icon={["far", "star"]}
+                      className="faIcon"
+                    />
+                  </button>
+                ) : (
+                  <button
+                    className="favorite"
+                    aria-label="favorite button"
+                    onClick={this.handleClickFavorite}
+                  >
+                    <FontAwesomeIcon icon={faStar} className="faIcon" />
+                  </button>
+                )}
+
+                <button
+                  className="block"
+                  aria-label="block button"
+                  onClick={this.handleClickBlock}
+                >
+                  <FontAwesomeIcon icon={faTimes} className="faIcon" />
+                </button>
+                <Link to="/grid" aria-label="back button" className="primary">
+                  <FontAwesomeIcon icon={faTh} className="faIcon" />
+                </Link>
+              </section>
+            </section>
+          </nav>
+          <section className="username">
+            <h2>{username}</h2>
+          </section>
+          <section className="profilePic">
+            <img
+              src={profile_pic}
+              alt={this.props.username + `'s profile pic`}
+              className="profilePic"
+            />
+          </section>
+          <section className="interestsProfile">
+            <ul>
+              {interests.map((interest) => (
+                <li key={interest} className="interestWrapper">
+                  <FontAwesomeIcon
+                    icon={interestDict[interest]}
+                    className="faIconProfile"
+                  />
+                  <p className="interestTextProfile">{interest}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className="bio">
+            <p>{bio}</p>
+          </section>
+          <section className="pronouns">
+            <p>{pronouns}</p>
           </section>
         </section>
       ) : (

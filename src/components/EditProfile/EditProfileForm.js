@@ -1,5 +1,6 @@
 import ApiContext from "../../ApiContext";
 import Checkbox from "../Checkbox/Checkbox";
+import { Link } from "react-router-dom";
 import React, { Component } from "react";
 
 export default class EditProfileForm extends Component {
@@ -62,44 +63,19 @@ export default class EditProfileForm extends Component {
     await this.props.onPronounsChange(e.target.value);
   };
 
-  onZipcodeChange = async (e) => {
-    await this.props.onZipcodeChange(e.target.value);
-  };
-
   handleSubmit = async (e) => {
     e.preventDefault();
-    const zipcode = this.props.profile.zipcode;
     const interests = [];
     for (const checkbox of this.selectedCheckboxes) {
       await interests.push(checkbox);
     }
     const sortedInterests = interests.sort();
-    if (zipcode.toString().length === 5) {
-      this.setState({ error: null });
-      const url = `https://cors-anywhere.herokuapp.com/https://phzmapi.org/${zipcode}.json`;
-      fetch(url)
-        .then((res) =>
-          !res.ok ? res.json().then((e) => Promise.reject(e)) : true
-        )
-        .then(this.props.onEditSuccess)
-        .catch((res) => {
-          this.setState({ error: "Could not find that zipcode" });
-        });
-
-      this.props.onInterestsChange(sortedInterests);
-    } else {
-      this.setState({ error: `Invalid zipcode` });
-    }
+    await this.props.onInterestsChange(sortedInterests);
+    this.props.onEditSuccess();
   };
 
   render() {
-    const {
-      username,
-      bio,
-      profile_pic,
-      pronouns,
-      zipcode,
-    } = this.props.profile;
+    const { username, bio, profile_pic, pronouns } = this.props.profile;
     const { error } = this.state;
     return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
@@ -165,18 +141,14 @@ export default class EditProfileForm extends Component {
             <option value="They/Them">They/Them</option>
           </datalist>
         </div>
-        <div className="zipcodeInput">
-          <label htmlFor="zipcode">Zipcode:</label>
-          <input
-            type="number"
-            name="zipcode"
-            id="zipcode"
-            placeholder={zipcode || ""}
-            value={zipcode || ""}
-            onChange={this.onZipcodeChange}
-            aria-required="true"
-            required
-          />
+        <div className="accountOptions">
+          {this.context.userProfile.blocked_profiles.length > 0 ? (
+            <Link to="/blockedprofiles" className="button" id="small">
+              Unblock Profiles
+            </Link>
+          ) : (
+            <> </>
+          )}
         </div>
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <div className="buttons">

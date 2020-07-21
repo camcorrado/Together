@@ -7,7 +7,6 @@ export default React.createContext({
   conversations: [],
   interestOptions: [],
   sortBy: "",
-  location: {},
   refreshProfile: () => {},
   setUserInfo: () => {},
   setProfileInfo: () => {},

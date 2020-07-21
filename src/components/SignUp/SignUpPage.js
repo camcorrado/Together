@@ -1,9 +1,12 @@
+import ApiContext from "../../ApiContext";
 import Header from "../Header/Header";
 import React, { Component } from "react";
 import SignUpForm from "../../components/SignUp/SignUpForm";
 
 export default class SignUpPage extends Component {
-  handleSignUpSuccess = () => {
+  static contextType = ApiContext;
+
+  handleSignUpSuccess = async () => {
     this.props.history.push("/createprofile");
   };
 

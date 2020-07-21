@@ -66,6 +66,19 @@ const AuthApiService = {
         console.error(err);
       });
   },
+  patchUser(user) {
+    const authToken = TokenService.getAuthToken();
+    return fetch(`${config.API_ENDPOINT}/users`, {
+      method: "PATCH",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify(user),
+    }).then((res) =>
+      !res.ok ? res.json().then((e) => Promise.reject(e)) : true
+    );
+  },
 };
 
 export default AuthApiService;

@@ -1,5 +1,7 @@
 import ApiContext from "./ApiContext";
 import AuthApiService from "./services/auth-api-service";
+import BlockedProfiles from "./components/AccountSettings/BlockedProfiles";
+import ChangePasswordPage from "./components/AccountSettings/ChangePasswordPage";
 import config from "./config";
 import CreateProfilePage from "./components/CreateProfile/CreateProfilePage";
 import EditProfilePage from "./components/EditProfile/EditProfilePage";
@@ -56,7 +58,7 @@ class App extends Component {
       "Travel",
     ],
     sortBy: "View All",
-    location: {},
+    messageBadge: 0,
     error: null,
   };
 
@@ -86,8 +88,6 @@ class App extends Component {
         AuthApiService.postRefreshToken();
       });
     }
-
-    //this.findLocation();
   }
 
   componentWillUnmount() {
@@ -115,26 +115,7 @@ class App extends Component {
     */
     this.forceUpdate();
   };
-  /*
-  findLocation = async () => {
-    await navigator.geolocation.getCurrentPosition(success, error);
 
-    function success(position) {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-
-      const url = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.REACT_APP_API_KEY}`;
-      console.log(process.env);
-      console.log({ url });
-    }
-
-    function error(err) {
-      this.setState({ error: err.message });
-    }
-
-    console.log(this.state.location);
-  };
-*/
   refreshProfile = async () => {
     this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
@@ -208,12 +189,60 @@ class App extends Component {
   };
 
   handleSetNearbyProfiles = (data) => {
-    let filteredProfiles = data.filter(
-      (profile) => !this.state.userProfile.blocked_profiles.includes(profile.id)
-    );
-    this.setState({
-      nearbyProfiles: filteredProfiles,
+    let filteredProfiles = data.filter((profile) => {
+      if (
+        !this.state.userProfile.blocked_profiles.includes(profile.id) &&
+        profile.user_id !== this.state.userProfile.user_id
+      ) {
+        return profile;
+      } else {
+        return false;
+      }
     });
+
+    filteredProfiles.forEach((profile) => {
+      const distance = this.distance(
+        this.state.userProfile.geolocation.x,
+        this.state.userProfile.geolocation.y,
+        profile.geolocation.x,
+        profile.geolocation.y,
+        "M"
+      );
+      profile.geolocation = distance;
+    });
+
+    this.setState({
+      nearbyProfiles: filteredProfiles.sort(
+        (a, b) => a.geolocation - b.geolocation
+      ),
+    });
+  };
+
+  distance = (lat1, lon1, lat2, lon2, unit) => {
+    if (lat1 === lat2 && lon1 === lon2) {
+      return 0;
+    } else {
+      var radlat1 = (Math.PI * lat1) / 180;
+      var radlat2 = (Math.PI * lat2) / 180;
+      var theta = lon1 - lon2;
+      var radtheta = (Math.PI * theta) / 180;
+      var dist =
+        Math.sin(radlat1) * Math.sin(radlat2) +
+        Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+      if (dist > 1) {
+        dist = 1;
+      }
+      dist = Math.acos(dist);
+      dist = (dist * 180) / Math.PI;
+      dist = dist * 60 * 1.1515;
+      if (unit === "K") {
+        dist = dist * 1.609344;
+      }
+      if (unit === "N") {
+        dist = dist * 0.8684;
+      }
+    }
+    return dist;
   };
 
   handleSetConverations = async () => {
@@ -254,12 +283,16 @@ class App extends Component {
   };
 
   handleEditProfile = (data, cb) => {
+    console.log({ data });
+    let geoData = data.geolocation;
+
     this.setState(
       {
-        userProfile: data,
+        userProfile: { ...data, geolocation: `${geoData.x}, ${geoData.y}` },
       },
       cb
     );
+    console.log(this.state.userProfile);
   };
 
   handleLogOut = async () => {
@@ -272,8 +305,6 @@ class App extends Component {
       userProfile: {},
       nearbyProfiles: [],
     });
-
-    this.props.history.push("/");
   };
 
   render() {
@@ -284,7 +315,6 @@ class App extends Component {
       conversations: this.state.conversations,
       interestOptions: this.state.interestOptions,
       sortBy: this.state.sortBy,
-      location: this.state.location,
       refreshProfile: this.refreshProfile,
       setUserInfo: this.handleSetUserInfo,
       setProfileInfo: this.handleSetProfileInfo,
@@ -302,6 +332,14 @@ class App extends Component {
               <Route exact path={"/"} component={Hero} />
               <PublicOnlyRoute path={"/login"} component={LoginPage} />
               <PublicOnlyRoute path={"/signup"} component={SignUpPage} />
+              <PrivateRoute
+                path={"/blockedprofiles"}
+                component={BlockedProfiles}
+              />
+              <PrivateRoute
+                path={"/changepassword"}
+                component={ChangePasswordPage}
+              />
               <PrivateRoute
                 path={"/createprofile"}
                 component={CreateProfilePage}

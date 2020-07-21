@@ -55,11 +55,23 @@ export default class LoginForm extends Component {
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <div className="emailInput">
           <label htmlFor="email">Email:</label>
-          <input type="email" name="email" id="email" required />
+          <input
+            type="email"
+            name="email"
+            id="email"
+            defaultValue="test@gmail.com"
+            required
+          />
         </div>
         <div className="passwordInput">
           <label htmlFor="password">Password:</label>
-          <input type="password" name="password" id="password" required />
+          <input
+            type="password"
+            name="password"
+            id="password"
+            defaultValue="Test123!"
+            required
+          />
         </div>
         <div className="buttons">
           <button type="submit" className="primary">

@@ -2,7 +2,6 @@ import ApiContext from "../../ApiContext";
 import Nav from "../Nav/Nav";
 import ProfileIcon from "./ProfileIcon";
 import React, { Component } from "react";
-import UserProfileIcon from "./UserProfileIcon";
 
 export default class Grid extends Component {
   static contextType = ApiContext;
@@ -40,9 +39,6 @@ export default class Grid extends Component {
           <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
-              <li key={this.context.userProfile.id} className="profile">
-                <UserProfileIcon />
-              </li>
               {this.context.nearbyProfiles
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (
@@ -73,9 +69,6 @@ export default class Grid extends Component {
           <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
-              <li key={this.context.userProfile.id} className="profile">
-                <UserProfileIcon />
-              </li>
               {filteredProfiles
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (
@@ -112,9 +105,6 @@ export default class Grid extends Component {
           <Nav />
           <section className="profiles">
             <ul className="gridProfiles">
-              <li key={this.context.userProfile.id} className="profile">
-                <UserProfileIcon />
-              </li>
               {filteredProfiles
                 .filter((profile) => profile.id !== this.context.userProfile.id)
                 .map((profile) => (

@@ -54,7 +54,7 @@ export default class ProfileIcon extends Component {
     };
 
     const { id, username, profile_pic, interests } = this.props;
-    const url = `/userProfile/${id}`;
+    const url = `/userprofile/${id}`;
     return (
       <Link to={url} className="profileIconLink">
         <section className="profileIcon">

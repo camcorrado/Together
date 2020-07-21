@@ -22,4 +22,4 @@ Currently, the geolocation and profile picture upload are not working properly. 
 
 ## Live URL
 
-https://lgbtq.now.sh/
+https://together-lgbtq.now.sh

@@ -119,6 +119,13 @@ nav {
   height: 120px;
 }
 
+.profilePicButton {
+  max-width: 25px;
+  position: relative;
+  top: 5px;
+  border-radius: 3px;
+}
+
 .sortByForm {
   border: none;
 }
@@ -143,6 +150,10 @@ p + p {
 
 .error {
   color: red;
+}
+
+.success {
+  color: green;
 }
 
 input::-webkit-outer-spin-button,
@@ -204,7 +215,17 @@ button.block {
   color: black;
 }
 
-.grid {
+.messageBadge {
+  position: absolute;
+}
+
+#small {
+  font-size: 12px;
+  padding: 10px;
+}
+
+.grid,
+.blockedProfilesGrid {
   width: 100%;
   margin: 0px;
   padding: 0px;
@@ -216,7 +237,8 @@ button.block {
   overflow: scroll;
 }
 
-.gridProfiles {
+.gridProfiles,
+.blockedProfiles {
   list-style: none;
   display: flex;
   flex-flow: wrap;
@@ -282,6 +304,7 @@ button.block {
   flex-direction: row;
   justify-content: space-evenly;
   overflow-x: scroll;
+  min-height: 30px;
 }
 
 .faIcon,
@@ -359,6 +382,15 @@ button.block {
   opacity: 1;
 }
 
+.bio {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
 .buttonsProfile {
   display: flex;
   flex-direction: row;
@@ -376,7 +408,8 @@ button.block {
   height: 100px;
 }
 
-.conversations {
+.conversations,
+.userProfile {
   margin-top: 100px;
 }
 
@@ -390,6 +423,10 @@ button.block {
 
 .profilePicConversations {
   max-width: 50px;
+}
+
+img.profilePicMessage {
+  max-width: 100px;
 }
 
 .messageHistory {
@@ -419,6 +456,10 @@ button.block {
 
 .MessageForm {
   border: none;
+}
+
+.changePassword {
+  margin-top: 120px;
 }
 
 @media (orientation: landscape) {

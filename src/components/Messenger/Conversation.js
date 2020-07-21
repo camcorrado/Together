@@ -81,7 +81,15 @@ export default class Conversation extends Component {
     const { error } = this.state;
     const url = `/conversation/${this.props.id}`;
     return (
-      <Link to={url} className="conversationLink">
+      <Link
+        to={{
+          pathname: url,
+          state: {
+            otherUser: this.state.users[0],
+          },
+        }}
+        className="conversationLink"
+      >
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="conversation">
           {this.state.users.map((profile) => (
