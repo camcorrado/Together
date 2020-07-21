@@ -28,8 +28,54 @@ header {
   padding: 45px 15px;
 }
 
+.appTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.L,
+.G,
+.B,
+.Q,
+.plus {
+  opacity: 0.25;
+}
+
+.L {
+  color: red;
+}
+
+.G {
+  color: orange;
+}
+
+.B {
+  color: yellow;
+}
+
+.T {
+  color: green;
+}
+
+.ogether {
+  color: black;
+}
+
+.Q {
+  color: blue;
+}
+
+.plus {
+  color: purple;
+}
+
+.Together {
+  display: flex;
+}
+
 h1 {
-  font-size: 50px;
+  font-size: 40px;
 }
 
 form {
@@ -120,9 +166,9 @@ nav {
 }
 
 .profilePicButton {
-  max-width: 25px;
+  width: 25px;
   position: relative;
-  top: 5px;
+  top: 7px;
   border-radius: 3px;
 }
 
@@ -294,17 +340,35 @@ button.block {
   width: 100%;
   white-space: normal;
   position: absolute;
-  background-color: black;
   max-height: 30px;
   min-height: 10px;
   left: 0px;
   bottom: 0px;
   padding: 0px;
+  overflow-x: scroll;
+  min-height: 30px;
+}
+
+.interestsGrid ul {
+  list-style: none;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
   overflow-x: scroll;
-  min-height: 30px;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.interestTextGrid {
+  background-color: white;
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  z-index: 1;
+  font-size: 20px;
 }
 
 .faIcon,
@@ -343,14 +407,6 @@ button.block {
   justify-content: space-evenly;
 }
 
-.interestsGrid ul {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  overflow-x: scroll;
-  overflow-y: hidden;
-}
-
 .interestWrapper {
   position: relative;
 }
@@ -364,17 +420,7 @@ button.block {
   transform: translate(-50%, -50%);
   opacity: 0;
   z-index: 1;
-}
-
-.interestTextGrid {
-  background-color: black;
-  color: white;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  z-index: 1;
+  font-size: 20px;
 }
 
 .interestTextProfile:hover,
@@ -463,6 +509,10 @@ img.profilePicMessage {
 }
 
 @media (orientation: landscape) {
+  h1 {
+    font-size: 60px;
+  }
+
   .profile {
     flex-basis: 25%;
     max-width: 25%;

@@ -78,21 +78,21 @@ export default class Conversation extends Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { users, displayMessage, error } = this.state;
     const url = `/conversation/${this.props.id}`;
     return (
       <Link
         to={{
           pathname: url,
           state: {
-            otherUser: this.state.users[0],
+            otherUser: users[0],
           },
         }}
         className="conversationLink"
       >
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="conversation">
-          {this.state.users.map((profile) => (
+          {users.map((profile) => (
             <img
               key={profile.id}
               src={profile.profile_pic}
@@ -100,10 +100,10 @@ export default class Conversation extends Component {
               className="profilePicConversations"
             />
           ))}
-          {this.state.users.map((profile) => (
+          {users.map((profile) => (
             <h5 key={profile.id}>{profile.username}</h5>
           ))}
-          <p className="mostRecentMessage">{this.state.displayMessage}</p>
+          <p className="mostRecentMessage">{displayMessage}</p>
         </section>
       </Link>
     );

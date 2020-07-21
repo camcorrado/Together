@@ -18,7 +18,8 @@ class MessageList extends Component {
   }
 
   render() {
-    if (this.context.conversations.length === 0) {
+    const { conversations } = this.context;
+    if (conversations.length === 0) {
       return (
         <section className="messageList">
           <Nav />
@@ -33,7 +34,7 @@ class MessageList extends Component {
           <Nav />
           <section className="conversations">
             <ul>
-              {this.context.conversations.map((conversation) => (
+              {conversations.map((conversation) => (
                 <li key={conversation.id}>
                   <Conversation
                     id={conversation.id}

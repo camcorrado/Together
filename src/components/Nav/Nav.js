@@ -16,6 +16,7 @@ export default class Nav extends Component {
 
   static defaultProps = {
     userProfile: {},
+    refreshProfile: () => {},
     logOut: () => {},
   };
 
@@ -26,9 +27,11 @@ export default class Nav extends Component {
 
   render() {
     const { id, username, profile_pic } = this.context.userProfile;
+    const { messageBadge } = this.context;
+    const { pathname } = window.location;
     const url = `/userprofile/${id}`;
     const editUrl = `/editprofile/${id}`;
-    if (window.location.pathname === "/grid") {
+    if (pathname === "/grid") {
       return (
         <nav role="navigation">
           <section className="buttons">
@@ -37,18 +40,22 @@ export default class Nav extends Component {
               aira-label="view profile button"
               id="viewProfileButton"
             >
-              <img
-                src={profile_pic}
-                alt={username + `'s profile pic`}
-                className="profilePicButton"
-              />
+              {profile_pic ? (
+                <img
+                  src={profile_pic}
+                  alt={username + `'s profile pic`}
+                  className="profilePicButton"
+                />
+              ) : (
+                <></>
+              )}
             </Link>
             <Link to="messenger" aria-label="messages button">
               <FontAwesomeIcon icon={faComments} className="faIcon" />
-              {this.context.messageBadge === 0 ? (
+              {messageBadge === 0 ? (
                 <></>
               ) : (
-                <div className="messageBadge">{this.context.messageBadge}</div>
+                <div className="messageBadge">{messageBadge}</div>
               )}
             </Link>
             <button onClick={this.handleClickLogOut} aria-label="logout button">
@@ -58,7 +65,10 @@ export default class Nav extends Component {
           <SortByForm />
         </nav>
       );
-    } else if (window.location.pathname === "/messenger") {
+    } else if (
+      pathname === "/messenger" ||
+      pathname.includes("/conversation")
+    ) {
       return (
         <nav role="navigation">
           <section className="buttons">
@@ -67,11 +77,15 @@ export default class Nav extends Component {
               aira-label="view profile button"
               id="viewProfileButton"
             >
-              <img
-                src={profile_pic}
-                alt={username + `'s profile pic`}
-                className="profilePicButton"
-              />
+              {profile_pic ? (
+                <img
+                  src={profile_pic}
+                  alt={username + `'s profile pic`}
+                  className="profilePicButton"
+                />
+              ) : (
+                <></>
+              )}
             </Link>
             <Link to="/grid" aria-label="back button" className="primary">
               <FontAwesomeIcon icon={faTh} className="faIcon" />
@@ -83,8 +97,8 @@ export default class Nav extends Component {
         </nav>
       );
     } else if (
-      window.location.pathname === "/blockedprofiles" ||
-      window.location.pathname === "/changepassword"
+      pathname === "/blockedprofiles" ||
+      pathname === "/changepassword"
     ) {
       return (
         <nav role="navigation">
@@ -99,7 +113,7 @@ export default class Nav extends Component {
           </section>
         </nav>
       );
-    } else if (window.location.pathname.includes("/userprofile")) {
+    } else if (pathname.includes("/userprofile")) {
       return (
         <nav role="navigation">
           <section className="buttons">

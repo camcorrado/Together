@@ -29,72 +29,82 @@ export default class Grid extends Component {
   }
 
   render() {
-    if (
-      this.context.sortBy === "View All" &&
-      this.context.nearbyProfiles.length > 0 &&
-      this.context.userProfile.id
-    ) {
+    const { sortBy, nearbyProfiles, userProfile } = this.context;
+    if (sortBy === "View All" && nearbyProfiles.length > 0 && userProfile.id) {
       return (
         <section className="grid">
           <Nav />
           <section className="profiles">
-            <ul className="gridProfiles">
-              {this.context.nearbyProfiles
-                .filter((profile) => profile.id !== this.context.userProfile.id)
-                .map((profile) => (
-                  <li key={profile.id} className="profile">
-                    <ProfileIcon
-                      id={profile.id}
-                      user_id={profile.user_id}
-                      profile_pic={profile.profile_pic}
-                      username={profile.username}
-                      interests={profile.interests}
-                    />
-                  </li>
-                ))}
-            </ul>
+            {nearbyProfiles.length > 0 ? (
+              <ul className="gridProfiles">
+                {nearbyProfiles
+                  .filter((profile) => profile.id !== userProfile.id)
+                  .map((profile) => (
+                    <li key={profile.id} className="profile">
+                      <ProfileIcon
+                        id={profile.id}
+                        user_id={profile.user_id}
+                        profile_pic={profile.profile_pic}
+                        username={profile.username}
+                        interests={profile.interests}
+                      />
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p>
+                No one has signed up yet! Congrats and thank you on being the
+                first! Share with friends to get things going!
+              </p>
+            )}
           </section>
         </section>
       );
     } else if (
-      this.context.sortBy === "Favorites" &&
-      this.context.nearbyProfiles.length > 0 &&
-      this.context.userProfile.id
+      sortBy === "Favorites" &&
+      nearbyProfiles.length > 0 &&
+      userProfile.id
     ) {
-      const filteredProfiles = this.context.nearbyProfiles.filter((profile) =>
-        this.context.userProfile.favorited_profiles.includes(profile.id)
+      const filteredProfiles = nearbyProfiles.filter((profile) =>
+        userProfile.favorited_profiles.includes(profile.id)
       );
       return (
         <section className="grid">
           <Nav />
           <section className="profiles">
-            <ul className="gridProfiles">
-              {filteredProfiles
-                .filter((profile) => profile.id !== this.context.userProfile.id)
-                .map((profile) => (
-                  <li className="profile" key={profile.id}>
-                    <ProfileIcon
-                      key={profile.id}
-                      id={profile.id}
-                      user_id={profile.user_id}
-                      profile_pic={profile.profile_pic}
-                      username={profile.username}
-                      interests={profile.interests}
-                    />
-                  </li>
-                ))}
-            </ul>
+            {filteredProfiles.length > 0 ? (
+              <ul className="gridProfiles">
+                {filteredProfiles
+                  .filter((profile) => profile.id !== userProfile.id)
+                  .map((profile) => (
+                    <li className="profile" key={profile.id}>
+                      <ProfileIcon
+                        key={profile.id}
+                        id={profile.id}
+                        user_id={profile.user_id}
+                        profile_pic={profile.profile_pic}
+                        username={profile.username}
+                        interests={profile.interests}
+                      />
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p>
+                You don't have any favorites! View profiles to favorite them!
+              </p>
+            )}
           </section>
         </section>
       );
     } else if (
-      this.context.sortBy === "Shared Interests" &&
-      this.context.nearbyProfiles.length > 0 &&
-      this.context.userProfile.id
+      sortBy === "Shared Interests" &&
+      nearbyProfiles.length > 0 &&
+      userProfile.id
     ) {
-      const filteredProfiles = this.context.nearbyProfiles.filter((profile) => {
+      const filteredProfiles = nearbyProfiles.filter((profile) => {
         profile.count = profile.interests.filter((interest) =>
-          this.context.userProfile.interests.includes(interest)
+          userProfile.interests.includes(interest)
         ).length;
         return profile.count;
       });
@@ -104,21 +114,28 @@ export default class Grid extends Component {
         <section className="grid">
           <Nav />
           <section className="profiles">
-            <ul className="gridProfiles">
-              {filteredProfiles
-                .filter((profile) => profile.id !== this.context.userProfile.id)
-                .map((profile) => (
-                  <li key={profile.id} className="profile">
-                    <ProfileIcon
-                      id={profile.id}
-                      user_id={profile.user_id}
-                      profile_pic={profile.profile_pic}
-                      username={profile.username}
-                      interests={profile.interests}
-                    />
-                  </li>
-                ))}
-            </ul>
+            {filteredProfiles.length > 0 ? (
+              <ul className="gridProfiles">
+                {filteredProfiles
+                  .filter((profile) => profile.id !== userProfile.id)
+                  .map((profile) => (
+                    <li key={profile.id} className="profile">
+                      <ProfileIcon
+                        id={profile.id}
+                        user_id={profile.user_id}
+                        profile_pic={profile.profile_pic}
+                        username={profile.username}
+                        interests={profile.interests}
+                      />
+                    </li>
+                  ))}
+              </ul>
+            ) : (
+              <p>
+                You don't have any interests selected! Edit your profile to
+                change your interests.
+              </p>
+            )}
           </section>
         </section>
       );

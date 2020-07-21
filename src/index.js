@@ -36,6 +36,7 @@ import {
   faCog,
   faTh,
   faCheck,
+  faEnvelope,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -69,7 +70,8 @@ library.add(
   faDoorOpen,
   faCog,
   faTh,
-  faCheck
+  faCheck,
+  faEnvelope
 );
 
 ReactDOM.render(

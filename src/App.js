@@ -63,6 +63,7 @@ class App extends Component {
   };
 
   componentDidMount() {
+    this.refreshProfile();
     /*
       set the function (callback) to call when a user goes idle
       we'll set this to logout a user when they're idle
@@ -257,7 +258,7 @@ class App extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then(async (conversations) => {
+      .then((conversations) => {
         let filteredConvos = [];
         conversations.forEach((convo) => {
           let id = convo.users
@@ -267,7 +268,8 @@ class App extends Component {
             filteredConvos.push(convo);
           }
         });
-        await this.setState({
+
+        this.setState({
           conversations: filteredConvos,
         });
       })
@@ -283,7 +285,6 @@ class App extends Component {
   };
 
   handleEditProfile = (data, cb) => {
-    console.log({ data });
     let geoData = data.geolocation;
 
     this.setState(
@@ -292,15 +293,14 @@ class App extends Component {
       },
       cb
     );
-    console.log(this.state.userProfile);
   };
 
-  handleLogOut = async () => {
+  handleLogOut = () => {
     TokenService.clearAuthToken();
     /* when logging out, clear the callbacks to the refresh api and idle auto logout */
     TokenService.clearCallbackBeforeExpiry();
     IdleService.unRegisterIdleResets();
-    await this.setState({
+    this.setState({
       userInfo: {},
       userProfile: {},
       nearbyProfiles: [],

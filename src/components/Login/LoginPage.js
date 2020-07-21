@@ -20,8 +20,7 @@ export default class LoginPage extends Component {
 
   componentDidMount() {
     this.findLocation();
-    const authToken = TokenService.getAuthToken();
-    if (authToken) {
+    if (TokenService.getAuthToken()) {
       this.props.history.push("/grid");
     }
   }
@@ -108,9 +107,7 @@ export default class LoginPage extends Component {
           <Header />
         </header>
         <h2>Login</h2>{" "}
-        <div role="alert">
-          {error && <p className="error">{error.message}</p>}
-        </div>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <LoginForm
           onLoginSuccess={this.handleLoginSuccess}
           onNoProfile={this.handleNoProfile}

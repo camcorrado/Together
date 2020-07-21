@@ -161,3 +161,12 @@ export default class EditProfileForm extends Component {
     );
   }
 }
+
+/*
+<Link to="/changepassword" className="button" id="small">
+            Change Password
+          </Link>
+          <Link to="/deactivateaccount" className="button" id="small">
+            Deactivate Account
+          </Link>
+          */

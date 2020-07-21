@@ -1,6 +1,7 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
 import { Link } from "react-router-dom";
+import Nav from "../Nav/Nav";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -25,41 +26,49 @@ class Message extends Component {
   async componentDidMount() {
     this.setState({ error: null });
     await this.context.refreshProfile();
-    const conversationId = this.props.match.params.conversationId;
-    fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((res) =>
-        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-      )
-      .then((data) => {
-        const convo = this.context.conversations
-          .filter((convo) => convo.id === Number(conversationId))
-          .pop();
-        const otherUser = convo.users.filter(
-          (user) => user !== this.context.userProfile.id
-        );
-        const otherProfile = this.context.nearbyProfiles.filter(
-          (profile) => profile.id === otherUser[0]
-        );
-        this.setState({
-          messageHistory: data,
-          otherUser: otherProfile.pop(),
-        });
-        data.forEach((message) => {
-          if (
-            message.msg_read === false &&
-            message.user_id !== this.context.userProfile.id
-          ) {
-          }
-        });
+    const conversationId = Number(this.props.match.params.conversationId);
+    const conversationIds = [];
+    this.context.conversations.forEach((convo) =>
+      conversationIds.push(convo.id)
+    );
+    if (conversationIds.includes(conversationId)) {
+      fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
       })
-      .catch((res) => {
-        this.setState({ error: res.error });
-      });
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
+        .then((data) => {
+          const convo = this.context.conversations
+            .filter((convo) => convo.id === Number(conversationId))
+            .pop();
+          const otherUser = convo.users.filter(
+            (user) => user !== this.context.userProfile.id
+          );
+          const otherProfile = this.context.nearbyProfiles.filter(
+            (profile) => profile.id === otherUser[0]
+          );
+          this.setState({
+            messageHistory: data,
+            otherUser: otherProfile.pop(),
+          });
+          data.forEach((message) => {
+            if (
+              message.msg_read === false &&
+              message.user_id !== this.context.userProfile.id
+            ) {
+            }
+          });
+        })
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+    } else {
+      this.setState({ error: `Invalid Conversation` });
+    }
   }
 
   handleSubmit = (e) => {
@@ -147,17 +156,32 @@ class Message extends Component {
 
   render() {
     const { messageHistory, error } = this.state;
-    const url = `/userprofile/${this.state.otherUser.id}`;
-    if (this.state.messageHistory.length === 0) {
+    const { id, username, profile_pic } = this.state.otherUser;
+    const { userProfile } = this.context;
+    const url = `/userprofile/${id}`;
+    if (error !== null) {
       return (
+        <section className="userProfile">
+          <Nav />
+          <div role="alert">{error && <p className="error">{error}</p>}</div>
+        </section>
+      );
+    } else if (messageHistory.length === 0) {
+      return !userProfile.id ? (
+        <h2>Loading Conversation...</h2>
+      ) : (
         <section className="messenger">
           <section className="profilePicMessage">
             <Link to={url}>
-              <img
-                src={this.state.otherUser.profile_pic}
-                alt={this.state.otherUser.username + `'s profile pic`}
-                className="profilePicMessage"
-              />
+              {profile_pic ? (
+                <img
+                  src={profile_pic}
+                  alt={username + `'s profile pic`}
+                  className="profilePicMessage"
+                />
+              ) : (
+                <></>
+              )}
             </Link>
           </section>
           <section className="messageHistory">
@@ -186,20 +210,26 @@ class Message extends Component {
         </section>
       );
     } else {
-      return (
+      return !userProfile.id ? (
+        <h2>Loading Conversation...</h2>
+      ) : (
         <section className="messenger">
           <section className="profilePicMessage">
             <Link to={url}>
-              <img
-                src={this.state.otherUser.profile_pic}
-                alt={this.state.otherUser.username + `'s profile pic`}
-                className="profilePicMessage"
-              />
+              {profile_pic ? (
+                <img
+                  src={profile_pic}
+                  alt={username + `'s profile pic`}
+                  className="profilePicMessage"
+                />
+              ) : (
+                <></>
+              )}
             </Link>
           </section>
           <section className="messageHistory">
             {messageHistory.map((message) =>
-              message.user_id === this.context.userProfile.id ? (
+              message.user_id === userProfile.id ? (
                 <p className="userMessage" key={message.id}>
                   {message.content}
                 </p>
