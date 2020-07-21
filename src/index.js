@@ -4,6 +4,10 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
+import "./fonts/AnnieUseYourTelescope-Regular.ttf";
+import "./fonts/ArchitectsDaughter-Regular.ttf";
+import "./fonts/Cabin-Regular.ttf";
+import "./fonts/GiveYouGlory-Regular.ttf";
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
 import {
   faFistRaised,

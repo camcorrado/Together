@@ -12,7 +12,7 @@ body {
 }
 
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: "Cabin-Regular";
   font-size: 20px;
   color: #444;
   text-align: center;
@@ -32,6 +32,7 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  font-family: "AnnieUseYourTelescope-Regular";
 }
 
 .L,
@@ -44,18 +45,21 @@ header {
 
 .L {
   color: red;
+  display: none;
 }
 
 .G {
   color: orange;
+  display: none;
 }
 
 .B {
   color: yellow;
+  display: none;
 }
 
 .T {
-  color: green;
+  color: black;
 }
 
 .ogether {
@@ -64,10 +68,12 @@ header {
 
 .Q {
   color: blue;
+  display: none;
 }
 
 .plus {
   color: purple;
+  display: none;
 }
 
 .Together {
@@ -76,7 +82,7 @@ header {
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 70px;
 }
 
 form {
@@ -511,7 +517,7 @@ img.profilePicMessage {
 
 @media (orientation: landscape) {
   h1 {
-    font-size: 60px;
+    font-size: 120px;
   }
 
   .profile {
