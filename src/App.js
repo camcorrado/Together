@@ -32,6 +32,7 @@ class App extends Component {
     userInfo: {},
     userProfile: {},
     nearbyProfiles: [],
+    blockedBy: [],
     conversations: [],
     interestOptions: [
       "Activism",
@@ -190,10 +191,21 @@ class App extends Component {
   };
 
   handleSetNearbyProfiles = (data) => {
+    let blockedBy = [];
+
+    data.filter((profile) => {
+      if (profile.blocked_profiles.includes(this.state.userProfile.id)) {
+        blockedBy.push(profile.id);
+      } else {
+        return false;
+      }
+    });
+
     let filteredProfiles = data.filter((profile) => {
       if (
         !this.state.userProfile.blocked_profiles.includes(profile.id) &&
-        profile.user_id !== this.state.userProfile.user_id
+        profile.user_id !== this.state.userProfile.user_id &&
+        !blockedBy.includes(profile.id)
       ) {
         return profile;
       } else {
@@ -216,6 +228,7 @@ class App extends Component {
       nearbyProfiles: filteredProfiles.sort(
         (a, b) => a.geolocation - b.geolocation
       ),
+      blockedBy: blockedBy,
     });
   };
 
@@ -312,6 +325,7 @@ class App extends Component {
       userInfo: this.state.userInfo,
       userProfile: this.state.userProfile,
       nearbyProfiles: this.state.nearbyProfiles,
+      blockedBy: this.state.blockedBy,
       conversations: this.state.conversations,
       interestOptions: this.state.interestOptions,
       sortBy: this.state.sortBy,

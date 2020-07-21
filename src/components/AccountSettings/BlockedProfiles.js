@@ -20,26 +20,29 @@ export default class BlockedProfiles extends Component {
 
   async componentDidMount() {
     await this.context.refreshProfile();
-
-    this.setState({ error: null });
-    await fetch(`${config.API_ENDPOINT}/profiles`, {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-      },
-    })
-      .then((res) =>
-        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-      )
-      .then(async (data) => {
-        const blockedProfiles = await data.filter((profile) =>
-          this.context.userProfile.blocked_profiles.includes(profile.id)
-        );
-        this.setState({ blockedProfiles: blockedProfiles });
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
+    } else {
+      this.setState({ error: null });
+      await fetch(`${config.API_ENDPOINT}/profiles`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
       })
-      .catch((res) => {
-        this.setState({ error: res.error });
-      });
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
+        .then(async (data) => {
+          const blockedProfiles = await data.filter((profile) =>
+            this.context.userProfile.blocked_profiles.includes(profile.id)
+          );
+          this.setState({ blockedProfiles: blockedProfiles });
+        })
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+    }
   }
 
   render() {

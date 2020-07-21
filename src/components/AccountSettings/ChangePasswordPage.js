@@ -15,8 +15,11 @@ export default class ChangePasswordPage extends Component {
     error: null,
   };
 
-  componentDidMount() {
-    this.context.refreshProfile();
+  async componentDidMount() {
+    await this.context.refreshProfile();
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
+    }
   }
 
   render() {

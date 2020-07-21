@@ -32,9 +32,13 @@ export default class EditProfilepage extends Component {
 
   async componentDidMount() {
     await this.context.refreshProfile();
-    this.setState({
-      ...this.context.userProfile,
-    });
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
+    } else {
+      this.setState({
+        ...this.context.userProfile,
+      });
+    }
   }
 
   handleChangeUsername = (value) => {

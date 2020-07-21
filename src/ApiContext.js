@@ -4,6 +4,7 @@ export default React.createContext({
   userInfo: {},
   userProfile: {},
   nearbyProfiles: [],
+  blockedBy: [],
   conversations: [],
   interestOptions: [],
   sortBy: "",

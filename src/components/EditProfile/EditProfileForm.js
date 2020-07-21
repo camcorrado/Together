@@ -2,6 +2,8 @@ import ApiContext from "../../ApiContext";
 import Checkbox from "../Checkbox/Checkbox";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUndo } from "@fortawesome/free-solid-svg-icons";
 
 export default class EditProfileForm extends Component {
   static contextType = ApiContext;
@@ -155,7 +157,9 @@ export default class EditProfileForm extends Component {
           <button className="primary" type="submit" onClick={this.handleSubmit}>
             Submit
           </button>
-          <button onClick={this.props.onClickCancel}>Cancel</button>
+          <button onClick={this.props.onClickCancel}>
+            <FontAwesomeIcon icon={faUndo} className="faIcon" />
+          </button>
         </div>
       </form>
     );

@@ -26,48 +26,52 @@ class Message extends Component {
   async componentDidMount() {
     this.setState({ error: null });
     await this.context.refreshProfile();
-    const conversationId = Number(this.props.match.params.conversationId);
-    const conversationIds = [];
-    this.context.conversations.forEach((convo) =>
-      conversationIds.push(convo.id)
-    );
-    if (conversationIds.includes(conversationId)) {
-      fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) =>
-          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-        )
-        .then((data) => {
-          const convo = this.context.conversations
-            .filter((convo) => convo.id === Number(conversationId))
-            .pop();
-          const otherUser = convo.users.filter(
-            (user) => user !== this.context.userProfile.id
-          );
-          const otherProfile = this.context.nearbyProfiles.filter(
-            (profile) => profile.id === otherUser[0]
-          );
-          this.setState({
-            messageHistory: data,
-            otherUser: otherProfile.pop(),
-          });
-          data.forEach((message) => {
-            if (
-              message.msg_read === false &&
-              message.user_id !== this.context.userProfile.id
-            ) {
-            }
-          });
-        })
-        .catch((res) => {
-          this.setState({ error: res.error });
-        });
+    if (Object.keys(this.context.userProfile).length === 0) {
+      this.props.history.push("/createprofile");
     } else {
-      this.setState({ error: `Invalid Conversation` });
+      const conversationId = Number(this.props.match.params.conversationId);
+      const conversationIds = [];
+      this.context.conversations.forEach((convo) =>
+        conversationIds.push(convo.id)
+      );
+      if (conversationIds.includes(conversationId)) {
+        fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
+        })
+          .then((res) =>
+            !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+          )
+          .then((data) => {
+            const convo = this.context.conversations
+              .filter((convo) => convo.id === Number(conversationId))
+              .pop();
+            const otherUser = convo.users.filter(
+              (user) => user !== this.context.userProfile.id
+            );
+            const otherProfile = this.context.nearbyProfiles.filter(
+              (profile) => profile.id === otherUser[0]
+            );
+            this.setState({
+              messageHistory: data,
+              otherUser: otherProfile.pop(),
+            });
+            data.forEach((message) => {
+              if (
+                message.msg_read === false &&
+                message.user_id !== this.context.userProfile.id
+              ) {
+              }
+            });
+          })
+          .catch((res) => {
+            this.setState({ error: res.error });
+          });
+      } else {
+        this.setState({ error: `Invalid Conversation` });
+      }
     }
   }
 

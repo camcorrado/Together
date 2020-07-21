@@ -16,7 +16,6 @@ export default class Nav extends Component {
 
   static defaultProps = {
     userProfile: {},
-    refreshProfile: () => {},
     logOut: () => {},
   };
 

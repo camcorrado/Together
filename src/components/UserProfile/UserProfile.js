@@ -30,8 +30,11 @@ import {
   faPlane,
   faTimes,
   faStar,
+  faComments,
   faTh,
-  faEnvelope,
+  faUndo,
+  faCheck,
+  faDoorOpen,
 } from "@fortawesome/free-solid-svg-icons";
 
 class UserProfile extends React.Component {
@@ -40,6 +43,8 @@ class UserProfile extends React.Component {
   static defaultProps = {
     userProfile: {},
     conversations: [],
+    nearbyProfiles: [],
+    blockedBy: [],
     refreshProfile: () => {},
     setConversations: () => {},
   };
@@ -52,10 +57,13 @@ class UserProfile extends React.Component {
   async componentDidMount() {
     this.setState({ error: null });
     await this.context.refreshProfile();
+
+    const profileId = Number(this.props.match.params.profileId);
     if (Object.keys(this.context.userProfile).length === 0) {
       this.props.history.push("/createprofile");
+    } else if (this.context.blockedBy.includes(profileId)) {
+      this.setState({ error: `Invalid profile` });
     } else {
-      const profileId = this.props.match.params.profileId;
       fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
         method: "GET",
         headers: {
@@ -338,7 +346,6 @@ class UserProfile extends React.Component {
 
   render() {
     const { profile, error } = this.state;
-    const { userProfile } = this.context;
     const {
       id,
       username,
@@ -371,15 +378,44 @@ class UserProfile extends React.Component {
       Theater: faTheaterMasks,
       Travel: faPlane,
     };
-    if (error !== null && error !== undefined) {
+    if (this.state.error !== null) {
       return (
         <section className="userProfile">
-          <Nav />
-          <div role="alert">{error && <p className="error">{error}</p>}</div>
+          <nav role="navigation">
+            <section className="buttons">
+              <Link
+                to={`/userprofile/${this.context.userProfile.id}`}
+                aira-label="view profile button"
+                id="viewProfileButton"
+              >
+                {this.context.userProfile.profile_pic ? (
+                  <img
+                    src={this.context.userProfile.profile_pic}
+                    alt={this.context.userProfile.username + `'s profile pic`}
+                    className="profilePicButton"
+                  />
+                ) : (
+                  <></>
+                )}
+              </Link>
+              <Link to="/grid" aria-label="back button" className="primary">
+                <FontAwesomeIcon icon={faTh} className="faIcon" />
+              </Link>
+              <button
+                onClick={this.handleClickLogOut}
+                aria-label="logout button"
+              >
+                <FontAwesomeIcon icon={faDoorOpen} className="faIcon" />
+              </button>
+            </section>
+          </nav>
+          <div role="alert">
+            {error && <p className="error">Invalid Profile</p>}
+          </div>
         </section>
       );
-    } else if (profile.id === userProfile.id) {
-      return profile.id ? (
+    } else if (this.state.profile.id === this.context.userProfile.id) {
+      return this.state.profile.id ? (
         <section className="userProfile">
           <Nav />
           <div role="alert">{error && <p className="error">{error}</p>}</div>
@@ -413,22 +449,62 @@ class UserProfile extends React.Component {
       ) : (
         <h2>Loading Profile...</h2>
       );
-    } else if (userProfile.blocked_profiles.includes(id)) {
-      return profile.id ? (
+    } else if (this.context.userProfile.blocked_profiles.includes(id)) {
+      return this.state.profile.id ? (
         <section className="userProfile">
-          <Nav />
-          <section className="error">
-            <p>
-              You have blocked this user. Go to Edit Profile to change your
-              block settings.
-            </p>
+          <nav role="navigation">
+            <section className="buttons">
+              <button
+                className="unblock"
+                aria-label="unblock button"
+                onClick={this.handleClickUnblock}
+              >
+                <FontAwesomeIcon icon={faCheck} className="faIcon" />
+              </button>
+              <Link
+                to="/blockedprofiles"
+                aria-label="back button"
+                className="primary"
+              >
+                <FontAwesomeIcon icon={faUndo} className="faIcon" />
+              </Link>
+            </section>
+          </nav>
+          <section className="username">
+            <h2>{username}</h2>
+          </section>
+          <section className="profilePic">
+            <img
+              src={profile_pic}
+              alt={this.props.username + `'s profile pic`}
+              className="profilePic"
+            />
+          </section>
+          <section className="interestsProfile">
+            <ul>
+              {interests.map((interest) => (
+                <li key={interest} className="interestWrapper">
+                  <FontAwesomeIcon
+                    icon={interestDict[interest]}
+                    className="faIconProfile"
+                  />
+                  <p className="interestTextProfile">{interest}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <section className="bio">
+            <p>{bio}</p>
+          </section>
+          <section className="pronouns">
+            <p>{pronouns}</p>
           </section>
         </section>
       ) : (
         <h2>Loading Profile...</h2>
       );
     } else {
-      return profile.id ? (
+      return this.state.profile.id ? (
         <section className="userProfile">
           <nav role="navigation">
             <section className="buttons">
@@ -438,10 +514,11 @@ class UserProfile extends React.Component {
                   aria-label="message button"
                   onClick={this.sendMessage}
                 >
-                  <FontAwesomeIcon icon={faEnvelope} className="faIcon" />
+                  <FontAwesomeIcon icon={faComments} className="faIcon" />
                 </button>
-                {userProfile.favorited_profiles.includes(profile.id) ===
-                true ? (
+                {this.context.userProfile.favorited_profiles.includes(
+                  this.state.profile.id
+                ) === true ? (
                   <button
                     className="unfavorite"
                     aria-label="unfavorite button"
