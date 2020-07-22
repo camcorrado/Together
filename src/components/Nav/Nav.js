@@ -49,7 +49,11 @@ export default class Nav extends Component {
                 <></>
               )}
             </Link>
-            <Link to="messenger" aria-label="messages button">
+            <Link
+              to="messenger"
+              aria-label="messages button"
+              className="primary"
+            >
               <FontAwesomeIcon icon={faComments} className="faIcon" />
               {messageBadge === 0 ? (
                 <></>
@@ -112,7 +116,7 @@ export default class Nav extends Component {
           </section>
         </nav>
       );
-    } else if (pathname.includes("/userprofile")) {
+    } else if (pathname.includes(`/userprofile/${id}`)) {
       return (
         <nav role="navigation">
           <section className="buttons">

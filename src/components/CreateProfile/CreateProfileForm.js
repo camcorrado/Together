@@ -136,6 +136,7 @@ export default class CreateProfileForm extends Component {
             rows="15"
             aria-required="true"
             maxLength="120"
+            defaultValue="https://i.pinimg.com/236x/9a/26/84/9a2684c4213171476e13732af3b26537--big-smiley-face-smiley-faces.jpg"
             required
           ></textarea>
         </div>

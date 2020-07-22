@@ -195,7 +195,7 @@ class App extends Component {
 
     data.filter((profile) => {
       if (profile.blocked_profiles.includes(this.state.userProfile.id)) {
-        blockedBy.push(profile.id);
+        return blockedBy.push(profile.id);
       } else {
         return false;
       }

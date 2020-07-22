@@ -92,6 +92,7 @@ class UserProfile extends React.Component {
   handleClickFavorite = async (e) => {
     e.preventDefault();
     this.setState({ error: null });
+
     const favoritedProfiles = [
       ...this.context.userProfile.favorited_profiles,
       this.state.profile.id,
@@ -146,6 +147,7 @@ class UserProfile extends React.Component {
   handleClickUnfavorite = async (e) => {
     e.preventDefault();
     this.setState({ error: null });
+
     const favoritedProfiles = this.context.userProfile.favorited_profiles.filter(
       (profileId) => profileId !== this.state.profile.id
     );
@@ -344,8 +346,14 @@ class UserProfile extends React.Component {
     }
   };
 
+  handleClickLogOut = (e) => {
+    e.preventDefault();
+    this.context.logOut();
+  };
+
   render() {
     const { profile, error } = this.state;
+    const { userProfile } = this.context;
     const {
       id,
       username,
@@ -378,20 +386,20 @@ class UserProfile extends React.Component {
       Theater: faTheaterMasks,
       Travel: faPlane,
     };
-    if (this.state.error !== null) {
+    if (error !== null && error !== undefined) {
       return (
         <section className="userProfile">
           <nav role="navigation">
             <section className="buttons">
               <Link
-                to={`/userprofile/${this.context.userProfile.id}`}
+                to={`/userprofile/${userProfile.id}`}
                 aira-label="view profile button"
                 id="viewProfileButton"
               >
-                {this.context.userProfile.profile_pic ? (
+                {userProfile.profile_pic ? (
                   <img
-                    src={this.context.userProfile.profile_pic}
-                    alt={this.context.userProfile.username + `'s profile pic`}
+                    src={userProfile.profile_pic}
+                    alt={userProfile.username + `'s profile pic`}
                     className="profilePicButton"
                   />
                 ) : (
@@ -414,8 +422,8 @@ class UserProfile extends React.Component {
           </div>
         </section>
       );
-    } else if (this.state.profile.id === this.context.userProfile.id) {
-      return this.state.profile.id ? (
+    } else if (profile.id === userProfile.id) {
+      return profile.id ? (
         <section className="userProfile">
           <Nav />
           <div role="alert">{error && <p className="error">{error}</p>}</div>
@@ -425,7 +433,7 @@ class UserProfile extends React.Component {
           <section className="profilePic">
             <img
               src={profile_pic}
-              alt={this.props.username + `'s profile pic`}
+              alt={username + `'s profile pic`}
               className="profilePic"
             />
           </section>
@@ -449,8 +457,8 @@ class UserProfile extends React.Component {
       ) : (
         <h2>Loading Profile...</h2>
       );
-    } else if (this.context.userProfile.blocked_profiles.includes(id)) {
-      return this.state.profile.id ? (
+    } else if (userProfile.blocked_profiles.includes(id)) {
+      return profile.id ? (
         <section className="userProfile">
           <nav role="navigation">
             <section className="buttons">
@@ -476,7 +484,7 @@ class UserProfile extends React.Component {
           <section className="profilePic">
             <img
               src={profile_pic}
-              alt={this.props.username + `'s profile pic`}
+              alt={username + `'s profile pic`}
               className="profilePic"
             />
           </section>
@@ -504,7 +512,7 @@ class UserProfile extends React.Component {
         <h2>Loading Profile...</h2>
       );
     } else {
-      return this.state.profile.id ? (
+      return profile.id ? (
         <section className="userProfile">
           <nav role="navigation">
             <section className="buttons">
@@ -516,9 +524,8 @@ class UserProfile extends React.Component {
                 >
                   <FontAwesomeIcon icon={faComments} className="faIcon" />
                 </button>
-                {this.context.userProfile.favorited_profiles.includes(
-                  this.state.profile.id
-                ) === true ? (
+                {userProfile.favorited_profiles.includes(profile.id) ===
+                true ? (
                   <button
                     className="unfavorite"
                     aria-label="unfavorite button"
@@ -558,7 +565,7 @@ class UserProfile extends React.Component {
           <section className="profilePic">
             <img
               src={profile_pic}
-              alt={this.props.username + `'s profile pic`}
+              alt={username + `'s profile pic`}
               className="profilePic"
             />
           </section>
