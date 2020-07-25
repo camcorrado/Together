@@ -1,0 +1,90 @@
+.grid {
+  width: 100%;
+  margin-top: 120px;
+  padding: 0px;
+}
+
+.profiles {
+  padding: 0px;
+  overflow: scroll;
+}
+
+.gridProfiles {
+  list-style: none;
+  display: flex;
+  flex-flow: wrap;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  line-height: 30px;
+  width: 100%;
+}
+
+.profile {
+  flex: 1 0 50%;
+  height: auto;
+  max-width: 50%;
+  border: 2px solid black;
+}
+
+.profile:before {
+  content: "";
+  float: left;
+  padding-top: 100%;
+}
+
+.profileIcon {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  padding: 0px;
+}
+
+.profileIconLink {
+  text-decoration: none;
+}
+
+.profilePicGrid {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: black;
+}
+
+.profilePic {
+  width: 100%;
+  height: 100%;
+}
+
+.interestsGrid {
+  color: white;
+  margin: auto;
+  width: 100%;
+  position: absolute;
+  max-height: 30px;
+  min-height: 10px;
+  left: 0px;
+  bottom: 0px;
+  padding: 0px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  min-height: 30px;
+  margin-bottom: 5px;
+}
+
+.interestsGrid ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: 100%;
+}
+
+.interestsGrid li {
+  margin: auto;
+}

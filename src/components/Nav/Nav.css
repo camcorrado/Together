@@ -1,0 +1,49 @@
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 1% 0;
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 120px;
+}
+
+.sortByForm {
+  border: none;
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  top: 83px;
+}
+
+#sortBy {
+  padding: 0px;
+  font-size: 0px;
+  margin: auto;
+}
+
+select {
+  background-color: white;
+  border: 1px solid darkgray;
+  text-align-last: center;
+  font-size: 16px;
+}
+
+.messageBadge {
+  line-height: 1.25;
+  position: relative;
+  bottom: 52px;
+  left: 55px;
+  background-color: white;
+  color: black;
+  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  padding: 0px;
+  margin: 0px;
+}

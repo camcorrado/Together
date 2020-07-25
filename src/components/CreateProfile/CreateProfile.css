@@ -1,0 +1,40 @@
+.CreateProfilePage header {
+  padding: 20px;
+}
+
+textarea#bio {
+  width: 100%;
+  min-height: 20px;
+  max-height: 70px;
+  margin: auto;
+  border: 1px solid darkgray;
+  resize: none;
+  padding: 0px 5px;
+  font-size: 18px;
+}
+
+.bioInput,
+.interestsInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.bioInput label,
+.interestsInput label {
+  text-align: center;
+}
+
+.interestCheckboxes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.checkbox input {
+  margin: 0px;
+}
+
+.checkbox .faIcon {
+  margin: 0px 10px;
+}

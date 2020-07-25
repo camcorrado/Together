@@ -1,12 +1,12 @@
 import ApiContext from "../../ApiContext";
 import CreateProfileForm from "./CreateProfileForm";
 import React, { Component } from "react";
+import "./CreateProfile.css";
 
 export default class CreateProfilePage extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
-    userInfo: {},
     userProfile: {},
     refreshProfile: () => {},
   };
@@ -26,7 +26,7 @@ export default class CreateProfilePage extends Component {
     return (
       <section className="CreateProfilePage">
         <header>
-          <h1>Create Your Profile</h1>
+          <h2>Create Your Profile</h2>
         </header>
         <CreateProfileForm onCreateSuccess={this.handleCreateSuccess} />
       </section>

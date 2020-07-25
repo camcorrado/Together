@@ -3,7 +3,8 @@ import Checkbox from "../Checkbox/Checkbox";
 import { Link } from "react-router-dom";
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUndo } from "@fortawesome/free-solid-svg-icons";
+import icons from "../Icons";
+import "./EditProfile.css";
 
 export default class EditProfileForm extends Component {
   static contextType = ApiContext;
@@ -79,8 +80,10 @@ export default class EditProfileForm extends Component {
   render() {
     const { username, bio, profile_pic, pronouns } = this.props.profile;
     const { error } = this.state;
+    const { buttonDict } = icons;
     return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <div className="usernameInput">
           <label htmlFor="username">Username:</label>
           <input
@@ -143,7 +146,7 @@ export default class EditProfileForm extends Component {
             <option value="They/Them">They/Them</option>
           </datalist>
         </div>
-        <div className="accountOptions">
+        <section className="accountOptions">
           {this.context.userProfile.blocked_profiles.length > 0 ? (
             <Link to="/blockedprofiles" className="button" id="small">
               Unblock Profiles
@@ -151,26 +154,22 @@ export default class EditProfileForm extends Component {
           ) : (
             <> </>
           )}
-        </div>
-        <div role="alert">{error && <p className="error">{error}</p>}</div>
-        <div className="buttons">
+          <Link to="/changepassword" className="button" id="small">
+            Change Password
+          </Link>
+          <Link to="/deactivate" className="button" id="small">
+            Deactivate Account
+          </Link>
+        </section>
+        <section className="buttons">
           <button className="primary" type="submit" onClick={this.handleSubmit}>
             Submit
           </button>
           <button onClick={this.props.onClickCancel}>
-            <FontAwesomeIcon icon={faUndo} className="faIcon" />
+            <FontAwesomeIcon icon={buttonDict.faUndo} className="faIcon" />
           </button>
-        </div>
+        </section>
       </form>
     );
   }
 }
-
-/*
-<Link to="/changepassword" className="button" id="small">
-            Change Password
-          </Link>
-          <Link to="/deactivateaccount" className="button" id="small">
-            Deactivate Account
-          </Link>
-          */

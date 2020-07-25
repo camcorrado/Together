@@ -3,6 +3,7 @@ import Checkbox from "../Checkbox/Checkbox";
 import config from "../../config";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
+import "./CreateProfile.css";
 
 export default class CreateProfileForm extends Component {
   static contextType = ApiContext;
@@ -11,7 +12,6 @@ export default class CreateProfileForm extends Component {
     userInfo: {},
     interestOptions: [],
     setProfileInfo: () => {},
-    onCreateSuccess: () => {},
   };
 
   state = {
@@ -19,9 +19,33 @@ export default class CreateProfileForm extends Component {
     error: null,
   };
 
-  componentDidMount = () => {
+  componentDidMount() {
+    this.handlePermission();
     this.selectedCheckboxes = new Set();
-    this.findLocation();
+  }
+
+  handlePermission = async () => {
+    let locationStatus;
+
+    await navigator.permissions
+      .query({ name: "geolocation" })
+      .then((result) => {
+        if (result.state === "granted") {
+          locationStatus = "granted";
+        } else if (result.state === "prompt") {
+          locationStatus = "prompt";
+        } else if (result.state === "denied") {
+          locationStatus = "denied";
+        }
+      });
+
+    if (locationStatus !== "granted") {
+      this.setState({
+        error: `geolocation denied`,
+      });
+    } else {
+      this.findLocation();
+    }
   };
 
   toggleCheckbox = (label) => {
@@ -62,6 +86,7 @@ export default class CreateProfileForm extends Component {
 
   handleSubmit = async (e) => {
     e.preventDefault();
+    this.setState({ error: null });
     const interests = [];
     const { username, bio, profile_pic, pronouns } = e.target;
     for (const checkbox of this.selectedCheckboxes) {
@@ -78,9 +103,8 @@ export default class CreateProfileForm extends Component {
       geolocation: this.state.geolocationData,
       blocked_profiles: [],
       favorited_profiles: [],
+      deactivated: "false",
     };
-
-    this.setState({ error: null });
 
     await fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "POST",
@@ -102,11 +126,22 @@ export default class CreateProfileForm extends Component {
 
   render() {
     const { error } = this.state;
-    return (
+    return this.state.error === "geolocation denied" ? (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
-        <div role="alert">
+        <section role="alert" className="alert">
+          {error && (
+            <p className="error">
+              Together requires geolocation. Please change your location
+              permission and refresh the page to continue.
+            </p>
+          )}
+        </section>
+      </form>
+    ) : (
+      <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
+        <section role="alert" className="alert">
           {error && <p className="error">{error.message}</p>}
-        </div>
+        </section>
         <div className="usernameInput">
           <label htmlFor="username">Username</label>
           <input
@@ -125,6 +160,7 @@ export default class CreateProfileForm extends Component {
             name="profile_pic"
             id="profile_pic"
             aria-required="true"
+            defaultValue="https://i.pinimg.com/236x/9a/26/84/9a2684c4213171476e13732af3b26537--big-smiley-face-smiley-faces.jpg"
             required
           />
         </div>
@@ -136,7 +172,6 @@ export default class CreateProfileForm extends Component {
             rows="15"
             aria-required="true"
             maxLength="120"
-            defaultValue="https://i.pinimg.com/236x/9a/26/84/9a2684c4213171476e13732af3b26537--big-smiley-face-smiley-faces.jpg"
             required
           ></textarea>
         </div>
@@ -160,9 +195,11 @@ export default class CreateProfileForm extends Component {
             <option value="They/Them">They/Them</option>
           </datalist>
         </div>
-        <div className="buttons">
-          <button type="submit">Submit</button>
-        </div>
+        <section className="buttons">
+          <button type="submit" className="primary">
+            Submit
+          </button>
+        </section>
       </form>
     );
   }

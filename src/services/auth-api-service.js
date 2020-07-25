@@ -44,7 +44,7 @@ const AuthApiService = {
     return fetch(`${config.API_ENDPOINT}/auth/refresh`, {
       method: "POST",
       headers: {
-        authorization: `Bearer ${TokenService.getAuthToken()}`,
+        Authorization: `Bearer ${TokenService.getAuthToken()}`,
       },
     })
       .then((res) =>
@@ -67,12 +67,11 @@ const AuthApiService = {
       });
   },
   patchUser(user) {
-    const authToken = TokenService.getAuthToken();
     return fetch(`${config.API_ENDPOINT}/users`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${TokenService.getAuthToken()}`,
       },
       body: JSON.stringify(user),
     }).then((res) =>

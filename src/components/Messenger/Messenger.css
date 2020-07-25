@@ -1,0 +1,158 @@
+.messenger {
+  margin-top: 120px;
+  padding: 0px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 100vh;
+  overflow: hidden;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
+
+.messageFormContainer {
+  padding-top: 0px;
+  margin-top: 0px;
+  position: sticky;
+  bottom: 0px;
+}
+
+.MessageForm {
+  border: none;
+}
+
+.messageHistory {
+  padding: 0px 15px;
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  max-width: 500px;
+  margin: 120px auto 0px auto;
+  overflow-y: scroll;
+}
+
+.userMessage {
+  margin: 5px;
+  align-self: flex-end;
+  padding: 0px 10px;
+  background-color: skyblue;
+  border-radius: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  max-width: 400px;
+  text-align: left;
+  font-size: 18px;
+}
+
+.otherMessage {
+  margin: 5px;
+  align-self: flex-start;
+  padding: 0px 10px;
+  background-color: lightgray;
+  border-radius: 10px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  max-width: 400px;
+  text-align: left;
+  font-size: 18px;
+}
+
+.conversations {
+  margin-top: 100px;
+  max-width: 500px;
+  margin: 120px auto 0px auto;
+}
+
+.conversations ul {
+  list-style: none;
+}
+
+.conversations li {
+  border: 1px solid black;
+}
+
+.profilePicConversations {
+  max-width: 50px;
+  max-height: 50px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.profilePicMessageContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: 1% 0;
+  background-color: #aaa;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 120px;
+}
+
+img.profilePicMessage {
+  max-width: 100px;
+  max-height: 100px;
+}
+
+a.profilePicMessage:hover {
+  background-color: transparent;
+}
+
+textarea#message {
+  width: 100%;
+  min-height: 20px;
+  max-height: 70px;
+  margin: auto;
+  border: 1px solid darkgray;
+  border-radius: 10px;
+  resize: none;
+  padding: 0px 5px;
+  font-size: 18px;
+}
+
+.conversation {
+  display: flex;
+  justify-content: flex-start;
+  color: black;
+  max-width: 500px;
+  min-height: 55px;
+}
+
+.messageInfo {
+  width: 100%;
+  text-align: left;
+}
+
+.conversationLink {
+  text-decoration: none;
+  color: black;
+}
+
+.mostRecentMessageRead {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 350px;
+  margin: 0px;
+  opacity: 0.5;
+}
+
+.mostRecentMessageUnead {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 350px;
+  margin: 0px;
+}

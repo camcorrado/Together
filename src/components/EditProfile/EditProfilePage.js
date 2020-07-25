@@ -3,6 +3,7 @@ import config from "../../config";
 import EditProfileForm from "./EditProfileForm";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
+import "./EditProfile.css";
 
 export default class EditProfilepage extends Component {
   static contextType = ApiContext;
@@ -27,6 +28,7 @@ export default class EditProfilepage extends Component {
     geolocation: null,
     blocked_profiles: null,
     favorited_profiles: null,
+    deactivated: null,
     error: null,
   };
 
@@ -74,6 +76,7 @@ export default class EditProfilepage extends Component {
       pronouns,
       blocked_profiles,
       favorited_profiles,
+      deactivated,
     } = this.state;
     const newProfile = {
       id,
@@ -86,6 +89,7 @@ export default class EditProfilepage extends Component {
       geolocation: `${geoData.x}, ${geoData.y}`,
       blocked_profiles,
       favorited_profiles,
+      deactivated,
     };
     this.setState({ error: null });
     fetch(`${config.API_ENDPOINT}/profiles/${id}`, {
@@ -141,25 +145,29 @@ export default class EditProfilepage extends Component {
       favorited_profiles,
     };
 
-    return this.state.id ? (
+    return (
       <section className="EditProfilePage">
         <header>
-          <h1>Edit Your Profile</h1>
+          <h2>Edit Your Profile</h2>
         </header>
         <div role="alert">{error && <p className="error">{error}</p>}</div>
-        <EditProfileForm
-          profile={profile}
-          onEditSuccess={this.handleEditSuccess}
-          onUsernameChange={this.handleChangeUsername}
-          onBioChange={this.handleChangeBio}
-          onInterestsChange={this.handleChangeInterests}
-          onProfilePicChange={this.handleChangeProfilePic}
-          onPronounsChange={this.handleChangePronouns}
-          onClickCancel={this.handleClickCancel}
-        />
+        {this.state.id ? (
+          <EditProfileForm
+            profile={profile}
+            onEditSuccess={this.handleEditSuccess}
+            onUsernameChange={this.handleChangeUsername}
+            onBioChange={this.handleChangeBio}
+            onInterestsChange={this.handleChangeInterests}
+            onProfilePicChange={this.handleChangeProfilePic}
+            onPronounsChange={this.handleChangePronouns}
+            onClickCancel={this.handleClickCancel}
+          />
+        ) : (
+          <section className="loaderMessage">
+            <div className="loader"></div>
+          </section>
+        )}
       </section>
-    ) : (
-      <h2>Loading Profile Information...</h2>
     );
   }
 }

@@ -1,0 +1,67 @@
+.EditProfilePage header {
+  padding: 20px;
+}
+
+textarea#bio {
+  width: 100%;
+  min-height: 20px;
+  max-height: 70px;
+  margin: auto;
+  border: 1px solid darkgray;
+  resize: none;
+  padding: 0px 5px;
+  font-size: 18px;
+}
+
+.bioInput,
+.interestsInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.bioInput label,
+.interestsInput label {
+  text-align: center;
+}
+
+.interestCheckboxes {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.accountOptions {
+  padding: 7.5px;
+}
+
+#small {
+  font-size: 12px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #999;
+  background-color: #ccc;
+  border-bottom: 3px solid #333;
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.5s;
+  margin: 10px;
+  min-width: 80px;
+  text-align: center;
+}
+
+#small:hover {
+  border-bottom-width: 1px;
+  background-color: #333;
+  color: white;
+}
+
+.checkbox input {
+  margin: 0px;
+}
+
+.checkbox .faIcon {
+  margin: 0px 10px;
+}

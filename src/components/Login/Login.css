@@ -1,0 +1,7 @@
+#loginTitle,
+#loginAlert {
+  position: relative;
+  top: 31px;
+  max-width: 500px;
+  margin: auto;
+}

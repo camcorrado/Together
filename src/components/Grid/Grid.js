@@ -2,6 +2,7 @@ import ApiContext from "../../ApiContext";
 import Nav from "../Nav/Nav";
 import ProfileIcon from "./ProfileIcon";
 import React, { Component } from "react";
+import "./Grid.css";
 
 export default class Grid extends Component {
   static contextType = ApiContext;
@@ -140,7 +141,14 @@ export default class Grid extends Component {
         </section>
       );
     } else {
-      return <h2>Loading Profiles...</h2>;
+      return (
+        <section className="grid">
+          <Nav />
+          <section className="loaderMessage">
+            <div className="loader"></div>
+          </section>
+        </section>
+      );
     }
   }
 }

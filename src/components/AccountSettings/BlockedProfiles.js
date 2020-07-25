@@ -3,6 +3,7 @@ import config from "../../config";
 import Nav from "../Nav/Nav";
 import React, { Component } from "react";
 import ProfileIcon from "../Grid/ProfileIcon";
+import "./AccountSettings.css";
 
 export default class BlockedProfiles extends Component {
   static contextType = ApiContext;
@@ -16,9 +17,11 @@ export default class BlockedProfiles extends Component {
   state = {
     blockedProfiles: [],
     error: null,
+    loading: null,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
     await this.context.refreshProfile();
     if (Object.keys(this.context.userProfile).length === 0) {
       this.props.history.push("/createprofile");
@@ -37,7 +40,7 @@ export default class BlockedProfiles extends Component {
           const blockedProfiles = await data.filter((profile) =>
             this.context.userProfile.blocked_profiles.includes(profile.id)
           );
-          this.setState({ blockedProfiles: blockedProfiles });
+          this.setState({ blockedProfiles: blockedProfiles, loading: false });
         })
         .catch((res) => {
           this.setState({ error: res.error });
@@ -46,13 +49,15 @@ export default class BlockedProfiles extends Component {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, loading } = this.state;
 
     return (
       <section className="blockedProfilesGrid">
         <Nav />
-        <div role="alert">{error && <p className="error">{error}</p>}</div>
-        <section className="profiles">
+        <section role="alert" className="blockedError">
+          {error && <p className="error">{error}</p>}
+        </section>
+        <section className="blockedProfiles">
           {this.state.blockedProfiles.length > 0 ? (
             <ul className="blockedProfiles">
               {this.state.blockedProfiles.map((profile) => (
@@ -69,7 +74,13 @@ export default class BlockedProfiles extends Component {
               ))}
             </ul>
           ) : (
-            <h2>You don't have any profiles blocked!</h2>
+            <section className="loaderMessage">
+              {loading ? (
+                <div className="loader"></div>
+              ) : (
+                <h2 className="temp">You don't have any profiles blocked!</h2>
+              )}
+            </section>
           )}
         </section>
       </section>

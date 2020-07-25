@@ -4,6 +4,7 @@ import BlockedProfiles from "./components/AccountSettings/BlockedProfiles";
 import ChangePasswordPage from "./components/AccountSettings/ChangePasswordPage";
 import config from "./config";
 import CreateProfilePage from "./components/CreateProfile/CreateProfilePage";
+import DeactivateProfilePage from "./components/AccountSettings/DeactivateProfilePage";
 import EditProfilePage from "./components/EditProfile/EditProfilePage";
 import ErrorBoundary from "./components/ErrorBoundary";
 import Grid from "./components/Grid/Grid";
@@ -34,6 +35,7 @@ class App extends Component {
     nearbyProfiles: [],
     blockedBy: [],
     conversations: [],
+    messageBadge: null,
     interestOptions: [
       "Activism",
       "Anime",
@@ -59,66 +61,33 @@ class App extends Component {
       "Travel",
     ],
     sortBy: "View All",
-    messageBadge: 0,
     error: null,
   };
 
   componentDidMount() {
-    this.refreshProfile();
-    /*
-      set the function (callback) to call when a user goes idle
-      we'll set this to logout a user when they're idle
-    */
     IdleService.setIdleCallback(this.logoutFromIdle);
-
-    /* if a user is logged in */
     if (TokenService.hasAuthToken()) {
-      /*
-        tell the idle service to register event listeners
-        the event listeners are fired when a user does something, e.g. move their mouse
-        if the user doesn't trigger one of these event listeners,
-          the idleCallback (logout) will be invoked
-      */
       IdleService.regiserIdleTimerResets();
-
-      /*
-        Tell the token service to read the JWT, looking at the exp value
-        and queue a timeout just before the token expires
-      */
       TokenService.queueCallbackBeforeExpiry(() => {
-        /* the timoue will call this callback just before the token expires */
         AuthApiService.postRefreshToken();
       });
     }
   }
 
   componentWillUnmount() {
-    /*
-      when the app unmounts,
-      stop the event listeners that auto logout (clear the token from storage)
-    */
     IdleService.unRegisterIdleResets();
-    /*
-      and remove the refresh endpoint request
-    */
     TokenService.clearCallbackBeforeExpiry();
   }
 
   logoutFromIdle = () => {
-    /* remove the token from localStorage */
     TokenService.clearAuthToken();
-    /* remove any queued calls to the refresh endpoint */
     TokenService.clearCallbackBeforeExpiry();
-    /* remove the timeouts that auto logout when idle */
     IdleService.unRegisterIdleResets();
-    /*
-      react won't know the token has been removed from local storage,
-      so we need to tell React to rerender
-    */
     this.forceUpdate();
   };
 
   refreshProfile = async () => {
+    console.log("refresh");
     this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
     if (authToken) {
@@ -141,12 +110,11 @@ class App extends Component {
 
   handleSetUserInfo = async () => {
     this.setState({ error: null });
-    const authToken = TokenService.getAuthToken();
     await fetch(`${config.API_ENDPOINT}/users`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${TokenService.getAuthToken()}`,
       },
     })
       .then((res) =>
@@ -191,8 +159,8 @@ class App extends Component {
   };
 
   handleSetNearbyProfiles = (data) => {
+    console.log("nearbyProfiles ran");
     let blockedBy = [];
-
     data.filter((profile) => {
       if (profile.blocked_profiles.includes(this.state.userProfile.id)) {
         return blockedBy.push(profile.id);
@@ -200,19 +168,18 @@ class App extends Component {
         return false;
       }
     });
-
     let filteredProfiles = data.filter((profile) => {
       if (
         !this.state.userProfile.blocked_profiles.includes(profile.id) &&
         profile.user_id !== this.state.userProfile.user_id &&
-        !blockedBy.includes(profile.id)
+        !blockedBy.includes(profile.id) &&
+        profile.deactivated === "false"
       ) {
         return profile;
       } else {
         return false;
       }
     });
-
     filteredProfiles.forEach((profile) => {
       const distance = this.distance(
         this.state.userProfile.geolocation.x,
@@ -223,7 +190,6 @@ class App extends Component {
       );
       profile.geolocation = distance;
     });
-
     this.setState({
       nearbyProfiles: filteredProfiles.sort(
         (a, b) => a.geolocation - b.geolocation
@@ -271,19 +237,23 @@ class App extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then((conversations) => {
+      .then(async (conversations) => {
         let filteredConvos = [];
-        conversations.forEach((convo) => {
+        conversations.forEach(async (convo) => {
           let id = convo.users
             .filter((user) => user !== this.state.userProfile.id)
             .pop();
           if (!this.state.userProfile.blocked_profiles.includes(id)) {
             filteredConvos.push(convo);
           }
+          await this.handleSetMessageBadge(convo.id);
         });
-
         this.setState({
-          conversations: filteredConvos,
+          conversations: filteredConvos.sort((a, b) => {
+            let dateA = Date.parse(a.new_msg);
+            let dateB = Date.parse(b.new_msg);
+            return dateB - dateA;
+          }),
         });
       })
       .catch((res) => {
@@ -291,15 +261,47 @@ class App extends Component {
       });
   };
 
-  handle;
+  handleSetMessageBadge = async (conversationId) => {
+    let count = 0;
+    await fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+      },
+    })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
+      .then((messages) => {
+        messages.forEach((message) => {
+          if (
+            message.msg_read === "false" &&
+            message.user_id !== this.state.userProfile.id
+          ) {
+            count++;
+          }
+        });
+      })
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
+    this.setState({ messageBadge: count });
+    console.log(this.state.messageBadge);
+  };
 
   handleSortBy = (value) => {
     this.setState({ sortBy: value });
   };
 
+  handleEditUser = () => {
+    const data = this.state.userInfo;
+    this.setState({
+      userInfo: { ...data, deactivated: "false" },
+    });
+  };
+
   handleEditProfile = (data, cb) => {
     let geoData = data.geolocation;
-
     this.setState(
       {
         userProfile: { ...data, geolocation: `${geoData.x}, ${geoData.y}` },
@@ -310,7 +312,6 @@ class App extends Component {
 
   handleLogOut = () => {
     TokenService.clearAuthToken();
-    /* when logging out, clear the callbacks to the refresh api and idle auto logout */
     TokenService.clearCallbackBeforeExpiry();
     IdleService.unRegisterIdleResets();
     this.setState({
@@ -327,6 +328,7 @@ class App extends Component {
       nearbyProfiles: this.state.nearbyProfiles,
       blockedBy: this.state.blockedBy,
       conversations: this.state.conversations,
+      messageBadge: this.state.messageBadge,
       interestOptions: this.state.interestOptions,
       sortBy: this.state.sortBy,
       refreshProfile: this.refreshProfile,
@@ -334,8 +336,10 @@ class App extends Component {
       setProfileInfo: this.handleSetProfileInfo,
       setNearbyProfiles: this.handleSetNearbyProfiles,
       setConversations: this.handleSetConverations,
+      setMessageBadge: this.handleSetMessageBadge,
       handleSortBy: this.handleSortBy,
       editProfile: this.handleEditProfile,
+      editUser: this.handleEditUser,
       logOut: this.handleLogOut,
     };
     return (
@@ -357,6 +361,10 @@ class App extends Component {
               <PrivateRoute
                 path={"/createprofile"}
                 component={CreateProfilePage}
+              />
+              <PrivateRoute
+                path={"/deactivate"}
+                component={DeactivateProfilePage}
               />
               <PrivateRoute path={"/editprofile"} component={EditProfilePage} />
               <PrivateRoute path={"/grid"} component={Grid} />

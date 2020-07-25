@@ -1,0 +1,100 @@
+button.favorite {
+  background-color: yellow;
+  border-bottom: 3px solid darkgoldenrod;
+  color: black;
+}
+
+button.block {
+  background-color: red;
+  border-bottom: 3px solid darkred;
+  color: black;
+}
+
+.userProfile {
+  overflow: scroll;
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  margin-top: 120px;
+}
+
+.profilePic {
+  max-width: 300px;
+  margin: auto;
+}
+
+.faIconProfile {
+  cursor: pointer;
+}
+
+.interestsProfile ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.interestWrapper {
+  position: relative;
+}
+
+.interestTextProfile {
+  background-color: white;
+  color: black;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  z-index: 1;
+  font-size: 20px;
+}
+
+.interestTextProfile:hover {
+  opacity: 1;
+}
+
+.bio {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+}
+
+nav .buttonsProfile {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0px;
+}
+
+.buttonsProfile button,
+.buttonsProfile a {
+  flex-basis: 40%;
+}
+
+#unblock {
+  background-color: #5b905b;
+  border-bottom: 3px solid green;
+  color: white;
+  width: 80px;
+  height: 45px;
+}
+
+#favorite {
+  background-color: yellow;
+}
+
+#block {
+  background-color: red;
+}
+
+#favorite:hover,
+#block:hover {
+  background-color: black;
+}

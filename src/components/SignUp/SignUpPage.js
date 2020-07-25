@@ -3,9 +3,14 @@ import Header from "../Header/Header";
 import React, { Component } from "react";
 import SignUpForm from "../../components/SignUp/SignUpForm";
 import TokenService from "../../services/token-service";
+import "./SignUp.css";
 
 export default class SignUpPage extends Component {
   static contextType = ApiContext;
+
+  static defaultProps = {
+    refreshProfile: () => {},
+  };
 
   componentDidMount() {
     const authToken = TokenService.getAuthToken();
@@ -15,6 +20,7 @@ export default class SignUpPage extends Component {
   }
 
   handleSignUpSuccess = async () => {
+    await this.context.refreshProfile();
     this.props.history.push("/createprofile");
   };
 
@@ -24,7 +30,7 @@ export default class SignUpPage extends Component {
         <header className="App_Header">
           <Header />
         </header>
-        <h2>Register</h2>
+        <h3>Register</h3>
         <SignUpForm onSignUpSuccess={this.handleSignUpSuccess} />
       </section>
     );

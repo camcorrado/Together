@@ -6,6 +6,7 @@ export default React.createContext({
   nearbyProfiles: [],
   blockedBy: [],
   conversations: [],
+  messageBadge: null,
   interestOptions: [],
   sortBy: "",
   refreshProfile: () => {},
@@ -13,7 +14,9 @@ export default React.createContext({
   setProfileInfo: () => {},
   setNearbyProfiles: () => {},
   setConversations: () => {},
+  setMessageBadge: () => {},
   handleSortBy: () => {},
   editProfile: () => {},
+  editUser: () => {},
   logOut: () => {},
 });

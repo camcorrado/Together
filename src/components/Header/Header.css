@@ -1,0 +1,60 @@
+header {
+  padding: 35px 15px 20px 15px;
+}
+
+.appTitle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  font-family: "AnnieUseYourTelescope-Regular";
+}
+
+.L,
+.G,
+.B,
+.Q,
+.plus {
+  opacity: 0.25;
+}
+
+.L {
+  color: red;
+  display: none;
+}
+
+.G {
+  color: orange;
+  display: none;
+}
+
+.B {
+  color: yellow;
+  display: none;
+}
+
+.T {
+  color: black;
+}
+
+.ogether {
+  color: black;
+}
+
+.Q {
+  color: blue;
+  display: none;
+}
+
+.plus {
+  color: purple;
+  display: none;
+}
+
+.Together {
+  display: flex;
+  text-decoration: none;
+}
+
+.Together:hover {
+  background-color: transparent;
+}

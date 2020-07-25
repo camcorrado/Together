@@ -9,80 +9,35 @@ body {
   height: 100%;
   width: 100%;
   min-width: 360px;
+  min-height: 560px;
+  background-color: oldlace;
 }
 
 body {
   font-family: "Cabin-Regular";
   font-size: 20px;
-  color: #444;
   text-align: center;
   line-height: 1.5;
 }
 
 main {
   height: 100%;
-  overflow: scroll;
-}
-
-header {
-  padding: 45px 15px;
-}
-
-.appTitle {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  font-family: "AnnieUseYourTelescope-Regular";
-}
-
-.L,
-.G,
-.B,
-.Q,
-.plus {
-  opacity: 0.25;
-}
-
-.L {
-  color: red;
-  display: none;
-}
-
-.G {
-  color: orange;
-  display: none;
-}
-
-.B {
-  color: yellow;
-  display: none;
-}
-
-.T {
-  color: black;
-}
-
-.ogether {
-  color: black;
-}
-
-.Q {
-  color: blue;
-  display: none;
-}
-
-.plus {
-  color: purple;
-  display: none;
-}
-
-.Together {
-  display: flex;
-  text-decoration: none;
 }
 
 h1 {
-  font-size: 70px;
+  font-size: 20vw;
+}
+
+h2 {
+  font-size: 5vw;
+}
+
+h3 {
+  font-size: 4vw;
+}
+
+p {
+  font-size: 3.5vw;
 }
 
 form {
@@ -94,12 +49,20 @@ form {
   padding: 5px;
 }
 
-form div {
+section.buttons {
   display: flex;
   justify-content: center;
   align-content: center;
   margin-bottom: 5px;
   width: 100%;
+}
+
+form div {
+  display: flex;
+  justify-content: center;
+  align-content: flex-start;
+  width: 100%;
+  min-height: 30px;
 }
 
 label {
@@ -115,37 +78,34 @@ input {
   font-size: 18px;
   padding: 0px 5px;
   max-height: 30px;
-  margin: auto;
+  margin: auto 5% auto 0px;
+  color: black;
 }
 
-select {
-  background-color: white;
-  border: 1px solid darkgray;
-  text-align-last: center;
+section {
+  padding: 15px;
 }
 
-.bioInput,
-.interestsInput {
-  display: flex;
-  flex-direction: column;
+section.buttons {
+  padding: 0px 15px;
 }
 
-.bioInput label,
-.interestsInput label {
-  text-align: center;
+p {
+  margin: 0 auto;
+  max-width: 650px;
 }
 
-textarea {
-  width: 100%;
-  margin: auto;
-  border: 1px solid darkgray;
+.alert {
+  padding: 0px;
+  min-height: 30px;
 }
 
-.interestCheckboxes {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+.error {
+  color: red;
+}
+
+.success {
+  color: green;
 }
 
 .checkbox {
@@ -158,73 +118,25 @@ textarea {
   padding-left: 10%;
 }
 
-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  padding: 1% 0;
-  background-color: #aaa;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 120px;
+.faIcon,
+.faIconGrid,
+.faIconProfile {
+  margin: 10px 5px;
+  width: 100%;
+}
+
+.faIconGrid {
+  filter: drop-shadow(0 0 0.15rem black);
 }
 
 .profilePicButton {
   width: 25px;
-  position: relative;
-  top: 7px;
+  height: 25px;
   border-radius: 3px;
 }
 
-.sortByForm {
-  border: none;
-}
-
-#sortBy {
-  padding: 0px;
-  font-size: 0px;
-}
-
-section {
-  padding: 15px;
-}
-
-p {
-  margin: 0 auto;
-  max-width: 650px;
-}
-
-p + p {
-  margin-top: 15px;
-}
-
-.error {
-  color: red;
-}
-
-.success {
-  color: green;
-}
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-input[type="number"] {
-  -moz-appearance: textfield;
-}
-
-nav a,
-.buttons a,
-.button,
-button,
-.buttonsProfile a {
-  padding: 8px 25px;
+.buttons button,
+.buttons a {
   border-radius: 5px;
   border: 1px solid #999;
   background-color: #ccc;
@@ -235,291 +147,59 @@ button,
   cursor: pointer;
   transition: all 0.5s;
   margin: 10px;
+  min-width: 80px;
+  height: 45px;
+  text-align: center;
+  padding: 0px 10px;
 }
 
-.buttons a.primary,
+#messageButton {
+  background-color: lightblue;
+}
+
 button.primary,
-.buttonsProfile > a.primary {
-  background-color: #5b905b;
-  border-bottom: 3px solid green;
+a.primary {
+  background-color: goldenrod;
+  border-bottom: 3px solid darkgoldenrod;
   color: white;
+  min-width: 80px;
+  height: 45px;
 }
 
-nav a:hover,
-.buttons a:hover,
+a:hover,
 button:hover,
-button.favorite:hover,
-button.block:hover,
-.buttonsProfile > a.primary:hover {
+#messageButton:hover {
   border-bottom-width: 1px;
   background-color: #333;
   color: white;
 }
 
-button.favorite {
-  background-color: yellow;
-  border-bottom: 3px solid darkgoldenrod;
-  color: black;
+.loader {
+  margin: 50px auto 0px auto;
+  border: 8px solid #f3f3f3; /* Light grey */
+  border-top: 8px solid goldenrod; /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 2s linear infinite;
 }
 
-button.block {
-  background-color: red;
-  border-bottom: 3px solid darkred;
-  color: black;
-}
-
-.messageBadge {
-  position: absolute;
-}
-
-#small {
-  font-size: 12px;
-  padding: 10px;
-}
-
-.grid,
-.blockedProfilesGrid {
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-}
-
-.profiles {
-  margin-top: 120px;
-  padding: 0px;
-  overflow: scroll;
-}
-
-.gridProfiles,
-.blockedProfiles {
-  list-style: none;
+#viewProfileButton {
   display: flex;
-  flex-flow: wrap;
-  justify-content: flex-start;
-  padding: 0;
-  margin: 0;
-  line-height: 30px;
-  width: 100%;
-}
-
-.profile {
-  flex: 1 0 50%;
-  height: auto;
-  max-width: 50%;
-  border: 2px solid black;
-}
-
-.profile:before {
-  content: "";
-  float: left;
-  padding-top: 100%;
-}
-
-.profileIcon {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  padding: 0px;
-}
-
-.profileIconLink {
-  text-decoration: none;
-}
-
-.profilePicGrid {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background-color: black;
-}
-
-.profilePic {
-  width: 100%;
-  height: 100%;
-}
-
-.interestsGrid {
-  color: white;
-  margin: auto;
-  width: 100%;
-  white-space: normal;
-  position: absolute;
-  max-height: 30px;
-  min-height: 10px;
-  left: 0px;
-  bottom: 0px;
-  padding: 0px;
-  overflow-x: scroll;
-  min-height: 30px;
-}
-
-.interestsGrid ul {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
-  overflow-x: scroll;
-  overflow-y: hidden;
-  width: 100%;
-}
-
-.interestTextGrid {
-  background-color: white;
-  color: black;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  z-index: 1;
-  font-size: 20px;
-}
-
-.faIcon,
-.faIconGrid,
-.faIconProfile {
-  margin: 0px 5px;
-  width: 100%;
-}
-
-.faIconGrid {
-  filter: drop-shadow(0 0 0.15rem black);
-}
-
-.userProfile {
-  overflow: scroll;
-  max-width: 500px;
-  margin: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.profilePic {
-  max-width: 500px;
-  margin: auto;
-}
-
-.faIconProfile {
-  cursor: pointer;
-}
-
-.interestsProfile ul {
-  list-style: none;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
-}
-
-.interestWrapper {
-  position: relative;
-}
-
-.interestTextProfile {
-  background-color: white;
-  color: black;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0;
-  z-index: 1;
-  font-size: 20px;
-}
-
-.interestTextProfile:hover,
-.interestTextGrid:hover {
-  opacity: 1;
-}
-
-.bio {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
-  hyphens: auto;
-}
-
-.buttonsProfile {
-  display: flex;
-  flex-direction: row;
   justify-content: center;
-  flex-wrap: wrap;
-  padding: 0px;
+  align-items: center;
 }
 
-.buttonsProfile button,
-.buttonsProfile a {
-  flex-basis: 40%;
-}
-
-.messageList > nav {
-  height: 100px;
-}
-
-.conversations,
-.userProfile {
-  margin-top: 100px;
-}
-
-.conversations ul {
-  list-style: none;
-}
-
-.conversations li {
-  border: 1px solid black;
-}
-
-.profilePicConversations {
-  max-width: 50px;
-}
-
-img.profilePicMessage {
-  max-width: 100px;
-}
-
-.messageHistory {
-  padding: 0px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  max-width: 500px;
-  margin: auto;
-}
-
-.userMessage {
-  margin: 5px;
-  align-self: flex-end;
-  padding: 0px 10px;
-  background-color: skyblue;
-  border-radius: 10px;
-}
-
-.otherMessage {
-  margin: 5px;
-  align-self: flex-start;
-  padding: 0px 10px;
-  background-color: lightgray;
-  border-radius: 10px;
-}
-
-.MessageForm {
-  border: none;
-}
-
-.changePassword {
-  margin-top: 120px;
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @media (orientation: landscape) {
-  h1 {
-    font-size: 120px;
-  }
-
   .profile {
     flex-basis: 25%;
     max-width: 25%;
