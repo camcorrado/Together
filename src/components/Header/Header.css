@@ -6,7 +6,8 @@ header {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  font-family: "AnnieUseYourTelescope-Regular";
+  font-family: "Handlee-Regular";
+  padding-bottom: 0px;
 }
 
 .L,
@@ -33,11 +34,13 @@ header {
 }
 
 .T {
-  color: black;
+  color: green;
+  display: none;
 }
 
-.ogether {
+#Together {
   color: black;
+  filter: drop-shadow(2px 2px 2px goldenrod);
 }
 
 .Q {

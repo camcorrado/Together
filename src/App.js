@@ -239,16 +239,21 @@ class App extends Component {
       )
       .then(async (conversations) => {
         let filteredConvos = [];
-        conversations.forEach(async (convo) => {
+        let count = 0;
+        await conversations.forEach(async (convo) => {
           let id = convo.users
             .filter((user) => user !== this.state.userProfile.id)
             .pop();
           if (!this.state.userProfile.blocked_profiles.includes(id)) {
             filteredConvos.push(convo);
           }
-          await this.handleSetMessageBadge(convo.id);
+          let indCount = await this.handleSetMessageBadge(convo.id);
+          count = count + indCount;
+          this.setState({ messageBadge: count });
         });
+        console.log({ count });
         this.setState({
+          messageBadge: count,
           conversations: filteredConvos.sort((a, b) => {
             let dateA = Date.parse(a.new_msg);
             let dateB = Date.parse(b.new_msg);
@@ -259,6 +264,7 @@ class App extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
+    console.log(this.state.messageBadge);
   };
 
   handleSetMessageBadge = async (conversationId) => {
@@ -276,7 +282,11 @@ class App extends Component {
         messages.forEach((message) => {
           if (
             message.msg_read === "false" &&
-            message.user_id !== this.state.userProfile.id
+            message.user_id !== this.state.userProfile.id &&
+            !this.state.userProfile.blocked_profiles.includes(
+              message.user_id
+            ) &&
+            !this.state.blockedBy.includes(message.user_id)
           ) {
             count++;
           }
@@ -285,8 +295,7 @@ class App extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    this.setState({ messageBadge: count });
-    console.log(this.state.messageBadge);
+    return count;
   };
 
   handleSortBy = (value) => {

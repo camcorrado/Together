@@ -28,7 +28,7 @@
   flex-direction: column-reverse;
   width: 100%;
   max-width: 500px;
-  margin: 120px auto 0px auto;
+  margin: 125px auto 0px auto;
   overflow-y: scroll;
 }
 
@@ -78,6 +78,11 @@
 
 .conversations li {
   border: 1px solid black;
+  border-bottom: none;
+}
+
+.conversations li:last-child {
+  border-bottom: 1px solid black;
 }
 
 .profilePicConversations {
@@ -94,11 +99,12 @@
   right: 0;
   z-index: 10;
   padding: 1% 0;
-  background-color: #aaa;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 120px;
+  border-bottom: 1px solid black;
 }
 
 img.profilePicMessage {

@@ -242,25 +242,12 @@ class UserProfile extends React.Component {
           onClickSendMessage={this.sendMessage}
           onClickViewProfile={this.viewProfile}
         />
-        {loading ? (
-          <section className="loaderMessage">
-            <div className="loader"></div>
-          </section>
-        ) : error !== null && error !== undefined ? (
-          <section role="alert" className="alert">
-            {error && <p className="error">Invalid Profile</p>}
-          </section>
-        ) : (
-          <section role="alert" className="alert">
-            {error && <p className="error">{error}</p>}
-          </section>
-        )}
         {profile.id === userProfile.id ? (
           <>
             <section className="username">
               <h2>{username}</h2>
             </section>
-            <section className="profilePic">
+            <section className="profilePicUserProfile">
               {profile_pic ? (
                 <img
                   src={profile_pic}
@@ -295,7 +282,7 @@ class UserProfile extends React.Component {
                 <section className="username">
                   <h2>{username}</h2>
                 </section>
-                <section className="profilePic">
+                <section className="profilePicUserProfile">
                   {profile_pic ? (
                     <img
                       src={profile_pic}
@@ -331,7 +318,7 @@ class UserProfile extends React.Component {
                 <section className="username">
                   <h2>{username}</h2>
                 </section>
-                <section className="profilePic">
+                <section className="profilePicUserProfile">
                   {profile_pic ? (
                     <img
                       src={profile_pic}
@@ -364,6 +351,19 @@ class UserProfile extends React.Component {
               </>
             )}
           </>
+        )}
+        {loading ? (
+          <section className="loaderMessage">
+            <div className="loader"></div>
+          </section>
+        ) : error !== null && error !== undefined ? (
+          <section role="alert" className="alert">
+            {error && <p className="error">Invalid Profile</p>}
+          </section>
+        ) : (
+          <section role="alert" className="alert">
+            {error && <p className="error">{error}</p>}
+          </section>
         )}
       </section>
     );

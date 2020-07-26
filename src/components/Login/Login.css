@@ -1,7 +1,6 @@
-#loginTitle,
-#loginAlert {
+.LoginForm {
   position: relative;
-  top: 31px;
+  bottom: 30px;
   max-width: 500px;
   margin: auto;
 }

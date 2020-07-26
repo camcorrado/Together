@@ -7,6 +7,9 @@ import "./fonts/AnnieUseYourTelescope-Regular.ttf";
 import "./fonts/ArchitectsDaughter-Regular.ttf";
 import "./fonts/Cabin-Regular.ttf";
 import "./fonts/GiveYouGlory-Regular.ttf";
+import "./fonts/Handlee-Regular.ttf";
+import "./fonts/RobotoMono-Italic-VariableFont_wght.ttf";
+import "./fonts/RobotoMono-VariableFont_wght.ttf";
 
 ReactDOM.render(
   <BrowserRouter>

@@ -10,7 +10,7 @@ body {
   width: 100%;
   min-width: 360px;
   min-height: 560px;
-  background-color: oldlace;
+  background-color: white;
 }
 
 body {
@@ -25,19 +25,19 @@ main {
 }
 
 h1 {
-  font-size: 20vw;
+  font-size: clamp(60px, 18vw, 120px);
 }
 
 h2 {
-  font-size: 5vw;
+  font-size: clamp(20px, 6vw, 40px);
 }
 
 h3 {
-  font-size: 4vw;
+  font-size: clamp(15px, 4vw, 30px);
 }
 
 p {
-  font-size: 3.5vw;
+  font-size: clamp(13px, 3.5vw, 28px);
 }
 
 form {
@@ -139,7 +139,7 @@ p {
 .buttons a {
   border-radius: 5px;
   border: 1px solid #999;
-  background-color: #ccc;
+  background-color: white;
   border-bottom: 3px solid #333;
   font-size: 20px;
   text-decoration: none;
@@ -154,14 +154,43 @@ p {
 }
 
 #messageButton {
-  background-color: lightblue;
+  border: 1px solid lightblue;
+  border-bottom: 3px solid cornflowerblue;
+}
+
+#unblock {
+  background-color: #5b905b;
+  border-bottom: 3px solid green;
+  color: white;
+  width: 80px;
+  height: 45px;
+}
+
+#favorite {
+  border: 1px solid yellow;
+  border-bottom: 3px solid gold;
+}
+
+.unfavorite > .faIcon {
+  color: yellow;
+}
+
+#block {
+  border: 1px solid red;
+  border-bottom: 3px solid darkred;
+}
+
+#favorite:hover,
+#block:hover {
+  background-color: black;
 }
 
 button.primary,
 a.primary {
-  background-color: goldenrod;
+  background-color: white;
+  border: 1px solid goldenrod;
   border-bottom: 3px solid darkgoldenrod;
-  color: white;
+  color: black;
   min-width: 80px;
   height: 45px;
 }

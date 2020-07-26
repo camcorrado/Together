@@ -5,11 +5,12 @@ nav {
   right: 0;
   z-index: 10;
   padding: 1% 0;
-  background-color: black;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   height: 120px;
+  border-bottom: 1px solid black;
 }
 
 .sortByForm {
@@ -38,12 +39,14 @@ select {
   position: relative;
   bottom: 52px;
   left: 55px;
-  background-color: white;
+  background-color: goldenrod;
   color: black;
   font-size: 18px;
-  width: 20px;
-  height: 20px;
+  width: 25px;
+  height: 25px;
   border-radius: 100%;
-  padding: 0px;
-  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  padding: 1px 0px 0px 1px;
 }

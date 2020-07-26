@@ -407,7 +407,7 @@ export default class Nav extends Component {
                     onClick={this.handleClickUnfavorite}
                   >
                     <FontAwesomeIcon
-                      icon={buttonDict.faStarRegular}
+                      icon={buttonDict.faStar}
                       className="faIcon"
                     />
                   </button>

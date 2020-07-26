@@ -20,8 +20,8 @@ class Title extends React.Component {
             <div className="T">
               <h1>T</h1>
             </div>
-            <div className="ogether">
-              <h1>ogether</h1>
+            <div id="Together">
+              <h1>Together</h1>
             </div>
           </Link>
           <div className="Q">
