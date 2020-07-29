@@ -172,13 +172,15 @@ section.buttons {
   color: yellow;
 }
 
-#block {
+#block,
+.DeactivateProfilePage button.primary {
   border: 1px solid red;
   border-bottom: 3px solid darkred;
 }
 
 #favorite:hover,
-#block:hover {
+#block:hover,
+.DeactivateProfilePage button.primary:hover {
   background-color: black;
 }
 
