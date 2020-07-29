@@ -76,7 +76,6 @@ export default class ChangePasswordForm extends Component {
               type="password"
               name="oldPassword"
               id="oldPassword"
-              defaultValue="Test123!"
               required
             />
           </div>
@@ -86,7 +85,6 @@ export default class ChangePasswordForm extends Component {
               type="password"
               name="firstNewPassword"
               id="firstNewPassword"
-              defaultValue="Pass123!"
               required
             />
           </div>
@@ -96,7 +94,6 @@ export default class ChangePasswordForm extends Component {
               type="password"
               name="secondNewPassword"
               id="secondNewPassword"
-              defaultValue="Pass123!"
               required
             />
           </div>

@@ -54,13 +54,7 @@ export default class ChangePasswordForm extends Component {
         <section className="formInputs">
           <div className="passwordInput">
             <label htmlFor="password">Password:</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              defaultValue="Test123!"
-              required
-            />
+            <input type="password" name="password" id="password" required />
           </div>
         </section>
         <section className="buttons">
