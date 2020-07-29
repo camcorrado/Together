@@ -33,7 +33,7 @@ Allows the user to view their conversations. Conversations are ordered by most r
 ![Messenger Page](https://i.imgur.com/UszxG9T.png)
 Allows users to send each other text messages. By viewing unread messages, they are marked as read.
 
-![Edit Profile Page](https://i.imgur.com/UFgwDJt.png)
+![Edit Profile Page](https://i.imgur.com/riE0pgC.png)
 Allows the user full control over the contents of their profile at any time. Currently, image upload is not supported. An image URL must be entered into the Profile Picture input.
 
 ![Blocked Profiles Page](https://i.imgur.com/LlwdTbz.png)
