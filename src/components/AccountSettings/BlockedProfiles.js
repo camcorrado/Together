@@ -78,7 +78,7 @@ export default class BlockedProfiles extends Component {
               {loading ? (
                 <div className="loader"></div>
               ) : (
-                <h2 className="temp">You don't have any profiles blocked!</h2>
+                <h3 className="temp">You don't have any profiles blocked!</h3>
               )}
             </section>
           )}

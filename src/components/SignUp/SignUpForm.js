@@ -26,7 +26,6 @@ export default class SignUpForm extends Component {
   }
 
   findLocation = async () => {
-    console.log("find ran");
     await navigator.geolocation.getCurrentPosition(
       this.locationSuccess,
       this.locationError
@@ -34,13 +33,10 @@ export default class SignUpForm extends Component {
   };
 
   locationSuccess = () => {
-    console.log("success");
-
     this.setState({ error: null });
   };
 
   locationError = () => {
-    console.log("error");
     this.setState({ error: "geolocation error" });
   };
 

@@ -20,33 +20,9 @@ export default class CreateProfileForm extends Component {
   };
 
   componentDidMount() {
-    this.handlePermission();
+    this.findLocation();
     this.selectedCheckboxes = new Set();
   }
-
-  handlePermission = async () => {
-    let locationStatus;
-
-    await navigator.permissions
-      .query({ name: "geolocation" })
-      .then((result) => {
-        if (result.state === "granted") {
-          locationStatus = "granted";
-        } else if (result.state === "prompt") {
-          locationStatus = "prompt";
-        } else if (result.state === "denied") {
-          locationStatus = "denied";
-        }
-      });
-
-    if (locationStatus !== "granted") {
-      this.setState({
-        error: `geolocation denied`,
-      });
-    } else {
-      this.findLocation();
-    }
-  };
 
   toggleCheckbox = (label) => {
     if (this.selectedCheckboxes.has(label)) {
@@ -80,8 +56,8 @@ export default class CreateProfileForm extends Component {
     this.setState({ geolocationData: `${latitude}, ${longitude}` });
   };
 
-  locationError = (err) => {
-    this.setState({ error: err.message });
+  locationError = () => {
+    this.setState({ error: `Please allow Geolocation` });
   };
 
   handleSubmit = async (e) => {
@@ -126,7 +102,7 @@ export default class CreateProfileForm extends Component {
 
   render() {
     const { error } = this.state;
-    return this.state.error === "geolocation denied" ? (
+    return this.state.error === `Please allow Geolocation` ? (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
         <section role="alert" className="alert">
           {error && (
