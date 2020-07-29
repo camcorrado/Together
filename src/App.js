@@ -39,6 +39,7 @@ class App extends Component {
     messageBadge: null,
     interestOptions: [
       "Activism",
+      "Animals",
       "Anime",
       "Art",
       "Cooking",
@@ -52,12 +53,12 @@ class App extends Component {
       "Movies",
       "Music",
       "Nightlife",
-      "Pets/Animals",
+      "Outdoors",
       "Reading",
       "Spirituality",
       "Sports",
       "Tech",
-      "The Outdoors",
+
       "Theater",
       "Travel",
     ],
@@ -389,7 +390,7 @@ class App extends Component {
                 path={"/conversation/:conversationId"}
                 component={Message}
               />
-              <Route component={Terms} />
+              <Route path={"/terms"} component={Terms} />
               <Route component={NotFoundPage} />
             </Switch>
           </ErrorBoundary>

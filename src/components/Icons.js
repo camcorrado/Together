@@ -50,6 +50,7 @@ const icons = {
 
   interestDict: {
     Activism: faFistRaised,
+    Animals: faCat,
     Anime: faDragon,
     Art: faPaintBrush,
     Cooking: faUtensilSpoon,
@@ -60,11 +61,10 @@ const icons = {
     Food: faPizzaSlice,
     Gaming: faGamepad,
     Gardening: faSeedling,
-    "The Outdoors": faCampground,
     Movies: faFilm,
     Music: faMusic,
     Nightlife: faMoon,
-    "Pets/Animals": faCat,
+    Outdoors: faCampground,
     Reading: faBookOpen,
     Spirituality: faPrayingHands,
     Sports: faFutbol,

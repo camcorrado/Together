@@ -14,12 +14,12 @@ export default class LoginPage extends Component {
     userInfo: {},
     userProfile: {},
     editUser: () => {},
+    editProfile: () => {},
   };
 
   state = {
     geolocationData: "",
     error: null,
-    editProfile: () => {},
   };
 
   componentDidMount() {

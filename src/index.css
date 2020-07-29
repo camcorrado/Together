@@ -113,6 +113,7 @@ section.buttons {
   text-align: left;
   padding: 0px;
   padding-left: 10%;
+  font-size: 16px;
 }
 
 .faIcon,
@@ -130,6 +131,10 @@ section.buttons {
   width: 25px;
   height: 25px;
   border-radius: 3px;
+}
+
+#createProfileButton {
+  padding-top: 6px;
 }
 
 .buttons button,

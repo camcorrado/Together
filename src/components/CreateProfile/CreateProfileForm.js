@@ -119,7 +119,7 @@ export default class CreateProfileForm extends Component {
           {error && <p className="error">{error.message}</p>}
         </section>
         <div className="usernameInput">
-          <label htmlFor="username">Username</label>
+          <label htmlFor="username">Username:</label>
           <input
             type="text"
             name="username"
@@ -130,7 +130,7 @@ export default class CreateProfileForm extends Component {
           />
         </div>
         <div className="profilePicInput">
-          <label htmlFor="profile_pic">Profile Picture</label>
+          <label htmlFor="profile_pic">Profile Picture:</label>
           <input
             type="text"
             name="profile_pic"
@@ -141,7 +141,7 @@ export default class CreateProfileForm extends Component {
           />
         </div>
         <div className="bioInput">
-          <label htmlFor="bio">About</label>
+          <label htmlFor="bio">About:</label>
           <textarea
             name="bio"
             id="bio"
@@ -152,11 +152,11 @@ export default class CreateProfileForm extends Component {
           ></textarea>
         </div>
         <div className="interestsInput">
-          <label htmlFor="interests">Interests</label>
+          <label htmlFor="interests">Interests:</label>
           <div className="interestCheckboxes">{this.createCheckboxes()}</div>
         </div>
         <div className="pronounsInput">
-          <label htmlFor="pronouns">Pronouns</label>
+          <label htmlFor="pronouns">Pronouns:</label>
           <input
             type="text"
             list="pronouns"

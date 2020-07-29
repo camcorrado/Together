@@ -18,12 +18,17 @@ export default class DeactivateProfilePage extends Component {
 
   state = {
     error: null,
+    loading: null,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
     await this.context.refreshProfile();
     if (Object.keys(this.context.userProfile).length === 0) {
+      this.setState({ loading: false });
       this.props.history.push("/createprofile");
+    } else {
+      this.setState({ loading: false });
     }
   }
 
@@ -80,8 +85,12 @@ export default class DeactivateProfilePage extends Component {
   };
 
   render() {
-    const { error } = this.state;
-    return (
+    const { error, loading } = this.state;
+    return loading ? (
+      <section className="loaderMessage">
+        <div className="loader"></div>
+      </section>
+    ) : (
       <section className="DeactivateProfilePage">
         <Nav />
         <section className="deactivateProfile">

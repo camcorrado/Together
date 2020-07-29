@@ -30,15 +30,19 @@ export default class EditProfilepage extends Component {
     favorited_profiles: null,
     deactivated: null,
     error: null,
+    loading: null,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
     await this.context.refreshProfile();
     if (Object.keys(this.context.userProfile).length === 0) {
+      this.setState({ loading: false });
       this.props.history.push("/createprofile");
     } else {
       this.setState({
         ...this.context.userProfile,
+        loading: false,
       });
     }
   }
@@ -132,6 +136,7 @@ export default class EditProfilepage extends Component {
       blocked_profiles,
       favorited_profiles,
       error,
+      loading,
     } = this.state;
     const profile = {
       id,
@@ -145,7 +150,11 @@ export default class EditProfilepage extends Component {
       favorited_profiles,
     };
 
-    return (
+    return loading ? (
+      <section className="loaderMessage">
+        <div className="loader"></div>
+      </section>
+    ) : (
       <section className="EditProfilePage">
         <header>
           <h2>Edit Your Profile</h2>

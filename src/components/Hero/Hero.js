@@ -80,7 +80,11 @@ export default class Hero extends Component {
                 </>
               ) : (
                 <>
-                  <Link to="/createprofile" className="primary">
+                  <Link
+                    to="/createprofile"
+                    className="primary"
+                    id="createProfileButton"
+                  >
                     Create Your Profile
                   </Link>
                   <button onClick={this.handleClickLogOut}>Log Out</button>

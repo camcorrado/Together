@@ -168,7 +168,7 @@ export default class SignUpForm extends Component {
             </div>
             <div className="termsOfService">
               <label htmlFor="terms of service">
-                I have read and agree to the
+                I agree to the
                 <Link to="/terms" className="termsLink">
                   {" "}
                   terms of service:
