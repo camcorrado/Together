@@ -23,28 +23,27 @@ export default class LoginForm extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    await this.handlePermission();
+    await this.findLocation();
     this.setState({ loading: false });
   }
 
-  handlePermission = async () => {
-    let locationStatus;
-    await navigator.permissions
-      .query({ name: "geolocation" })
-      .then((result) => {
-        if (result.state === "granted") {
-          locationStatus = "granted";
-        } else if (result.state === "prompt") {
-          locationStatus = "prompt";
-        } else if (result.state === "denied") {
-          locationStatus = "denied";
-        }
-      });
-    if (locationStatus !== "granted") {
-      this.setState({
-        error: "geolocation error",
-      });
-    }
+  findLocation = async () => {
+    console.log("find ran");
+    await navigator.geolocation.getCurrentPosition(
+      this.locationSuccess,
+      this.locationError
+    );
+  };
+
+  locationSuccess = () => {
+    console.log("success");
+
+    this.setState({ error: null });
+  };
+
+  locationError = () => {
+    console.log("error");
+    this.setState({ error: "geolocation error" });
   };
 
   handleSubmit = (ev) => {

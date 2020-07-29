@@ -178,13 +178,14 @@ export default class LoginPage extends Component {
           <Header />
         </header>
         <h3 id="loginTitle">Login</h3>
-        <div role="alert" id="loginAlert" className="alert">
-          {error && <p className="error">{error}</p>}
-        </div>
+
         <LoginForm
           onLoginSuccess={this.handleLoginSuccess}
           onNoProfile={this.handleNoProfile}
         />
+        <div role="alert" id="loginAlert" className="alert">
+          {error && <p className="error">{error}</p>}
+        </div>
       </section>
     );
   }
