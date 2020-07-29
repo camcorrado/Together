@@ -1,13 +1,13 @@
 import ApiContext from "../../ApiContext";
 import config from "../../config";
 import Nav from "../Nav/Nav";
-import React from "react";
+import React, { Component } from "react";
 import TokenService from "../../services/token-service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../Icons";
 import "./UserProfile.css";
 
-class UserProfile extends React.Component {
+export default class UserProfile extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
@@ -22,7 +22,10 @@ class UserProfile extends React.Component {
     loading: null,
   };
 
+  _isMounted = false;
+
   async componentDidMount() {
+    this._isMounted = true;
     this.setState({ error: null, loading: true });
     await this.context.refreshProfile();
     const profileId = Number(this.props.match.params.profileId);
@@ -37,31 +40,39 @@ class UserProfile extends React.Component {
         profileId !== this.context.userProfile.id &&
         !this.context.userProfile.blocked_profiles.includes(profileId))
     ) {
-      this.setState({ error: `Invalid profile`, loading: false });
+      if (this._isMounted) {
+        this.setState({ error: `Invalid profile`, loading: false });
+      }
     } else {
-      fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((res) =>
-          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-        )
-        .then((data) => {
-          if (data.deactivated === "true") {
-            this.setState({ error: `Invalid profile`, loading: false });
-          } else {
-            this.setState({
-              profile: data,
-              loading: false,
-            });
-          }
+      if (this._isMounted) {
+        fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
+          method: "GET",
+          headers: {
+            "content-type": "application/json",
+          },
         })
-        .catch((res) => {
-          this.setState({ error: res.error });
-        });
+          .then((res) =>
+            !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+          )
+          .then((data) => {
+            if (data.deactivated === "true" && this._isMounted) {
+              this.setState({ error: `Invalid profile`, loading: false });
+            } else if (data.deactivated === "false" && this._isMounted) {
+              this.setState({
+                profile: data,
+                loading: false,
+              });
+            }
+          })
+          .catch((res) => {
+            this.setState({ error: res.error });
+          });
+      }
     }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleClickBlock = () => {
@@ -112,7 +123,9 @@ class UserProfile extends React.Component {
       )
       .then(
         this.context.editProfile(updatedProfile, () => {
-          this.props.history.push(`/grid`);
+          if (this._isMounted) {
+            this.props.history.push(`/grid`);
+          }
         })
       )
       .catch((res) => {
@@ -235,7 +248,7 @@ class UserProfile extends React.Component {
 
     const { interestDict } = icons;
     return (
-      <section className="userProfile">
+      <section className="UserProfile">
         <Nav
           onClickBlock={this.handleClickBlock}
           onClickUnblock={this.handleClickUnblock}
@@ -357,17 +370,15 @@ class UserProfile extends React.Component {
             <div className="loader"></div>
           </section>
         ) : error !== null && error !== undefined ? (
-          <section role="alert" className="alert">
+          <div role="alert" className="alert">
             {error && <p className="error">Invalid Profile</p>}
-          </section>
+          </div>
         ) : (
-          <section role="alert" className="alert">
+          <div role="alert" className="alert">
             {error && <p className="error">{error}</p>}
-          </section>
+          </div>
         )}
       </section>
     );
   }
 }
-
-export default UserProfile;

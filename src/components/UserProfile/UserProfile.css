@@ -10,7 +10,7 @@ button.block {
   color: black;
 }
 
-.userProfile {
+.UserProfile {
   overflow: scroll;
   max-width: 500px;
   margin: auto;

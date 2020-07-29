@@ -1,13 +1,13 @@
 import ApiContext from "../../ApiContext";
 import Header from "../Header/Header";
-import React from "react";
+import React, { Component } from "react";
 import TokenService from "../../services/token-service";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../Icons";
 import "./Hero.css";
 
-class Hero extends React.Component {
+export default class Hero extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
@@ -20,10 +20,19 @@ class Hero extends React.Component {
     loading: null,
   };
 
+  _isMounted = false;
+
   async componentDidMount() {
+    this._isMounted = true;
     this.setState({ loading: true });
     await this.context.refreshProfile();
-    this.setState({ loading: false });
+    if (this._isMounted) {
+      this.setState({ loading: false });
+    }
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   handleClickLogOut = (e) => {
@@ -35,8 +44,8 @@ class Hero extends React.Component {
     const { buttonDict } = icons;
     const { loading } = this.state;
     return (
-      <section className="hero">
-        <header className="App_Header">
+      <section className="Hero">
+        <header className="appHeader">
           <Header />
         </header>
         <section className="appDescription">
@@ -93,5 +102,3 @@ class Hero extends React.Component {
     );
   }
 }
-
-export default Hero;

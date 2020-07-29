@@ -33,7 +33,7 @@ export default class Grid extends Component {
     const { sortBy, nearbyProfiles, userProfile } = this.context;
     if (sortBy === "View All" && nearbyProfiles.length > 0 && userProfile.id) {
       return (
-        <section className="grid">
+        <section className="Grid">
           <Nav />
           <section className="profiles">
             {nearbyProfiles.length > 0 ? (
@@ -70,7 +70,7 @@ export default class Grid extends Component {
         userProfile.favorited_profiles.includes(profile.id)
       );
       return (
-        <section className="grid">
+        <section className="Grid">
           <Nav />
           <section className="profiles">
             {filteredProfiles.length > 0 ? (
@@ -112,7 +112,7 @@ export default class Grid extends Component {
 
       filteredProfiles.sort((a, b) => b.count - a.count);
       return (
-        <section className="grid">
+        <section className="Grid">
           <Nav />
           <section className="profiles">
             {filteredProfiles.length > 0 ? (
@@ -142,7 +142,7 @@ export default class Grid extends Component {
       );
     } else {
       return (
-        <section className="grid">
+        <section className="Grid">
           <Nav />
           <section className="loaderMessage">
             <div className="loader"></div>

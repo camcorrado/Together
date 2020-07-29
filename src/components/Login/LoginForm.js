@@ -83,19 +83,21 @@ export default class LoginForm extends Component {
     const { buttonDict } = icons;
 
     return loading ? (
-      <></>
+      <section className="loaderMessage">
+        <div className="loader"></div>
+      </section>
     ) : (
       <form className="LoginForm" onSubmit={this.handleSubmit}>
         {this.state.error === "geolocation error" ? (
           <>
-            <section role="alert" className="alert">
+            <div role="alert" className="alert">
               {error && (
                 <p className="error">
                   Together requires geolocation. Please change your location
                   permission and refresh the page to continue.
                 </p>
               )}
-            </section>
+            </div>
             <section className="buttons">
               <Link to="/" aria-label="back button">
                 <FontAwesomeIcon icon={buttonDict.faUndo} className="faIcon" />
@@ -104,28 +106,16 @@ export default class LoginForm extends Component {
           </>
         ) : (
           <>
-            <section role="alert" className="alert">
+            <div role="alert" className="alert">
               {error && <p className="error">{error}</p>}
-            </section>
+            </div>
             <div className="emailInput">
               <label htmlFor="email">Email:</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                defaultValue="camcorrado@gmail.com"
-                required
-              />
+              <input type="email" name="email" id="email" required />
             </div>
             <div className="passwordInput">
               <label htmlFor="password">Password:</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                defaultValue="Test123!"
-                required
-              />
+              <input type="password" name="password" id="password" required />
             </div>
             <section className="buttons">
               <button type="submit" className="primary">

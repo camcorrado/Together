@@ -29,15 +29,17 @@ h1 {
 }
 
 h2 {
-  font-size: clamp(20px, 6vw, 40px);
+  font-size: clamp(24px, 6vw, 48px);
 }
 
 h3 {
-  font-size: clamp(15px, 4vw, 30px);
+  font-size: clamp(20px, 4vw, 40px);
 }
 
 p {
-  font-size: clamp(13px, 3.5vw, 28px);
+  font-size: clamp(16px, 2.75vw, 20px);
+  margin: 0 auto;
+  max-width: 650px;
 }
 
 form {
@@ -88,11 +90,6 @@ section {
 
 section.buttons {
   padding: 0px 15px;
-}
-
-p {
-  margin: 0 auto;
-  max-width: 650px;
 }
 
 .alert {

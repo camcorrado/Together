@@ -65,10 +65,10 @@ export default class ChangePasswordForm extends Component {
     const { success, error } = this.state;
     return (
       <form className="ChangePasswordForm" onSubmit={this.handleSubmit}>
-        <section role="alert">
+        <div role="alert">
           {error && <p className="error">{error.message}</p>}
           {success && <p className="success">{success}</p>}
-        </section>
+        </div>
         <section className="formInputs">
           <div className="oldPasswordInput">
             <label htmlFor="oldPassword">Old Password:</label>
@@ -91,7 +91,7 @@ export default class ChangePasswordForm extends Component {
             />
           </div>
           <div className="verifyNewPasswordInput">
-            <label htmlFor="secondNewPassword">Verify Password:</label>
+            <label htmlFor="secondNewPassword">Confirm Password:</label>
             <input
               type="password"
               name="secondNewPassword"

@@ -1,0 +1,28 @@
+.termsText h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.termsText h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.termsText h4 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.termsText p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.terms p {
+  text-align: center;
+}
+
+p.date {
+  text-align: center;
+}

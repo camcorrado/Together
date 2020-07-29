@@ -82,13 +82,11 @@ export default class DeactivateProfilePage extends Component {
   render() {
     const { error } = this.state;
     return (
-      <section className="DeactivatePage">
+      <section className="DeactivateProfilePage">
         <Nav />
         <section className="deactivateProfile">
           <h2>Deactivate Profile</h2>
-          <section role="alert">
-            {error && <p className="error">{error}</p>}
-          </section>
+          <div role="alert">{error && <p className="error">{error}</p>}</div>
           <DeactivateProfileForm onDeactivate={this.handleDeactivate} />
         </section>
       </section>

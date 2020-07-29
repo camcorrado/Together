@@ -28,7 +28,7 @@ class MessageList extends Component {
     const { loading } = this.state;
     const { conversations } = this.context;
     return (
-      <section className="messageList">
+      <section className="MessageList">
         <Nav />
         <section className="conversations">
           {conversations.length > 0 ? (

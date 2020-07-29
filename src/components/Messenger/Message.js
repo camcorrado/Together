@@ -214,11 +214,8 @@ class Message extends Component {
     const { userProfile } = this.context;
     const { buttonDict } = icons;
     const url = `/userprofile/${id}`;
-
-    console.log(this.state);
-
     return (
-      <section className="messenger">
+      <section className="Messenger">
         {loading ? (
           <section className="loaderMessage">
             <div className="loader"></div>
@@ -226,9 +223,9 @@ class Message extends Component {
         ) : error !== null ? (
           <>
             <Nav />
-            <section role="alert" className="alert">
+            <div role="alert" className="alert">
               {error && <p className="error">{error}</p>}
-            </section>
+            </div>
           </>
         ) : (
           <>

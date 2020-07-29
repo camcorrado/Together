@@ -2,7 +2,7 @@ header {
   padding: 35px 15px 20px 15px;
 }
 
-.appTitle {
+.AppTitle {
   display: flex;
   flex-direction: row;
   justify-content: center;

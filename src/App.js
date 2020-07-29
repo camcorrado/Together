@@ -19,6 +19,7 @@ import PrivateRoute from "./components/Utils/PrivateRoute";
 import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import SignUpPage from "./components/SignUp/SignUpPage";
+import Terms from "./components/Terms/Terms";
 import TokenService from "./services/token-service";
 import UserProfile from "./components/UserProfile/UserProfile";
 
@@ -64,7 +65,10 @@ class App extends Component {
     error: null,
   };
 
+  _isMounted = false;
+
   componentDidMount() {
+    this._isMounted = true;
     IdleService.setIdleCallback(this.logoutFromIdle);
     if (TokenService.hasAuthToken()) {
       IdleService.regiserIdleTimerResets();
@@ -75,6 +79,7 @@ class App extends Component {
   }
 
   componentWillUnmount() {
+    this._isMounted = false;
     IdleService.unRegisterIdleResets();
     TokenService.clearCallbackBeforeExpiry();
   }
@@ -87,7 +92,6 @@ class App extends Component {
   };
 
   refreshProfile = async () => {
-    console.log("refresh");
     this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
     if (authToken) {
@@ -159,7 +163,6 @@ class App extends Component {
   };
 
   handleSetNearbyProfiles = (data) => {
-    console.log("nearbyProfiles ran");
     let blockedBy = [];
     data.filter((profile) => {
       if (profile.blocked_profiles.includes(this.state.userProfile.id)) {
@@ -251,7 +254,6 @@ class App extends Component {
           count = count + indCount;
           this.setState({ messageBadge: count });
         });
-        console.log({ count });
         this.setState({
           messageBadge: count,
           conversations: filteredConvos.sort((a, b) => {
@@ -264,7 +266,6 @@ class App extends Component {
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    console.log(this.state.messageBadge);
   };
 
   handleSetMessageBadge = async (conversationId) => {
@@ -311,12 +312,14 @@ class App extends Component {
 
   handleEditProfile = (data, cb) => {
     let geoData = data.geolocation;
-    this.setState(
-      {
-        userProfile: { ...data, geolocation: `${geoData.x}, ${geoData.y}` },
-      },
-      cb
-    );
+    if (this._isMounted) {
+      this.setState(
+        {
+          userProfile: { ...data, geolocation: `${geoData.x}, ${geoData.y}` },
+        },
+        cb
+      );
+    }
   };
 
   handleLogOut = () => {
@@ -386,6 +389,7 @@ class App extends Component {
                 path={"/conversation/:conversationId"}
                 component={Message}
               />
+              <Route component={Terms} />
               <Route component={NotFoundPage} />
             </Switch>
           </ErrorBoundary>

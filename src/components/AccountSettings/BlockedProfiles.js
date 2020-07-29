@@ -52,11 +52,11 @@ export default class BlockedProfiles extends Component {
     const { error, loading } = this.state;
 
     return (
-      <section className="blockedProfilesGrid">
+      <section className="BlockedProfilesGrid">
         <Nav />
-        <section role="alert" className="blockedError">
+        <div role="alert" className="blockedError">
           {error && <p className="error">{error}</p>}
-        </section>
+        </div>
         <section className="blockedProfiles">
           {this.state.blockedProfiles.length > 0 ? (
             <ul className="blockedProfiles">

@@ -174,13 +174,13 @@ export default class LoginPage extends Component {
     const { error } = this.state;
     return (
       <section className="LoginPage">
-        <header className="App_Header">
+        <header className="appHeader">
           <Header />
         </header>
         <h3 id="loginTitle">Login</h3>
-        <section role="alert" id="loginAlert" className="alert">
+        <div role="alert" id="loginAlert" className="alert">
           {error && <p className="error">{error}</p>}
-        </section>
+        </div>
         <LoginForm
           onLoginSuccess={this.handleLoginSuccess}
           onNoProfile={this.handleNoProfile}

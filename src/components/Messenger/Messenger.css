@@ -1,4 +1,4 @@
-.messenger {
+.Messenger {
   margin-top: 120px;
   padding: 0px;
   display: flex;
@@ -141,7 +141,7 @@ textarea#message {
   text-align: left;
 }
 
-.conversationLink {
+.ConversationLink {
   text-decoration: none;
   color: black;
 }

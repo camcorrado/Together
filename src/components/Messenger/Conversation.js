@@ -94,7 +94,7 @@ export default class Conversation extends Component {
             otherUser: users[0],
           },
         }}
-        className="conversationLink"
+        className="ConversationLink"
       >
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="conversation">

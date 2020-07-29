@@ -1,12 +1,12 @@
-import React from "react";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./Header.css";
 
-class Title extends React.Component {
+export default class Title extends Component {
   render() {
     return (
       <header role="banner">
-        <section className="appTitle">
+        <section className="AppTitle">
           <div className="L">
             <h1>L</h1>
           </div>
@@ -36,5 +36,3 @@ class Title extends React.Component {
     );
   }
 }
-
-export default Title;

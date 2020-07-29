@@ -12,7 +12,7 @@ export default class ProfileIcon extends Component {
 
     return (
       <Link to={url} className="profileIconLink">
-        <section className="profileIcon">
+        <section className="ProfileIcon">
           <img
             src={profile_pic}
             alt={username + `'s profile pic`}

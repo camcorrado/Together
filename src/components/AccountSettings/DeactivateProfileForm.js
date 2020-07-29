@@ -42,10 +42,8 @@ export default class ChangePasswordForm extends Component {
   render() {
     const { error } = this.state;
     return (
-      <form className="DeactivateForm" onSubmit={this.handleSubmit}>
-        <section role="alert">
-          {error && <p className="error">{error}</p>}
-        </section>
+      <form className="DeactivateProfileForm" onSubmit={this.handleSubmit}>
+        <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="forward">
           <p>
             Deactivating your profile will prevent other users from seeing it on

@@ -1,7 +1,7 @@
 import ApiContext from "../ApiContext";
-import React from "react";
+import React, { Component } from "react";
 
-export default class SortByForm extends React.Component {
+export default class SortByForm extends Component {
   constructor(props) {
     super(props);
 
@@ -23,7 +23,7 @@ export default class SortByForm extends React.Component {
 
   render() {
     return (
-      <form className="sortByForm">
+      <form className="SortByForm">
         <label htmlFor="sortBy" id="sortBy" aria-label="sort by options">
           <select
             value={this.context.sortBy}

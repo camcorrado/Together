@@ -47,54 +47,69 @@ export default class SignUpForm extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, email, password } = e.target;
+    const {
+      firstName,
+      lastName,
+      email,
+      firstPassword,
+      secondPassword,
+    } = e.target;
     this.setState({ error: null });
-    AuthApiService.postUser({
-      email: email.value,
-      password: password.value,
-      full_name: `${firstName.value} ${lastName.value}`,
-      deactivated: "false",
-    })
-      .then(() => {
-        AuthApiService.postLogin({
-          email: email.value,
-          password: password.value,
-        })
-          .then((res) => {
-            TokenService.saveAuthToken(res.authToken);
-          })
-          .then(() => {
-            this.context.refreshProfile();
-          })
-          .then(() => {
-            email.value = "";
-            password.value = "";
-            this.props.onSignUpSuccess();
-          })
-          .catch((res) => {
-            this.setState({ error: res.error });
-          });
+    if (firstPassword.value !== secondPassword.value) {
+      this.setState({ error: `Passwords do not match.` });
+    } else {
+      AuthApiService.postUser({
+        email: email.value,
+        password: firstPassword.value,
+        full_name: `${firstName.value} ${lastName.value}`,
+        deactivated: "false",
       })
-      .catch((res) => {
-        this.setState({ error: res.error });
-      });
+        .then(() => {
+          AuthApiService.postLogin({
+            email: email.value,
+            password: firstPassword.value,
+          })
+            .then((res) => {
+              TokenService.saveAuthToken(res.authToken);
+            })
+            .then(() => {
+              this.context.refreshProfile();
+            })
+            .then(() => {
+              firstName.value = "";
+              lastName.value = "";
+              email.value = "";
+              firstPassword.value = "";
+              secondPassword.value = "";
+              this.props.onSignUpSuccess();
+            })
+            .catch((res) => {
+              this.setState({ error: res.error });
+            });
+        })
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+    }
   };
 
   render() {
     const { error, loading } = this.state;
     const { buttonDict } = icons;
     return loading ? (
-      <></>
+      <section className="loaderMessage">
+        <div className="loader"></div>
+      </section>
     ) : (
       <form className="SignUpForm" onSubmit={this.handleSubmit}>
         {this.state.error === "geolocation error" ? (
           <>
-            <section role="alert" className="alert">
+            <div role="alert" className="alert">
               <p className="error">
                 Together requires geolocation. Please change your location
                 permission and refresh the page to continue.
               </p>
-            </section>
+            </div>
             <section className="buttons">
               <Link to="/" aria-label="back button">
                 <FontAwesomeIcon icon={buttonDict.faUndo} className="faIcon" />
@@ -103,9 +118,9 @@ export default class SignUpForm extends Component {
           </>
         ) : (
           <>
-            <section role="alert" className="alert">
+            <div role="alert" className="alert">
               {error && <p className="error">{error}</p>}
-            </section>
+            </div>
             <div className="firstNameInput">
               <label htmlFor="firstName">First Name:</label>
               <input
@@ -113,7 +128,6 @@ export default class SignUpForm extends Component {
                 name="firstName"
                 id="firstName"
                 maxLength="20"
-                defaultValue="Cam"
                 required
               />
             </div>
@@ -124,7 +138,6 @@ export default class SignUpForm extends Component {
                 name="lastName"
                 id="lastName"
                 maxLength="20"
-                defaultValue="Corrado"
                 required
               />
             </div>
@@ -135,20 +148,38 @@ export default class SignUpForm extends Component {
                 name="email"
                 id="email"
                 maxLength="120"
-                defaultValue="test100@gmail.com"
                 required
               />
             </div>
-            <div className="passwordInput">
-              <label htmlFor="password">Password:</label>
+            <div className="firstPasswordInput">
+              <label htmlFor="firstPassword">Password:</label>
               <input
                 type="password"
-                name="password"
-                id="password"
+                name="firstPassword"
+                id="firstPassword"
                 maxLength="20"
-                defaultValue="Test123!"
                 required
               />
+            </div>
+            <div className="secondPasswordInput">
+              <label htmlFor="secondPassword">Confirm Password:</label>
+              <input
+                type="password"
+                name="secondPassword"
+                id="secondPassword"
+                maxLength="20"
+                required
+              />
+            </div>
+            <div className="termsOfService">
+              <label htmlFor="terms of service">
+                I have read and agree to the
+                <Link to="/terms" className="termsLink">
+                  {" "}
+                  terms of service:
+                </Link>
+              </label>
+              <input type="checkbox" name="terms" id="terms" required />
             </div>
             <section className="buttons">
               <button type="submit" className="primary">

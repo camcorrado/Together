@@ -1,0 +1,12 @@
+.termsOfService label {
+  flex-basis: 75%;
+}
+
+.termsOfService input {
+  position: relative;
+  bottom: 2px;
+}
+
+.termsLink {
+  text-decoration: none;
+}

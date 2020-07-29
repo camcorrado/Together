@@ -30,9 +30,7 @@ export default class ChangePasswordPage extends Component {
         <Nav />
         <section className="changePassword">
           <h2>Change Password</h2>
-          <section role="alert">
-            {error && <p className="error">{error}</p>}
-          </section>
+          <div role="alert">{error && <p className="error">{error}</p>}</div>
           <ChangePasswordForm />
         </section>
       </section>

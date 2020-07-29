@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import icons from "../Icons";
-
 import React, { Component } from "react";
 
 class Checkbox extends Component {
