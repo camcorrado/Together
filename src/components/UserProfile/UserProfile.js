@@ -121,13 +121,15 @@ export default class UserProfile extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then(
-        this.context.editProfile(updatedProfile, () => {
-          if (this._isMounted) {
+      .then(() => {
+        console.log(this._isMounted);
+        if (this._isMounted) {
+          console.log("ran");
+          this.context.editProfile(updatedProfile, () => {
             this.props.history.push(`/grid`);
-          }
-        })
-      )
+          });
+        }
+      })
       .catch((res) => {
         this.setState({ error: res.error });
       });

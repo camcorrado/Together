@@ -17,12 +17,12 @@ export default class Terms extends Component {
             These Terms of Use constitute a legally binding agreement made
             between you, whether personally or on behalf of an entity (“you”)
             and Cameron Corrado ("Company", “we”, “us”, or “our”), concerning
-            your access to and use of the
+            your access to and use of the &nbsp;
             <a href="https://together-lgbtq.now.sh/">
               https://together-lgbtq.now.sh/
             </a>
-            website as well as any other media form, media channel, mobile
-            website or mobile application related, linked, or otherwise
+            &nbsp; website as well as any other media form, media channel,
+            mobile website or mobile application related, linked, or otherwise
             connected thereto (collectively, the “Site”). You agree that by
             accessing the Site, you have read, understood, and agreed to be
             bound by all of these Terms of Use. IF YOU DO NOT AGREE WITH ALL OF
@@ -977,11 +977,9 @@ export default class Terms extends Component {
           <h3>CONTACT US </h3>
           <p>
             In order to resolve a complaint regarding the Site or to receive
-            further information regarding use of the Site, please contact us at:
+            further information regarding use of the Site, please contact us at
+            camcorrado@gmail.com.
           </p>
-          <div className="terms">
-            <p>camcorrado@gmail.com</p>
-          </div>
         </section>
       </section>
     );

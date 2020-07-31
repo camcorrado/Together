@@ -6,7 +6,7 @@ Users can customize their profile, sort through profiles to determine their comp
 
 ## Motivation
 
-Most LGBTQ+ people meet each other through a dating app, bar, or by being the only other LGBTQ+ person at the party. Together provides us with a way to see who lives nearby and wants to start an LGBTQ+ boardg ame night or go for a bike ride together!
+Most LGBTQ+ people meet each other through a dating app, bar, or by being the only other LGBTQ+ person at the party. Together provides us with a way to see who lives nearby and wants to start an LGBTQ+ board game night or go for a bike ride together!
 
 ## Screenshots
 
