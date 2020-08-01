@@ -11,7 +11,8 @@ button.block {
 }
 
 .UserProfile {
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   max-width: 500px;
   margin: auto;
   display: flex;
