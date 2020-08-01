@@ -59,3 +59,10 @@ Allows the user to deactivate their account, preventing their profile from being
 ## Live URL
 
 https://together-lgbtq.now.sh
+
+## Demo Credentials
+
+Email: test@email.com
+Password: Test123!
+
+Note: if you test the password changing feature, please change the password back to "Test123!"

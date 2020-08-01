@@ -183,6 +183,11 @@ export default class LoginPage extends Component {
           onLoginSuccess={this.handleLoginSuccess}
           onNoProfile={this.handleNoProfile}
         />
+        <section className="credentials">
+          <h4>Demo Credentials</h4>
+          <p>Email: test@email.com</p>
+          <p>Password: Test123!</p>
+        </section>
         <div role="alert" id="loginAlert" className="alert">
           {error && <p className="error">{error}</p>}
         </div>

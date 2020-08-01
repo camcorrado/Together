@@ -41,6 +41,16 @@ export default class ChangePasswordPage extends Component {
           <h2>Change Password</h2>
           <div role="alert">{error && <p className="error">{error}</p>}</div>
           <ChangePasswordForm />
+          <section className="note">
+            {this.userInfo.email === "test@email.com" ? (
+              <p>
+                If you're using the test account, please change the password
+                back to "Test123!"
+              </p>
+            ) : (
+              <></>
+            )}
+          </section>
         </section>
       </section>
     );
