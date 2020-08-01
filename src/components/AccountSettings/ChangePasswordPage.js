@@ -9,6 +9,7 @@ export default class ChangePasswordPage extends Component {
 
   static defaultProps = {
     userInfo: {},
+    userProfile: {},
     refreshProfile: () => {},
   };
 
@@ -42,7 +43,7 @@ export default class ChangePasswordPage extends Component {
           <div role="alert">{error && <p className="error">{error}</p>}</div>
           <ChangePasswordForm />
           <section className="note">
-            {this.userInfo.email === "test@email.com" ? (
+            {this.context.userInfo.email === "test@email.com" ? (
               <p>
                 If you're using the test account, please change the password
                 back to "Test123!"
