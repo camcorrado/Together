@@ -88,11 +88,11 @@ class App extends Component {
     this.forceUpdate();
   };
 
-  refreshProfile = () => {
+  refreshProfile = async () => {
     this.setState({ error: null });
     const authToken = TokenService.getAuthToken();
     if (authToken) {
-      fetch(`${config.API_ENDPOINT}/users`, {
+      await fetch(`${config.API_ENDPOINT}/users`, {
         method: "GET",
         headers: {
           "content-type": "application/json",
@@ -102,16 +102,16 @@ class App extends Component {
         .then((res) =>
           !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
         )
-        .then((user) => {
-          this.handleSetUserInfo(user);
-          this.handleSetProfileInfo(user.id);
+        .then(async (user) => {
+          await this.handleSetUserInfo(user);
+          await this.handleSetProfileInfo(user.id);
         });
     }
   };
 
-  handleSetUserInfo = () => {
+  handleSetUserInfo = async () => {
     this.setState({ error: null });
-    fetch(`${config.API_ENDPOINT}/users`, {
+    await fetch(`${config.API_ENDPOINT}/users`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -131,9 +131,9 @@ class App extends Component {
       });
   };
 
-  handleSetProfileInfo = (id) => {
+  handleSetProfileInfo = async (id) => {
     this.setState({ error: null });
-    fetch(`${config.API_ENDPOINT}/profiles`, {
+    await fetch(`${config.API_ENDPOINT}/profiles`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -142,16 +142,16 @@ class App extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then((data) => {
-        const profileInfo = data.filter((profile) => {
+      .then(async (data) => {
+        const profileInfo = await data.filter((profile) => {
           return profile.user_id === id;
         });
         if (profileInfo.length > 0) {
           this.setState({
             userProfile: profileInfo.pop(),
           });
-          this.handleSetNearbyProfiles(data);
-          this.handleSetConverations();
+          await this.handleSetNearbyProfiles(data);
+          await this.handleSetConverations();
         }
       })
       .catch((res) => {
@@ -225,9 +225,9 @@ class App extends Component {
     return dist;
   };
 
-  handleSetConverations = () => {
+  handleSetConverations = async () => {
     this.setState({ error: null });
-    fetch(`${config.API_ENDPOINT}/conversations`, {
+    await fetch(`${config.API_ENDPOINT}/conversations`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -237,17 +237,17 @@ class App extends Component {
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
-      .then((conversations) => {
+      .then(async (conversations) => {
         let filteredConvos = [];
         let count = 0;
-        conversations.forEach((convo) => {
+        await conversations.forEach(async (convo) => {
           let id = convo.users
             .filter((user) => user !== this.state.userProfile.id)
             .pop();
           if (!this.state.userProfile.blocked_profiles.includes(id)) {
             filteredConvos.push(convo);
           }
-          let indCount = this.handleSetMessageBadge(convo.id);
+          let indCount = await this.handleSetMessageBadge(convo.id);
           count = count + indCount;
           this.setState({ messageBadge: count });
         });
@@ -265,9 +265,9 @@ class App extends Component {
       });
   };
 
-  handleSetMessageBadge = (conversationId) => {
+  handleSetMessageBadge = async (conversationId) => {
     let count = 0;
-    fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
+    await fetch(`${config.API_ENDPOINT}/conversations/${conversationId}`, {
       method: "GET",
       headers: {
         "content-type": "application/json",
@@ -307,10 +307,10 @@ class App extends Component {
     });
   };
 
-  handleEditProfile = (data, cb) => {
+  handleEditProfile = async (data, cb) => {
     let geoData = data.geolocation;
 
-    this.setState(
+    await this.setState(
       {
         userProfile: { ...data, geolocation: `${geoData.x}, ${geoData.y}` },
       },
