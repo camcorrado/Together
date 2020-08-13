@@ -30,6 +30,7 @@ import {
   faTh,
   faCheck,
   faEnvelope,
+  faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { faStar as faStarRegular } from "@fortawesome/free-regular-svg-icons";
@@ -47,6 +48,8 @@ const icons = {
     faEnvelope,
     faStarRegular,
   },
+
+  faUserCircle,
 
   interestDict: {
     Activism: faFistRaised,

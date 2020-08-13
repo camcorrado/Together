@@ -1,6 +1,6 @@
 # Together
 
-Together is a location based app to help bring LGBTQ+ locals together based on shared interests.
+Together is a location-based app to help bring LGBTQ+ locals together based on shared interests.
 
 Users can customize their profile, sort through profiles to determine their compatibility with others, and message each other to begin a beautiful new friendship!
 

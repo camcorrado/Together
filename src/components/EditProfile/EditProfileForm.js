@@ -17,6 +17,7 @@ export default class EditProfileForm extends Component {
 
   state = {
     interests: [],
+    profile_pic_loading: false,
     error: null,
   };
 
@@ -59,7 +60,28 @@ export default class EditProfileForm extends Component {
   };
 
   onProfilePicChange = async (e) => {
-    await this.props.onProfilePicChange(e.target.value);
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "together");
+    this.setState({ profile_pic_loading: true });
+
+    await fetch(process.env.REACT_APP_CLOUDINARY_URL, {
+      method: "POST",
+      body: data,
+    })
+      .then((res) =>
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+      )
+      .then(
+        (picData) => this.props.onProfilePicChange(picData.secure_url),
+        this.setState({
+          profile_pic_loading: false,
+        })
+      )
+      .catch((res) => {
+        this.setState({ error: res.error });
+      });
   };
 
   onPronounsChange = async (e) => {
@@ -79,7 +101,7 @@ export default class EditProfileForm extends Component {
 
   render() {
     const { username, bio, profile_pic, pronouns } = this.props.profile;
-    const { error } = this.state;
+    const { error, profile_pic_loading } = this.state;
     const { buttonDict } = icons;
     return (
       <form className="EditProfileForm" onSubmit={this.handleSubmit}>
@@ -98,18 +120,24 @@ export default class EditProfileForm extends Component {
             required
           />
         </div>
-        <div className="profilePicInput">
-          <label htmlFor="profile_pic">Profile Picture:</label>
-          <input
-            type="text"
-            name="profile_pic"
-            id="profile_pic"
-            placeholder={profile_pic || ""}
-            value={profile_pic || ""}
-            onChange={this.onProfilePicChange}
-            aria-required="true"
-            required
-          />
+        {profile_pic_loading ? (
+          <p>Uploading...</p>
+        ) : (
+          <div className="profilePicInput">
+            <label htmlFor="profile_pic">Profile Picture:</label>
+            <input
+              type="file"
+              name="profile_pic"
+              id="profile_pic"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={this.onProfilePicChange}
+              aria-required="true"
+              required
+            />
+          </div>
+        )}
+        <div className="profilePicForm">
+          <img src={profile_pic} alt="uploaded profile pic" />
         </div>
         <div className="bioInput">
           <label htmlFor="bio">About:</label>

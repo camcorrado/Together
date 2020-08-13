@@ -3,6 +3,8 @@ import Checkbox from "../Checkbox/Checkbox";
 import config from "../../config";
 import React, { Component } from "react";
 import TokenService from "../../services/token-service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import icons from "../Icons";
 import "./CreateProfile.css";
 
 export default class CreateProfileForm extends Component {
@@ -16,6 +18,8 @@ export default class CreateProfileForm extends Component {
 
   state = {
     geolocationData: "",
+    profile_pic: null,
+    profile_pic_loading: false,
     error: null,
   };
 
@@ -53,56 +57,89 @@ export default class CreateProfileForm extends Component {
   locationSuccess = (position) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    this.setState({ geolocationData: `${latitude}, ${longitude}` });
+    this.setState({
+      geolocationData: `${latitude}, ${longitude}`,
+    });
   };
 
   locationError = () => {
     this.setState({ error: `Please allow Geolocation` });
   };
 
-  handleSubmit = async (e) => {
-    e.preventDefault();
-    this.setState({ error: null });
-    const interests = [];
-    const { username, bio, profile_pic, pronouns } = e.target;
-    for (const checkbox of this.selectedCheckboxes) {
-      interests.push(checkbox);
-    }
-    const sortedInterests = interests.sort();
+  uploadImage = async (e) => {
+    const files = e.target.files;
+    const data = new FormData();
+    data.append("file", files[0]);
+    data.append("upload_preset", "together");
+    this.setState({ profile_pic_loading: true });
 
-    const newProfile = {
-      username: username.value,
-      bio: bio.value,
-      profile_pic: profile_pic.value,
-      interests: sortedInterests,
-      pronouns: pronouns.value,
-      geolocation: this.state.geolocationData,
-      blocked_profiles: [],
-      favorited_profiles: [],
-      deactivated: "false",
-    };
-
-    await fetch(`${config.API_ENDPOINT}/profiles`, {
+    await fetch(process.env.REACT_APP_CLOUDINARY_URL, {
       method: "POST",
-      body: JSON.stringify(newProfile),
-      headers: {
-        "content-type": "application/json",
-        authorization: `bearer ${TokenService.getAuthToken()}`,
-      },
+      body: data,
     })
       .then((res) =>
         !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
       )
+      .then((picData) =>
+        this.setState({
+          profile_pic: picData.secure_url,
+          profile_pic_loading: false,
+        })
+      )
       .catch((res) => {
         this.setState({ error: res.error });
       });
-    await this.context.setProfileInfo(this.context.userInfo.id);
-    this.props.onCreateSuccess();
+  };
+
+  handleSubmit = async (e) => {
+    e.preventDefault();
+    this.setState({ error: null });
+
+    if (this.state.profile_pic === null) {
+      this.setState({ error: `Please upload a profile picture.` });
+    } else {
+      const interests = [];
+      const { username, bio, pronouns } = e.target;
+
+      for (const checkbox of this.selectedCheckboxes) {
+        interests.push(checkbox);
+      }
+      const sortedInterests = interests.sort();
+
+      const newProfile = {
+        username: username.value,
+        bio: bio.value,
+        profile_pic: this.state.profile_pic,
+        interests: sortedInterests,
+        pronouns: pronouns.value,
+        geolocation: this.state.geolocationData,
+        blocked_profiles: [],
+        favorited_profiles: [],
+        deactivated: "false",
+      };
+
+      await fetch(`${config.API_ENDPOINT}/profiles`, {
+        method: "POST",
+        body: JSON.stringify(newProfile),
+        headers: {
+          "content-type": "application/json",
+          authorization: `bearer ${TokenService.getAuthToken()}`,
+        },
+      })
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
+      await this.context.setProfileInfo(this.context.userInfo.id);
+      this.props.onCreateSuccess();
+    }
   };
 
   render() {
-    const { error } = this.state;
-    return this.state.error === `Please allow Geolocation` ? (
+    const { error, profile_pic_loading, profile_pic } = this.state;
+    return error === `Please allow Geolocation` ? (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
         <section role="alert" className="alert">
           {error && (
@@ -116,7 +153,7 @@ export default class CreateProfileForm extends Component {
     ) : (
       <form className="CreateProfileForm" onSubmit={this.handleSubmit}>
         <section role="alert" className="alert">
-          {error && <p className="error">{error.message}</p>}
+          {error && <p className="error">{error}</p>}
         </section>
         <div className="usernameInput">
           <label htmlFor="username">Username:</label>
@@ -129,17 +166,32 @@ export default class CreateProfileForm extends Component {
             required
           />
         </div>
-        <div className="profilePicInput">
-          <label htmlFor="profile_pic">Profile Picture:</label>
-          <input
-            type="text"
-            name="profile_pic"
-            id="profile_pic"
-            aria-required="true"
-            defaultValue="https://i.pinimg.com/236x/9a/26/84/9a2684c4213171476e13732af3b26537--big-smiley-face-smiley-faces.jpg"
-            required
-          />
-        </div>
+        {profile_pic_loading ? (
+          <p>Uploading...</p>
+        ) : (
+          <div className="profilePicInput">
+            <label htmlFor="profile_pic">Profile Picture:</label>
+            <input
+              type="file"
+              name="profile_pic"
+              id="profile_pic"
+              accept="image/png, image/jpeg, image/jpg"
+              onChange={this.uploadImage}
+            />
+          </div>
+        )}
+        {profile_pic !== null ? (
+          <div className="profilePicForm">
+            <img src={profile_pic} alt="uploaded profile pic" />
+          </div>
+        ) : (
+          <div className="profilePicForm">
+            <FontAwesomeIcon
+              icon={icons.faUserCircle}
+              className="faIconDefaultProfilePic"
+            />
+          </div>
+        )}
         <div className="bioInput">
           <label htmlFor="bio">About:</label>
           <textarea

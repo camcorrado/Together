@@ -31,7 +31,6 @@ button.block {
 .profilePicUserProfile > img {
   width: 75%;
   height: 100%;
-  object-fit: cover;
 }
 
 .faIconProfile {

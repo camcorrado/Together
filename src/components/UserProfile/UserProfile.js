@@ -22,10 +22,7 @@ export default class UserProfile extends Component {
     loading: null,
   };
 
-  _isMounted = false;
-
   async componentDidMount() {
-    this._isMounted = true;
     this.setState({ error: null, loading: true });
     await this.context.refreshProfile();
     const profileId = Number(this.props.match.params.profileId);
@@ -40,39 +37,37 @@ export default class UserProfile extends Component {
         profileId !== this.context.userProfile.id &&
         !this.context.userProfile.blocked_profiles.includes(profileId))
     ) {
-      if (this._isMounted) {
-        this.setState({ error: `Invalid profile`, loading: false });
-      }
+      this.setState({
+        error: `Invalid profile`,
+        loading: false,
+      });
     } else {
-      if (this._isMounted) {
-        fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-          },
+      fetch(`${config.API_ENDPOINT}/profiles/${profileId}`, {
+        method: "GET",
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((res) =>
+          !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        )
+        .then((data) => {
+          if (data.deactivated === "true") {
+            this.setState({
+              error: `Invalid profile`,
+              loading: false,
+            });
+          } else if (data.deactivated === "false") {
+            this.setState({
+              profile: data,
+              loading: false,
+            });
+          }
         })
-          .then((res) =>
-            !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
-          )
-          .then((data) => {
-            if (data.deactivated === "true" && this._isMounted) {
-              this.setState({ error: `Invalid profile`, loading: false });
-            } else if (data.deactivated === "false" && this._isMounted) {
-              this.setState({
-                profile: data,
-                loading: false,
-              });
-            }
-          })
-          .catch((res) => {
-            this.setState({ error: res.error });
-          });
-      }
+        .catch((res) => {
+          this.setState({ error: res.error });
+        });
     }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   handleClickBlock = () => {
@@ -119,18 +114,15 @@ export default class UserProfile extends Component {
       },
     })
       .then((res) =>
-        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : true
       )
-      .then(() => {
-        console.log(this._isMounted);
-        if (this._isMounted) {
-          console.log("ran");
-          this.context.editProfile(updatedProfile, () => {
-            this.props.history.push(`/grid`);
-          });
-        }
-      })
+      .then(
+        this.context.editProfile(updatedProfile, () => {
+          this.props.history.push(`/grid`);
+        })
+      )
       .catch((res) => {
+        console.log({ res });
         this.setState({ error: res.error });
       });
   };
@@ -178,7 +170,7 @@ export default class UserProfile extends Component {
       },
     })
       .then((res) =>
-        !res.ok ? res.json().then((e) => Promise.reject(e)) : res.json()
+        !res.ok ? res.json().then((e) => Promise.reject(e)) : true
       )
       .then(
         this.context.editProfile(updatedProfile, () => {

@@ -80,8 +80,46 @@ input {
   font-size: 18px;
   padding: 0px 5px;
   max-height: 30px;
-  margin: auto 5% auto 0px;
+  margin: auto 10% auto 0px;
+  max-width: 300px;
   color: black;
+}
+
+input#profile_pic {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  border: none;
+}
+
+.profilePicInput {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-content: center;
+  max-width: 500px;
+}
+
+.profilePicInput > label {
+  flex: 1;
+  text-align: center;
+}
+
+.profilePicInput > input {
+  margin-right: 0px;
+}
+
+.profilePicForm {
+  max-width: 75%;
+  height: auto;
+  margin: auto;
+  overflow: hidden;
+  object-fit: cover;
+}
+
+.profilePicForm > img {
+  width: 75%;
+  height: 100%;
 }
 
 section {

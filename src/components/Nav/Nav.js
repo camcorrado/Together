@@ -213,7 +213,7 @@ export default class Nav extends Component {
             <section className="buttons">
               <Link
                 to={url}
-                aira-label="view profile button"
+                aria-label="view profile button"
                 id="viewProfileButton"
               >
                 {profile_pic ? (
@@ -263,7 +263,7 @@ export default class Nav extends Component {
             <section className="buttons">
               <Link
                 to={url}
-                aira-label="view profile button"
+                aria-label="view profile button"
                 id="viewProfileButton"
               >
                 {profile_pic ? (
@@ -301,7 +301,7 @@ export default class Nav extends Component {
             <section className="buttons">
               <Link
                 to={editUrl}
-                aira-label="edit profile button"
+                aria-label="edit profile button"
                 className="primary"
               >
                 <FontAwesomeIcon icon={buttonDict.faUndo} className="faIcon" />
@@ -314,7 +314,7 @@ export default class Nav extends Component {
           <nav role="navigation">
             {pathnameId === id ? (
               <section className="buttons">
-                <Link to={editUrl} aira-label="edit profile button">
+                <Link to={editUrl} aria-label="edit profile button">
                   <FontAwesomeIcon icon={buttonDict.faCog} className="faIcon" />
                 </Link>
                 <Link to="/grid" aria-label="back button" className="primary">
@@ -336,21 +336,6 @@ export default class Nav extends Component {
                 pathnameId !== id &&
                 !blocked_profiles.includes(pathnameId)) ? (
               <section className="buttons">
-                <button
-                  onClick={this.handleClickViewProfile}
-                  aira-label="view profile button"
-                  id="viewProfileButton"
-                >
-                  {profile_pic ? (
-                    <img
-                      src={profile_pic}
-                      alt={username + `'s profile pic`}
-                      className="profilePicButton"
-                    />
-                  ) : (
-                    <></>
-                  )}
-                </button>
                 <Link
                   to="/grid"
                   aria-label="back button"

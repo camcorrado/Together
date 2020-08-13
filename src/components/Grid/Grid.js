@@ -31,7 +31,7 @@ export default class Grid extends Component {
 
   render() {
     const { sortBy, nearbyProfiles, userProfile } = this.context;
-    if (sortBy === "View All" && nearbyProfiles.length > 0 && userProfile.id) {
+    if (sortBy === "View All" && userProfile.id) {
       return (
         <section className="Grid">
           <Nav />
@@ -53,10 +53,7 @@ export default class Grid extends Component {
                   ))}
               </ul>
             ) : (
-              <p>
-                No one has signed up yet! Congrats and thank you on being the
-                first! Share with friends to get things going!
-              </p>
+              <p>There aren't any profiles to view :(</p>
             )}
           </section>
         </section>

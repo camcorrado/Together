@@ -13,6 +13,12 @@ textarea#bio {
   font-size: 18px;
 }
 
+.faIconDefaultProfilePic {
+  font-size: 30vw;
+  height: 200px;
+  width: 200px;
+}
+
 .bioInput,
 .interestsInput {
   display: flex;
