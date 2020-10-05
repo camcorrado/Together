@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import TokenService from "../../services/token-service";
 import "./EditProfile.css";
 
-export default class EditProfilepage extends Component {
+export default class EditProfilePage extends Component {
   static contextType = ApiContext;
 
   static defaultProps = {
