@@ -275,4 +275,8 @@ button:hover,
     flex-basis: 25%;
     max-width: 25%;
   }
+
+  .mostRecentMessageRead {
+    max-width: 350px;
+  }
 }

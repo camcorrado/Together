@@ -150,7 +150,7 @@ textarea#message {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 350px;
+  max-width: 200px;
   margin: 0px;
   opacity: 0.5;
 }
