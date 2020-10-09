@@ -281,6 +281,9 @@ export default class UserProfile extends Component {
             <section className="bio">
               <p>{bio}</p>
             </section>
+            <section className="pronouns">
+              <p>{pronouns}</p>
+            </section>
           </>
         ) : (
           <>
