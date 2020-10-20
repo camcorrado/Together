@@ -6,7 +6,6 @@
 
 html,
 body {
-  height: 100%;
   width: 100%;
   min-width: 360px;
   min-height: 560px;
@@ -166,8 +165,15 @@ section.buttons {
 }
 
 .profilePicButton {
-  width: 25px;
-  height: 25px;
+  position: absolute;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+  min-height: 100%;
+  width: 50%;
+  object-fit: cover;
   border-radius: 3px;
 }
 
@@ -256,9 +262,11 @@ button:hover,
 }
 
 #viewProfileButton {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 @keyframes spin {

@@ -220,7 +220,7 @@ describe("LGBTQ App Components", () => {
     ReactDOM.unmountComponentAtNode(div);
   });
 
-  it("renders the Profile Icom without crashing", () => {
+  it("renders the Profile Icon without crashing", () => {
     const div = document.createElement("div");
 
     ReactDOM.render(

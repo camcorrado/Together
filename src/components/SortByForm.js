@@ -31,7 +31,7 @@ export default class SortByForm extends Component {
           >
             <option value="View All">View All</option>
             <option value="Favorites">Favorites</option>
-            <option value="Shared Interests">Mutual Interests</option>
+            <option value="Mutual Interests">Mutual Interests</option>
           </select>
         </label>
       </form>

@@ -22,9 +22,11 @@ export default class LoginForm extends Component {
   };
 
   async componentDidMount() {
-    this.setState({ loading: true });
-    await this.findLocation();
-    this.setState({ loading: false });
+    if (!TokenService.getAuthToken()) {
+      this.setState({ loading: true });
+      await this.findLocation();
+      this.setState({ loading: false });
+    }
   }
 
   findLocation = async () => {

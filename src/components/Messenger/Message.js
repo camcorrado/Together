@@ -244,7 +244,9 @@ class Message extends Component {
             </section>
             <section className="messageHistory">
               {messageHistory.length === 0 ? (
-                <p>You two haven't messaged each other yet!</p>
+                <p className="noMessages">
+                  You two haven't messaged each other yet!
+                </p>
               ) : (
                 <>
                   {messageHistory.map((message) =>

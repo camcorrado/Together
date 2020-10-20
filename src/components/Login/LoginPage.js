@@ -23,9 +23,10 @@ export default class LoginPage extends Component {
   };
 
   componentDidMount() {
-    this.findLocation();
     if (TokenService.getAuthToken()) {
       this.props.history.push("/grid");
+    } else {
+      this.findLocation();
     }
   }
 

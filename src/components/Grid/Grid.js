@@ -96,7 +96,7 @@ export default class Grid extends Component {
         </section>
       );
     } else if (
-      sortBy === "Shared Interests" &&
+      sortBy === "Mutual Interests" &&
       nearbyProfiles.length > 0 &&
       userProfile.id
     ) {

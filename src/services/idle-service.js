@@ -21,7 +21,7 @@ const IdleService = {
     /* queue the callback to happen 5 minutes from now */
     _timeoutId = setTimeout(_idleCallback, _FIVE_MINUTES_IN_MS);
   },
-  regiserIdleTimerResets() {
+  registerIdleTimerResets() {
     /* register the resetIdleTimer for events when a user interacts with page */
     _notIdleEvents.forEach((event) =>
       document.addEventListener(event, IdleService.resetIdleTimer, true)

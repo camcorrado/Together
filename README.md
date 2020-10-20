@@ -1,6 +1,6 @@
 # Together
 
-Together is a location-based app to help bring LGBTQ+ locals together based on shared interests.
+Together is a location-based app to help bring LGBTQ+ locals together based on mutual interests.
 
 Users can customize their profile, sort through profiles to determine their compatibility with others, & message each other to begin a beautiful new friendship!
 
@@ -22,7 +22,7 @@ Allows the new user to customize their profile. If the user does not finish this
 Allows returning users to log in, requiring geolocation to be allowed in order to continue.
 
 ![Grid Page](https://i.imgur.com/jgC16Bm.png)
-A display of all nearby profiles. Profiles are ordered by relative distance to the user, with icons depicting their interests. Profiles can also be sorted by Favorited & Shared Interests. Profiles the user has blocked, profiles that have blocked the user, & deactivated profiles will not display. The Nav Bar allows the user to view their own profile, view their conversations, or logout. A notification appears in the Nav Bar for unread messages.
+A display of all nearby profiles. Profiles are ordered by relative distance to the user, with icons depicting their interests. Profiles can also be sorted by Favorited & Mutual Interests. Profiles the user has blocked, profiles that have blocked the user, & deactivated profiles will not display. The Nav Bar allows the user to view their own profile, view their conversations, or logout. A notification appears in the Nav Bar for unread messages.
 
 ![User Profile Page](https://i.imgur.com/nwpRRfi.png)
 By clicking on a profile on the Grid Page, the user can get a more detailed view of that profile. The options to message, favorite, & block the profile are available.

@@ -28,8 +28,13 @@
   flex-direction: column-reverse;
   width: 100%;
   max-width: 500px;
+  height: 100%;
   margin: 125px auto 0px auto;
   overflow-y: scroll;
+}
+
+.noMessages {
+  margin: auto;
 }
 
 .userMessage {
@@ -85,11 +90,23 @@
   border-bottom: 1px solid black;
 }
 
+.profilePicContainer {
+  position: relative;
+  margin: 0px 20px 0px 0px;
+  min-width: 80px;
+  overflow: hidden;
+}
+
 .profilePicConversations {
-  max-width: 50px;
-  max-height: 50px;
+  position: absolute;
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+  min-height: 100%;
+  width: 80%;
   object-fit: cover;
-  margin-right: 20px;
 }
 
 .profilePicMessageContainer {
@@ -155,7 +172,7 @@ textarea#message {
   opacity: 0.5;
 }
 
-.mostRecentMessageUnead {
+.mostRecentMessageUnread {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

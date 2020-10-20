@@ -98,20 +98,22 @@ export default class Conversation extends Component {
       >
         <div role="alert">{error && <p className="error">{error}</p>}</div>
         <section className="conversation">
-          {users
-            .filter((profile) => profile.id !== userProfile.id)
-            .map((profile) =>
-              profile.profile_pic ? (
-                <img
-                  key={profile.id}
-                  src={profile.profile_pic}
-                  alt={profile.username + `'s profile pic`}
-                  className="profilePicConversations"
-                />
-              ) : (
-                <></>
-              )
-            )}
+          <section className="profilePicContainer">
+            {users
+              .filter((profile) => profile.id !== userProfile.id)
+              .map((profile) =>
+                profile.profile_pic ? (
+                  <img
+                    key={profile.id}
+                    src={profile.profile_pic}
+                    alt={profile.username + `'s profile pic`}
+                    className="profilePicConversations"
+                  />
+                ) : (
+                  <></>
+                )
+              )}
+          </section>
           <div className="messageInfo">
             {users
               .filter((profile) => profile.id !== userProfile.id)

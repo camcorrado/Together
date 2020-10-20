@@ -47,9 +47,9 @@ class MessageList extends Component {
               {loading ? (
                 <div className="loader"></div>
               ) : (
-                <h3 className="temp">
+                <p className="temp">
                   You haven't sent or received any messages yet!
-                </h3>
+                </p>
               )}
             </section>
           )}

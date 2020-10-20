@@ -33,7 +33,7 @@ const AuthApiService = {
           3. queue a call to the refresh endpoint based on the JWT's exp value
         */
         TokenService.saveAuthToken(res.authToken);
-        IdleService.regiserIdleTimerResets();
+        IdleService.registerIdleTimerResets();
         TokenService.queueCallbackBeforeExpiry(() => {
           AuthApiService.postRefreshToken();
         });
