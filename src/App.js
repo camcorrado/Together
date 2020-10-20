@@ -69,7 +69,7 @@ class App extends Component {
   componentDidMount() {
     IdleService.setIdleCallback(this.logoutFromIdle);
     if (TokenService.hasAuthToken()) {
-      IdleService.regiserIdleTimerResets();
+      IdleService.registerIdleTimerResets();
       TokenService.queueCallbackBeforeExpiry(() => {
         AuthApiService.postRefreshToken();
       });
@@ -151,7 +151,7 @@ class App extends Component {
             userProfile: profileInfo.pop(),
           });
           await this.handleSetNearbyProfiles(data);
-          await this.handleSetConverations();
+          await this.handleSetConversations();
         }
       })
       .catch((res) => {
@@ -225,7 +225,7 @@ class App extends Component {
     return dist;
   };
 
-  handleSetConverations = async () => {
+  handleSetConversations = async () => {
     this.setState({ error: null });
     await fetch(`${config.API_ENDPOINT}/conversations`, {
       method: "GET",
@@ -343,7 +343,7 @@ class App extends Component {
       setUserInfo: this.handleSetUserInfo,
       setProfileInfo: this.handleSetProfileInfo,
       setNearbyProfiles: this.handleSetNearbyProfiles,
-      setConversations: this.handleSetConverations,
+      setConversations: this.handleSetConversations,
       setMessageBadge: this.handleSetMessageBadge,
       handleSortBy: this.handleSortBy,
       editProfile: this.handleEditProfile,
