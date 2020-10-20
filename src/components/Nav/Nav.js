@@ -216,15 +216,17 @@ export default class Nav extends Component {
                 aria-label="view profile button"
                 id="viewProfileButton"
               >
-                {profile_pic ? (
-                  <img
-                    src={profile_pic}
-                    alt={username + `'s profile pic`}
-                    className="profilePicButton"
-                  />
-                ) : (
-                  <></>
-                )}
+                <div className="buttonProfilePicContainer">
+                  {profile_pic ? (
+                    <img
+                      src={profile_pic}
+                      alt={username + `'s profile pic`}
+                      className="profilePicButton"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </Link>
               <Link
                 to="messenger"
@@ -266,15 +268,17 @@ export default class Nav extends Component {
                 aria-label="view profile button"
                 id="viewProfileButton"
               >
-                {profile_pic ? (
-                  <img
-                    src={profile_pic}
-                    alt={username + `'s profile pic`}
-                    className="profilePicButton"
-                  />
-                ) : (
-                  <></>
-                )}
+                <div className="buttonProfilePicContainer">
+                  {profile_pic ? (
+                    <img
+                      src={profile_pic}
+                      alt={username + `'s profile pic`}
+                      className="profilePicButton"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </Link>
               <Link to="/grid" aria-label="back button" className="primary">
                 <FontAwesomeIcon icon={buttonDict.faTh} className="faIcon" />
